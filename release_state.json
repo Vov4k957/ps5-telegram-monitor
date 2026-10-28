@@ -1,14 +1,14 @@
 {
   "commands_menu_configured": true,
-  "last_heartbeat": "2026-10-28T14:09:19.499445+00:00",
+  "last_heartbeat": "2026-10-28T14:10:31.653277+00:00",
   "last_run": {
-    "checked_repositories": 6,
-    "completed_at": "2026-10-28T14:09:19.499445+00:00",
+    "checked_repositories": 5,
+    "completed_at": "2026-10-28T14:10:31.653277+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "40703126147",
-    "started_at": "2026-10-28T14:09:15.547108+00:00",
+    "run_id": "40703324230",
+    "started_at": "2026-10-28T14:10:29.531191+00:00",
     "updates_processed": 0
   },
   "repositories": {
@@ -109,13 +109,6 @@
       "418829460",
       "418479107",
       "417877460"
-    ],
-    "quer3q/ps5-dump-forge": [
-      "425438524",
-      "423022981",
-      "422614336",
-      "418406972",
-      "416564215"
     ]
   },
   "ru_translation_enabled_notice": true,
