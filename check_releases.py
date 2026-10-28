@@ -97,6 +97,32 @@ def extract_github_links(text):
     return repos
 
 
+def configure_commands_menu():
+    """Force the command menu for the authorized private chat."""
+    commands = [
+        {"command": "start", "description": "Главное меню"},
+        {"command": "list", "description": "Мои подписки GitHub"},
+        {"command": "remove", "description": "Удалить подписки кнопками"},
+        {"command": "translate_on", "description": "Включить русский перевод"},
+        {"command": "translate_off", "description": "Выключить перевод"},
+        {"command": "status", "description": "Состояние мониторинга"},
+        {"command": "check", "description": "Проверить обновления"},
+        {"command": "help", "description": "Список команд и помощь"},
+    ]
+    api = f"https://api.telegram.org/bot{TOKEN}/"
+    result = request_json(api + "setMyCommands", payload={
+        "commands": commands, "scope": {"type": "chat", "chat_id": int(CHAT_ID)}
+    })
+    if not result.get("ok"):
+        raise RuntimeError("Telegram отказал в настройке списка команд")
+    result = request_json(api + "setChatMenuButton", payload={
+        "chat_id": int(CHAT_ID), "menu_button": {"type": "commands"}
+    })
+    if not result.get("ok"):
+        raise RuntimeError("Telegram отказал в настройке кнопки меню")
+    print("Telegram: меню команд установлено для личного чата")
+
+
 def tg_updates(offset):
     """Poll messages every GitHub Actions run (no server or webhook)."""
     payload = {"timeout": 0, "limit": 100, "allowed_updates": ["message", "callback_query"]}
@@ -469,6 +495,14 @@ def main():
         state["repositories"] = {repo: None for repo in DEFAULT_REPOS}
     state.setdefault("translate_enabled", True)  # preserves previously enabled translation
     changed = first_run
+    if not state.get("commands_menu_configured"):
+        try:
+            configure_commands_menu()
+            state["commands_menu_configured"] = True
+            changed = True
+        except (RuntimeError, ValueError) as error:
+            # Keep monitoring releases even if Telegram refuses a UI setting.
+            print(f"Меню команд пока не настроено: {type(error).__name__}")
 
     updates = tg_updates(state.get("telegram_offset"))
     for update in updates:
