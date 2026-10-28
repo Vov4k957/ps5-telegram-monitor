@@ -260,7 +260,7 @@ class MonitorTests(unittest.TestCase):
         original = self.state_file.read_bytes()
         from tempfile import NamedTemporaryFile
         with NamedTemporaryFile(mode="r+", encoding="utf-8") as outfile, \
-                patch.dict("os.environ", {"GITHUB_STEP_SUMMARY": outfile.name}), \
+                patch.dict("os.environ", {"GITHUB_STEP_SUMMARY": outfile.name, "MONITOR_REPORT_ENABLED": "true"}), \
                 patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
                 patch.object(bot, "tg_updates", return_value=[]), \
                 patch.object(bot, "fetch_releases", side_effect=lambda repo: [
