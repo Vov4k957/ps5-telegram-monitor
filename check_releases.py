@@ -401,17 +401,162 @@ def status_message(state):
 # MyMemory: бесплатный перевод без ключа (анонимно до 5000 символов/день).
 # Ограничение сервиса: до 500 байт на один фрагмент.
 TRANSLATION_MAX_BYTES = 400
-CHANGELOG_MAX_CHARS = 1150
+CHANGELOG_MAX_CHARS = 2600
 TRANSLATION_BUDGET_SECONDS = 30
 PROTECT_RE = re.compile(
-    r"https?://[^\s)]+|`[^`\n]+`|@[A-Za-z0-9_-]+|"
+    r"!?\[[^\]\n]+\]\(https?://[^\s)]+\)|https?://[^\s)]+|`[^`\n]+`|@[A-Za-z0-9_-]+|"
     r"\bv?\d+\.\d+(?:\.\d+)*(?:-[A-Za-z0-9.]+)?\b|"
     r"(?<![\w])(?:ShadowMountPlus|ps5-y2jb-autoloader|"
-    r"kstuff-lite|MihawkOS|WebKit|GitHub|"
+    r"kstuff-lite|MihawkOS|WebKit|GitHub|ps5-elfldr|ps5-kexp|ps5-unified-autoloader|"
     r"FPKG|PKG|ELF|HV|Y2JB|SMB2|SMB3|SMB|PS5|PS4|"
-    r"Proton|Linux|DXVK|Vulkan|Alpha|Beta|Relapse|FW|elfldr)(?![\w])",
+    r"Proton|Linux|DXVK|Vulkan|Alpha|Beta|Relapse|FW|elfldr|socket|sockets)(?![\w])",
     re.IGNORECASE,
 )
+
+
+
+# Curated terminology for frequently-used technical release notes.
+# Exact patterns are intentional: machine translation remains the fallback.
+RELEASE_LINE_TRANSLATIONS = {
+    "## Changelog:": "## Список изменений:",
+    "## Changelog": "## Список изменений",
+    "## Bundled Binaries": "## Включённые бинарные компоненты",
+    "- Relapse: Switched to @notmaj0r's port":
+        "- Relapse: переход на версию, портированную @notmaj0r",
+    "- Autoloader: Fix socket readiness polling for elfldr, eliminating the 1-second startup delay":
+        "- Автозагрузчик: исправлена проверка готовности сокета elfldr, устранена задержка запуска на 1 секунду",
+    "- Performance: Removed network log server check":
+        "- Производительность: убрана проверка сервера сетевого логирования",
+    "- Updater optimizations": "- Оптимизирован механизм обновления",
+    "This build integrates the following external dependency versions:":
+        "В сборку включены следующие версии внешних компонентов:",
+}
+FULL_CHANGELOG_RE = re.compile(
+    r"^(\*\*?)Full Changelog \(since last stable release\)(\*\*?):\s*(https?://\S+)$",
+    re.IGNORECASE,
+)
+
+
+def normalize_release_markdown(text):
+    """Convert GitHub's HTML disclosure into readable Markdown, retaining assets."""
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    # <summary> renders in GitHub but not in Telegram.
+    text = re.sub(
+        r"<summary\b[^>]*>(.*?)</summary\s*>",
+        lambda m: "\n## " + re.sub(r"<[^>]+>", "", m.group(1)).strip() + "\n",
+        text, flags=re.IGNORECASE | re.DOTALL,
+    )
+    text = re.sub(r"</?details\b[^>]*>", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    # Preserve links from HTML media tags instead of dropping them.
+    text = re.sub(
+        r"<(?:video|source|img)\b[^>]*\bsrc=['\"](https?://[^'\"]+)['\"][^>]*>",
+        lambda m: "\n" + html.unescape(m.group(1)) + "\n",
+        text, flags=re.IGNORECASE,
+    )
+    text = re.sub(
+        r"<a\b[^>]*\bhref=['\"](https?://[^'\"]+)['\"][^>]*>(.*?)</a\s*>",
+        lambda m: "[" + re.sub(r"<[^>]*>", "", m.group(2)) + "](" +
+                  html.unescape(m.group(1)) + ")",
+        text, flags=re.IGNORECASE | re.DOTALL,
+    )
+    # Never forward arbitrary unsupported HTML tags to Telegram.
+    text = re.sub(r"</?[A-Za-z][^>\n]*>", "", text)
+    return re.sub(r"\n{3,}", "\n\n", text).strip()
+
+
+def trim_release_markdown(text, limit=CHANGELOG_MAX_CHARS):
+    """Truncate at line boundaries and retain GitHub attachment links."""
+    if len(text) <= limit:
+        return text
+    cut = text[:limit]
+    boundary = cut.rfind("\n")
+    if boundary >= limit // 2:
+        cut = cut[:boundary]
+    # Include assets even when a long changelog would otherwise hide them.
+    assets = re.findall(
+        r"https://github\.com/user-attachments/assets/[A-Za-z0-9-]+",
+        text,
+    )
+    remaining = [url for url in dict.fromkeys(assets) if url not in cut]
+    return cut.rstrip() + "\n\n… Описание сокращено.\n" + "\n".join(remaining)
+
+
+def telegram_inline_markdown(line):
+    """Render a safe subset of GitHub Markdown as Telegram HTML."""
+    slots = []
+
+    def protect(markup):
+        marker = "\uE000" + str(len(slots)) + "\uE001"
+        slots.append(markup)
+        return marker
+
+    def link(match):
+        url = match.group(3)
+        if not url.startswith(("https://", "http://")):
+            return html.escape(match.group(0))
+        label = match.group(2)
+        if match.group(1):
+            label = "📎 " + (label if label else "Изображение")
+        return protect(
+            '<a href="' + html.escape(url, quote=True) + '">' +
+            html.escape(label) + '</a>'
+        )
+
+    line = re.sub(
+        r"(!?)\[([^\]\n]*)\]\((https?://[^\s)]+)\)", link, line,
+    )
+    line = re.sub(
+        r"(?<!\x60)\x60([^\x60\n]+)\x60(?!\x60)",
+        lambda m: protect("<code>" + html.escape(m.group(1)) + "</code>"),
+        line,
+    )
+    # Convert raw attachment URLs to an explicit clickable label.
+    line = re.sub(
+        r"https://github\.com/user-attachments/assets/[A-Za-z0-9-]+",
+        lambda m: protect('<a href="' + html.escape(m.group(0), quote=True) +
+                          '">📎 Вложение к релизу GitHub</a>'),
+        line,
+    )
+    line = html.escape(line, quote=False)
+    line = re.sub(r"\*\*([^\n*]+)\*\*", r"<b>\1</b>", line)
+    line = re.sub(r"__([^\n_]+)__", r"<b>\1</b>", line)
+    line = re.sub(r"(?<!\w)\*([^\n*]+)\*(?!\w)", r"<i>\1</i>", line)
+    line = re.sub(r"~~([^\n~]+)~~", r"<s>\1</s>", line)
+    for i, slot in enumerate(slots):
+        line = line.replace("\uE000" + str(i) + "\uE001", slot)
+    return line
+
+
+def render_release_telegram(markdown):
+    """Headings, lists, links, code, and disclosure sections without raw syntax."""
+    lines = []
+    in_fence = False
+    for line in markdown.split("\n"):
+        if line.lstrip().startswith(chr(96) * 3):
+            in_fence = not in_fence
+            lines.append("<pre>" if in_fence else "</pre>")
+            continue
+        if in_fence:
+            lines.append(html.escape(line))
+            continue
+        if re.fullmatch(r"\s*[-*_]{3,}\s*", line):
+            lines.append("────────")
+            continue
+        match = re.match(r"^\s*#{1,6}\s+(.+?)\s*#*\s*$", line)
+        if match:
+            lines.append("<b>" + telegram_inline_markdown(match.group(1)) + "</b>")
+            continue
+        match = re.match(r"^(\s*)[-*+]\s+(.+)$", line)
+        if match:
+            lines.append(match.group(1) + "• " + telegram_inline_markdown(match.group(2)))
+            continue
+        match = re.match(r"^(\s*\d+[.)])\s+(.+)$", line)
+        if match:
+            lines.append(match.group(1) + " " + telegram_inline_markdown(match.group(2)))
+            continue
+        lines.append(telegram_inline_markdown(line))
+    return "\n".join(lines).strip()
 
 
 def split_text_for_translation(text, max_bytes=TRANSLATION_MAX_BYTES):
@@ -453,6 +598,12 @@ def translate_fragment(fragment, timeout=10):
 def translate_line(line, deadline=None):
     """Не переводит ссылки, код и технические имена."""
     stripped = line.strip()
+    fixed = RELEASE_LINE_TRANSLATIONS.get(stripped)
+    if fixed is not None:
+        return line[:len(line) - len(line.lstrip())] + fixed
+    full = FULL_CHANGELOG_RE.fullmatch(stripped)
+    if full:
+        return "**Полный список изменений (с предыдущего стабильного выпуска)**: " + full.group(3)
     if not stripped or stripped.startswith(("|", "![", "<")):
         return line
     if re.fullmatch(r"[-=+_*\s]+", stripped):
@@ -533,9 +684,8 @@ def format_release(repo, release, translate_enabled=True):
     tag = html.escape(str(release.get("tag_name") or "—"))
     url = html.escape(str(release.get("html_url") or f"https://github.com/{repo}/releases"), quote=True)
     kind = "🧪 Pre-release / Alpha / Beta" if release.get("prerelease") else "✅ Обычный релиз"
-    body = str(release.get("body") or "Описание изменений не указано.").strip()
-    if len(body) > CHANGELOG_MAX_CHARS:
-        body = body[:CHANGELOG_MAX_CHARS - 3].rstrip() + "…"
+    body = normalize_release_markdown(str(release.get("body") or "Описание изменений не указано."))
+    body = trim_release_markdown(body)
     if translate_enabled:
         translated_body, translated, note = translate_changelog(body)
     else:
@@ -544,7 +694,7 @@ def format_release(repo, release, translate_enabled=True):
     return (
         f"🚀 <b>Новая версия: {html.escape(repo)}</b>\n"
         f"<b>{title}</b> ({tag})\n{kind}\n\n"
-        f"<b>{body_label}:</b>\n{html.escape(translated_body)}\n"
+        f"<b>{body_label}:</b>\n{render_release_telegram(translated_body)}\n"
         f"<i>{html.escape(note)}</i>\n\n"
         f'<a href="{url}">🔗 Открыть релиз на GitHub</a>'
     )
