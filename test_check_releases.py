@@ -247,7 +247,7 @@ class MonitorTests(unittest.TestCase):
             rendered = bot.format_release("itsPLK/ps5-y2jb-autoloader", r, True)
         self.assertIn("переход на версию, портированную @notmaj0r", rendered)
         self.assertIn("готовности сокета elfldr", rendered)
-        self.assertIn("сервер сетевого логирования", rendered)
+        self.assertIn("проверка сервера сетевого логирования", rendered)
         self.assertIn("Оптимизирован механизм обновления", rendered)
         self.assertIn("<b>Список изменений:</b>", rendered)
         self.assertIn("<b>Включённые бинарные компоненты</b>", rendered)
