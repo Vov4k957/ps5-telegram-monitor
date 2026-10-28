@@ -1,0 +1,38 @@
+name: Cloudflare D1 sync connection check
+on:
+  push:
+    paths:
+      - '.github/workflows/cloudflare-sync-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-connection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Verify Cloudflare sync secret and subscriptions
+        env:
+          SYNC_SECRET: ${{ secrets.SYNC_SECRET }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          secret = os.environ.get("SYNC_SECRET", "")
+          if not secret:
+              raise SystemExit("SYNC_SECRET is not configured in GitHub Actions Secrets")
+          url = "https://ps5-telegram-webhook.vov4k95777.workers.dev/sync"
+          request = urllib.request.Request(
+              url, headers={"Authorization": f"Bearer {secret}", "Accept": "application/json"},
+          )
+          try:
+              with urllib.request.urlopen(request, timeout=20) as response:
+                  payload = json.load(response)
+          except Exception as error:
+              raise SystemExit("Cloudflare sync request failed: " + type(error).__name__)
+          repos = payload.get("repositories")
+          if not isinstance(repos, list) or len(repos) != 6 or payload.get("translate_enabled") is not True:
+              raise SystemExit("Cloudflare sync data does not match expected 6 subscriptions / translation on")
+          print("Cloudflare D1 sync verified: 6 subscriptions; translation enabled; authorization successful")
+          PY
