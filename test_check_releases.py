@@ -235,6 +235,57 @@ class MonitorTests(unittest.TestCase):
                     bot.synchronize_cloudflare_state(self.state)
                 self.assertEqual(self.state, original)
 
+    def test_real_y2jb_release_russian_terminology_and_telegram_markup(self):
+        body = "## Changelog:\r\n\r\n- Relapse: Switched to @notmaj0r's port\r\n- Autoloader: Fix socket readiness polling for elfldr, eliminating the 1-second startup delay\r\n- Performance: Removed network log server check\r\n- Updater optimizations\r\n\r\n**Full Changelog (since last stable release)**: https://github.com/itsPLK/ps5-y2jb-autoloader/compare/v1.0.4-35c4413...v1.1.0-ba879c8\r\n\r\n\r\nhttps://github.com/user-attachments/assets/97953c34-5b00-435f-bb4c-30240cb0d294\r\n\r\n\r\n---\r\n<details>\r\n<summary>Bundled Binaries</summary>\r\n\r\nThis build integrates the following external dependency versions:\r\n- [itsPLK/ps5-elfldr](https://github.com/itsPLK/ps5-elfldr): [v0.27-b57d0e9](https://github.com/itsPLK/ps5-elfldr/releases/tag/v0.27-b57d0e9)\r\n- [itsPLK/ps5-kexp](https://github.com/itsPLK/ps5-kexp): [v0.8-24cf6e5](https://github.com/itsPLK/ps5-kexp/releases/tag/v0.8-24cf6e5)\r\n- [itsPLK/ps5-unified-autoloader](https://github.com/itsPLK/ps5-unified-autoloader): [v0.1.6-e7093cd](https://github.com/itsPLK/ps5-unified-autoloader/releases/tag/v0.1.6-e7093cd)\r\n\r\n</details>\r\n"
+        r = {
+            "name": "v1.1.0", "tag_name": "v1.1.0-ba879c8",
+            "html_url": "https://github.com/itsPLK/ps5-y2jb-autoloader/releases/tag/v1.1.0-ba879c8",
+            "body": body,
+        }
+        # Fixture is the published upstream release body, without real API calls.
+        with patch.object(bot, "translate_fragment", side_effect=lambda text, **kw: text):
+            rendered = bot.format_release("itsPLK/ps5-y2jb-autoloader", r, True)
+        self.assertIn("переход на версию, портированную @notmaj0r", rendered)
+        self.assertIn("готовности сокета elfldr", rendered)
+        self.assertIn("сервер сетевого логирования", rendered)
+        self.assertIn("Оптимизирован механизм обновления", rendered)
+        self.assertIn("<b>Список изменений:</b>", rendered)
+        self.assertIn("<b>Включённые бинарные компоненты</b>", rendered)
+        self.assertIn("• <a href=", rendered)
+        self.assertIn("Вложение к релизу GitHub</a>", rendered)
+        self.assertIn("97953c34-5b00-435f-bb4c-30240cb0d294", rendered)
+        self.assertIn("compare/v1.0.4-35c4413...v1.1.0-ba879c8", rendered)
+        for unwanted in ("<details>", "</details>", "<summary>", "## Changelog", "**Full Changelog", "разъема", "разъёма"):
+            self.assertNotIn(unwanted, rendered)
+
+    def test_telegram_html_escapes_untrusted_text_preserves_links_and_code(self):
+        source = '## Notes\n- **Fix** `PS5` & <script>bad</script> [release](https://github.com/example/repo)\n---'
+        cleaned = bot.normalize_release_markdown(source)
+        rendered = bot.render_release_telegram(cleaned)
+        self.assertIn("<b>Notes</b>", rendered)
+        self.assertIn("• <b>Fix</b>", rendered)
+        self.assertIn("<code>PS5</code>", rendered)
+        self.assertIn("&amp; bad", rendered)
+        self.assertIn('<a href="https://github.com/example/repo">release</a>', rendered)
+        self.assertNotIn("<script>", rendered)
+        self.assertNotIn("**Fix**", rendered)
+
+    def test_attachment_survives_long_changelog_truncation(self):
+        asset = "https://github.com/user-attachments/assets/97953c34-5b00-435f-bb4c-30240cb0d294"
+        source = "Lorem ipsum\n" * 500 + "\n" + asset
+        short = bot.trim_release_markdown(source, limit=250)
+        self.assertIn(asset, short)
+        self.assertIn("Описание сокращено", short)
+
+    def test_fallback_original_still_gets_markdown_formatting(self):
+        content = "## Changelog\n- **Fixed** `elfldr`"
+        with patch.object(bot, "translate_fragment", side_effect=RuntimeError("unavailable")):
+            rendered = bot.format_release(
+                "owner/repo", {"tag_name": "v1.0", "body": content}, True)
+        self.assertIn("<b>Changelog</b>", rendered)
+        self.assertIn("• <b>Fixed</b> <code>elfldr</code>", rendered)
+        self.assertIn("Автоперевод недоступен", rendered)
+
     def test_translation_deadline_falls_back_to_original(self):
         with patch.object(bot.time, "monotonic", side_effect=[0, 31]), \
                 patch.object(bot, "translate_fragment") as translate:
