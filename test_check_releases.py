@@ -194,7 +194,7 @@ class MonitorTests(unittest.TestCase):
 
     def test_github_server_failure_retried_only_once(self):
         temporary = bot.APIError(503, "Temporarily unavailable")
-        with patch.object(bot, "request_json", side_effect=[temporary, {"ok": True}]) as api, \\
+        with patch.object(bot, "request_json", side_effect=[temporary, {"ok": True}]) as api, \
                 patch.object(bot.time, "sleep") as sleep:
             payload = bot.github_request_json("https://api.github.com/repos/owner/repo")
         self.assertEqual(payload, {"ok": True})
@@ -203,17 +203,17 @@ class MonitorTests(unittest.TestCase):
 
     def test_rate_limited_scan_skips_remaining_repositories_and_persists_cooldown(self):
         self.write_state()
-        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \\
-                patch.object(bot, "tg_updates", return_value=[]), \\
-                patch.object(bot, "fetch_releases", side_effect=bot.GitHubRateLimited(4102444800)) as fetch, \\
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
+                patch.object(bot, "fetch_releases", side_effect=bot.GitHubRateLimited(4102444800)) as fetch, \
                 patch.object(bot, "send_telegram") as send:
             bot.main()
         self.assertEqual(fetch.call_count, 1)
         send.assert_not_called()
         self.assertEqual(self.saved()["github_backoff_until"], 4102444800)
 
-        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \\
-                patch.object(bot, "tg_updates", return_value=[]), \\
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
                 patch.object(bot, "fetch_releases") as fetch:
             bot.main()
         fetch.assert_not_called()
@@ -222,8 +222,8 @@ class MonitorTests(unittest.TestCase):
     def test_expired_backoff_resumes_scan_and_clears_state(self):
         self.state["github_backoff_until"] = 100
         self.write_state()
-        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \\
-                patch.object(bot, "tg_updates", return_value=[]), \\
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
                 patch.object(bot, "fetch_releases", side_effect=lambda repo: [
                     release(int(self.state["repositories"][repo][0]))
                 ]) as fetch:
@@ -235,10 +235,10 @@ class MonitorTests(unittest.TestCase):
         self.write_state()
         original = self.state_file.read_bytes()
         from tempfile import NamedTemporaryFile
-        with NamedTemporaryFile(mode="r+", encoding="utf-8") as outfile, \\
-                patch.dict("os.environ", {"GITHUB_STEP_SUMMARY": outfile.name}), \\
-                patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \\
-                patch.object(bot, "tg_updates", return_value=[]), \\
+        with NamedTemporaryFile(mode="r+", encoding="utf-8") as outfile, \
+                patch.dict("os.environ", {"GITHUB_STEP_SUMMARY": outfile.name}), \
+                patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
                 patch.object(bot, "fetch_releases", side_effect=lambda repo: [
                     release(int(self.state["repositories"][repo][0]))
                 ]):
@@ -248,7 +248,7 @@ class MonitorTests(unittest.TestCase):
         self.assertEqual(self.state_file.read_bytes(), original)
         self.assertIn("Проверка выполнена", markdown)
         self.assertIn("Проверено репозиториев:", markdown)
-        self.assertIn("6", markdown) if False else None
+        self.assertIn("3 / 3", markdown)
 
     def test_no_new_release_keeps_state_file_byte_for_byte(self):
         self.write_state()
