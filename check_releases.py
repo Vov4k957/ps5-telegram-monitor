@@ -38,6 +38,9 @@ RELEASE_LIMIT = 30
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 GITHUB_TOKEN = os.getenv("GH_TOKEN", "").strip()
+CLOUDFLARE_SYNC_ENABLED = os.getenv("CLOUDFLARE_SYNC_ENABLED", "").strip().lower() == "true"
+CLOUDFLARE_SYNC_URL = os.getenv("CLOUDFLARE_SYNC_URL", "").strip()
+SYNC_SECRET = os.getenv("SYNC_SECRET", "").strip()
 
 
 class APIError(RuntimeError):
@@ -573,6 +576,46 @@ def save_state(state):
     temporary.replace(STATE_FILE)
 
 
+
+def synchronize_cloudflare_state(state):
+    """D1 is the subscription source of truth after the explicit cutover.
+
+    Preserve each existing repository's release IDs, so switching storage
+    cannot generate duplicate notifications. New repositories start at None
+    and baseline their existing releases without notifying.
+    A failed sync is fatal: never fall back to the stale GitHub list.
+    """
+    if not CLOUDFLARE_SYNC_URL.startswith("https://") or not SYNC_SECRET:
+        raise RuntimeError("Cloudflare sync is enabled but URL or secret is missing")
+    payload = request_json(
+        CLOUDFLARE_SYNC_URL,
+        headers={"Authorization": f"Bearer {SYNC_SECRET}",
+                 "Accept": "application/json"},
+        timeout=20,
+    )
+    if not isinstance(payload, dict):
+        raise RuntimeError("Cloudflare sync returned an invalid response")
+    desired = payload.get("repositories")
+    translated = payload.get("translate_enabled")
+    if (not isinstance(desired, list) or len(desired) > MAX_SUBSCRIPTIONS
+            or not isinstance(translated, bool)):
+        raise RuntimeError("Cloudflare sync returned invalid subscriptions or settings")
+    new_state = {}
+    existing = state["repositories"]
+    names = {key.casefold(): key for key in existing}
+    for repo in desired:
+        if (not isinstance(repo, str)
+                or not re.fullmatch(r"[A-Za-z0-9-]+/[A-Za-z0-9_.-]+", repo)
+                or repo.casefold() in (key.casefold() for key in new_state)):
+            raise RuntimeError("Cloudflare sync contains invalid or duplicate repository")
+        old_name = names.get(repo.casefold())
+        new_state[repo] = existing[old_name] if old_name is not None else None
+    changed = (new_state != existing or translated != state.get("translate_enabled"))
+    state["repositories"] = new_state
+    state["translate_enabled"] = translated
+    return changed
+
+
 def main():
     if not TOKEN or not CHAT_ID:
         raise RuntimeError("Добавь TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID в GitHub Actions Secrets")
@@ -581,6 +624,9 @@ def main():
     if first_run:
         state["repositories"] = {repo: None for repo in DEFAULT_REPOS}
     state.setdefault("translate_enabled", True)  # preserves previously enabled translation
+    if CLOUDFLARE_SYNC_ENABLED:
+        # Do not continue scanning stale repositories if D1 is unavailable.
+        synchronize_cloudflare_state(state)
     started_at = datetime.now(timezone.utc).isoformat()
     deadline = time.monotonic() + 240
     event = os.getenv("GITHUB_EVENT_NAME", "local")
@@ -603,7 +649,7 @@ def main():
 
     try:
         try:
-            updates = tg_updates(state.get("telegram_offset"))
+            updates = [] if CLOUDFLARE_SYNC_ENABLED else tg_updates(state.get("telegram_offset"))
         except (RuntimeError, OSError, ValueError) as error:
             record_error("getUpdates", error)
             updates = []
