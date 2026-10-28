@@ -41,6 +41,10 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GH_TOKEN: ${{ github.token }}
+          # Opt in only after SYNC_SECRET is configured and the Telegram webhook is ready.
+          CLOUDFLARE_SYNC_ENABLED: 'false'
+          CLOUDFLARE_SYNC_URL: https://ps5-telegram-webhook.vov4k95777.workers.dev/sync
+          SYNC_SECRET: ${{ secrets.SYNC_SECRET }}
         run: timeout 420s python3 -u check_releases.py
 
       - name: Save the observed versions between runs
