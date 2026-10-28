@@ -176,6 +176,30 @@ class MonitorTests(unittest.TestCase):
         self.assertEqual(send.call_count, 1)
         self.assertIn("v3", send.call_args.args[0])
 
+    def test_real_github_http_error_uses_message_and_preserves_limit_headers(self):
+        from io import BytesIO
+        from urllib.error import HTTPError
+        response = BytesIO(b'{"message":"You have exceeded a secondary rate limit"}')
+        error = HTTPError(
+            "https://api.github.com/repos/owner/repo", 403, "Forbidden",
+            {"Retry-After": "65", "X-RateLimit-Remaining": "5"}, response,
+        )
+        with patch.object(bot, "urlopen", side_effect=error):
+            with self.assertRaises(bot.APIError) as captured:
+                bot.request_json("https://api.github.com/repos/owner/repo")
+        self.assertTrue(bot.is_github_rate_limited(captured.exception))
+        self.assertEqual(captured.exception.headers.get("retry-after"), "65")
+        self.assertIn("secondary rate limit", captured.exception.description)
+
+    def test_rate_limit_request_is_not_retried_in_same_run(self):
+        error = bot.APIError(429, "secondary rate limit", {"retry-after": "120"})
+        with patch.object(bot, "request_json", side_effect=error) as call, \
+                patch.object(bot.time, "sleep") as sleep:
+            with self.assertRaises(bot.GitHubRateLimited):
+                bot.github_request_json("https://api.github.com/repos/owner/repo")
+        call.assert_called_once()
+        sleep.assert_not_called()
+
     def test_github_primary_limit_uses_reset_header(self):
         error = bot.APIError(403, "API rate limit exceeded", {
             "x-ratelimit-remaining": "0", "x-ratelimit-reset": "3600",
