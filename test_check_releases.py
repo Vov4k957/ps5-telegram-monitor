@@ -34,6 +34,7 @@ class MonitorTests(unittest.TestCase):
         self.state = {"repositories": {"one/repo": ["1"], "two/repo": ["2"],
                                        "three/repo": ["3"]},
                       "translate_enabled": False, "commands_menu_configured": True,
+                      "commands_menu_scope_cleared": True,
                       "telegram_offset": 100, "last_heartbeat": "2026-10-28T10:33:00+00:00"}
         for name, value in {"TOKEN": "test-token", "CHAT_ID": "42", "STATE_FILE": self.state_file}.items():
             p = patch.object(bot, name, value)
@@ -49,6 +50,53 @@ class MonitorTests(unittest.TestCase):
 
     def saved(self):
         return json.loads(self.state_file.read_text(encoding="utf-8"))
+
+    def test_removes_chat_override_instead_of_replacing_botfather_commands(self):
+        calls = []
+        def api(url, payload=None, **kwargs):
+            calls.append((url, copy.deepcopy(payload)))
+            return {"ok": True}
+        with patch.object(bot, "request_json", side_effect=api):
+            bot.configure_commands_menu()
+        self.assertEqual(len(calls), 2)
+        self.assertTrue(calls[0][0].endswith("/deleteMyCommands"))
+        self.assertEqual(
+            calls[0][1]["scope"], {"type": "chat", "chat_id": 42})
+        self.assertTrue(calls[1][0].endswith("/setChatMenuButton"))
+        self.assertFalse(any(url.endswith("/setMyCommands") for url, _ in calls))
+
+    def test_menu_migration_runs_once_and_keeps_release_history(self):
+        self.state.pop("commands_menu_scope_cleared")
+        self.write_state()
+        original_repositories = copy.deepcopy(self.state["repositories"])
+        calls = []
+        def api(url, payload=None, **kwargs):
+            calls.append(url)
+            return {"ok": True}
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
+                patch.object(bot, "fetch_releases", side_effect=lambda repo: [
+                    release(int(self.state["repositories"][repo][0]))
+                ]), \
+                patch.object(bot, "request_json", side_effect=api):
+            bot.main()
+            bot.main()
+        self.assertEqual(sum(x.endswith("/deleteMyCommands") for x in calls), 1)
+        self.assertTrue(self.saved()["commands_menu_scope_cleared"])
+        self.assertEqual(self.saved()["repositories"], original_repositories)
+        self.assertNotIn("setMyCommands", " ".join(calls))
+
+    def test_menu_migration_retries_after_telegram_api_error(self):
+        self.state.pop("commands_menu_scope_cleared")
+        self.write_state()
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
+                patch.object(bot, "fetch_releases", side_effect=lambda repo: [
+                    release(int(self.state["repositories"][repo][0]))
+                ]), \
+                patch.object(bot, "request_json", side_effect=bot.APIError(503)):
+            bot.main()
+        self.assertNotIn("commands_menu_scope_cleared", self.saved())
 
     def test_consecutive_removals_edit_same_message(self):
         edits = []
