@@ -1,4 +1,5 @@
 {
+  "commands_menu_configured": true,
   "last_heartbeat": "2026-10-28T10:33:29.607836+00:00",
   "repositories": {
     "EchoStretch/kstuff-lite": [
@@ -107,5 +108,7 @@
       "416564215"
     ]
   },
-  "ru_translation_enabled_notice": true
+  "ru_translation_enabled_notice": true,
+  "telegram_offset": 818870957,
+  "translate_enabled": true
 }
