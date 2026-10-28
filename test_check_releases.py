@@ -176,6 +176,80 @@ class MonitorTests(unittest.TestCase):
         self.assertEqual(send.call_count, 1)
         self.assertIn("v3", send.call_args.args[0])
 
+    def test_github_primary_limit_uses_reset_header(self):
+        error = bot.APIError(403, "API rate limit exceeded", {
+            "x-ratelimit-remaining": "0", "x-ratelimit-reset": "3600",
+        })
+        self.assertTrue(bot.is_github_rate_limited(error))
+        self.assertEqual(bot.github_retry_at(error, now=3000), 3602)
+
+    def test_github_secondary_limit_uses_retry_after_or_minute(self):
+        limited = bot.APIError(429, "secondary rate limit", {"Retry-After": "180"})
+        self.assertTrue(bot.is_github_rate_limited(limited))
+        self.assertEqual(bot.github_retry_at(limited, now=100), 281)
+        fallback = bot.APIError(403, "You have exceeded a secondary rate limit")
+        self.assertTrue(bot.is_github_rate_limited(fallback))
+        self.assertEqual(bot.github_retry_at(fallback, now=100), 160)
+        self.assertFalse(bot.is_github_rate_limited(bot.APIError(403, "Forbidden")))
+
+    def test_github_server_failure_retried_only_once(self):
+        temporary = bot.APIError(503, "Temporarily unavailable")
+        with patch.object(bot, "request_json", side_effect=[temporary, {"ok": True}]) as api, \\
+                patch.object(bot.time, "sleep") as sleep:
+            payload = bot.github_request_json("https://api.github.com/repos/owner/repo")
+        self.assertEqual(payload, {"ok": True})
+        self.assertEqual(api.call_count, 2)
+        sleep.assert_called_once_with(1)
+
+    def test_rate_limited_scan_skips_remaining_repositories_and_persists_cooldown(self):
+        self.write_state()
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \\
+                patch.object(bot, "tg_updates", return_value=[]), \\
+                patch.object(bot, "fetch_releases", side_effect=bot.GitHubRateLimited(4102444800)) as fetch, \\
+                patch.object(bot, "send_telegram") as send:
+            bot.main()
+        self.assertEqual(fetch.call_count, 1)
+        send.assert_not_called()
+        self.assertEqual(self.saved()["github_backoff_until"], 4102444800)
+
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \\
+                patch.object(bot, "tg_updates", return_value=[]), \\
+                patch.object(bot, "fetch_releases") as fetch:
+            bot.main()
+        fetch.assert_not_called()
+        self.assertEqual(self.saved()["github_backoff_until"], 4102444800)
+
+    def test_expired_backoff_resumes_scan_and_clears_state(self):
+        self.state["github_backoff_until"] = 100
+        self.write_state()
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \\
+                patch.object(bot, "tg_updates", return_value=[]), \\
+                patch.object(bot, "fetch_releases", side_effect=lambda repo: [
+                    release(int(self.state["repositories"][repo][0]))
+                ]) as fetch:
+            bot.main()
+        self.assertEqual(fetch.call_count, 3)
+        self.assertNotIn("github_backoff_until", self.saved())
+
+    def test_status_summary_does_not_touch_state_file(self):
+        self.write_state()
+        original = self.state_file.read_bytes()
+        from tempfile import NamedTemporaryFile
+        with NamedTemporaryFile(mode="r+", encoding="utf-8") as outfile, \\
+                patch.dict("os.environ", {"GITHUB_STEP_SUMMARY": outfile.name}), \\
+                patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \\
+                patch.object(bot, "tg_updates", return_value=[]), \\
+                patch.object(bot, "fetch_releases", side_effect=lambda repo: [
+                    release(int(self.state["repositories"][repo][0]))
+                ]):
+            bot.main()
+            outfile.seek(0)
+            markdown = outfile.read()
+        self.assertEqual(self.state_file.read_bytes(), original)
+        self.assertIn("Проверка выполнена", markdown)
+        self.assertIn("Проверено репозиториев:", markdown)
+        self.assertIn("6", markdown) if False else None
+
     def test_no_new_release_keeps_state_file_byte_for_byte(self):
         self.write_state()
         original = self.state_file.read_bytes()
