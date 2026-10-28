@@ -716,6 +716,19 @@ def load_state():
     return saved, False
 
 
+# Run timestamps and diagnostics live in the GitHub Actions logs. They must not
+# trigger repository commits when releases, subscriptions and settings are unchanged.
+RUN_METADATA_FIELDS = frozenset({"last_run", "last_heartbeat", "last_schedule_at"})
+
+
+def meaningful_state_snapshot(state):
+    """Stable signature excluding per-run telemetry, including nested release IDs."""
+    return json.dumps(
+        {key: value for key, value in state.items() if key not in RUN_METADATA_FIELDS},
+        ensure_ascii=False, sort_keys=True,
+    )
+
+
 def save_state(state):
     """Atomic local checkpoint; Actions persists this file even after a failed scan."""
     content = json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
@@ -771,6 +784,7 @@ def main():
         raise RuntimeError("Добавь TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID в GitHub Actions Secrets")
 
     state, first_run = load_state()
+    initial_meaningful_state = meaningful_state_snapshot(state)
     if first_run:
         state["repositories"] = {repo: None for repo in DEFAULT_REPOS}
     state.setdefault("translate_enabled", True)  # preserves previously enabled translation
@@ -780,8 +794,6 @@ def main():
     started_at = datetime.now(timezone.utc).isoformat()
     deadline = time.monotonic() + 240
     event = os.getenv("GITHUB_EVENT_NAME", "local")
-    if event == "schedule":
-        state["last_schedule_at"] = started_at
     errors = []
     processed = checked = sent = 0
 
@@ -864,15 +876,21 @@ def main():
             except (RuntimeError, OSError, ValueError) as error:
                 record_error("Отчёт /check", error)
     finally:
-        now = datetime.now(timezone.utc).isoformat()
-        state["last_heartbeat"] = now
-        state["last_run"] = {
-            "started_at": started_at, "completed_at": now, "event": event,
-            "run_id": os.getenv("GITHUB_RUN_ID", ""),
-            "checked_repositories": checked, "notifications_sent": sent,
-            "updates_processed": processed, "errors": errors,
-        }
-        save_state(state)
+        # Commit only real state changes. Otherwise a one-minute timer produces
+        # 1,440 useless commits/day just to update last_run/last_heartbeat.
+        if meaningful_state_snapshot(state) != initial_meaningful_state:
+            now = datetime.now(timezone.utc).isoformat()
+            state["last_heartbeat"] = now
+            state["last_run"] = {
+                "started_at": started_at, "completed_at": now, "event": event,
+                "run_id": os.getenv("GITHUB_RUN_ID", ""),
+                "checked_repositories": checked, "notifications_sent": sent,
+                "updates_processed": processed, "errors": errors,
+            }
+            save_state(state)
+            print("Изменения подписок, настроек или релизов сохранены в release_state.json")
+        else:
+            print("Изменений состояния нет: release_state.json не переписываем")
     print(f"Событие: {event}; проверено {checked} репозиториев; отправлено релизов: {sent}; "
           f"обработано updates: {processed}; ошибок: {len(errors)}")
     if errors:
