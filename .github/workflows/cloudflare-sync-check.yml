@@ -30,7 +30,14 @@ jobs:
               with urllib.request.urlopen(request, timeout=20) as response:
                   payload = json.load(response)
           except urllib.error.HTTPError as error:
-              raise SystemExit(f"Cloudflare sync rejected request: HTTP {error.code} (no secret disclosed)")
+              print("Sync HTTP status:", error.code)
+              print("Server:", error.headers.get("server", "unknown"))
+              print("Content type:", error.headers.get("content-type", "unknown"))
+              print("CF mitigation:", error.headers.get("cf-mitigated", "none"))
+              # Only emit the beginning of the diagnostic HTML or JSON, never credentials.
+              body = error.read(450).decode("utf-8", "replace")
+              print("Response preview:", body[:200].replace("\\n", " "))
+              raise SystemExit("Cloudflare sync request denied; no secret disclosed")
           except Exception as error:
               raise SystemExit("Cloudflare sync request failed: " + type(error).__name__)
           repos = payload.get("repositories")
