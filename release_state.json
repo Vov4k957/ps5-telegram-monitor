@@ -1,14 +1,14 @@
 {
   "commands_menu_configured": true,
-  "last_heartbeat": "2026-10-28T14:02:19.828449+00:00",
+  "last_heartbeat": "2026-10-28T14:03:04.661426+00:00",
   "last_run": {
     "checked_repositories": 6,
-    "completed_at": "2026-10-28T14:02:19.828449+00:00",
+    "completed_at": "2026-10-28T14:03:04.661426+00:00",
     "errors": [],
-    "event": "workflow_dispatch",
+    "event": "push",
     "notifications_sent": 0,
-    "run_id": "40701998844",
-    "started_at": "2026-10-28T14:02:16.980569+00:00",
+    "run_id": "40702115473",
+    "started_at": "2026-10-28T14:03:01.664993+00:00",
     "updates_processed": 0
   },
   "repositories": {
