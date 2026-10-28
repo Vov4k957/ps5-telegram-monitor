@@ -209,6 +209,32 @@ class MonitorTests(unittest.TestCase):
                 bot.main()
         self.assertFalse(self.state_file.exists())
 
+    def test_cloudflare_sync_preserves_release_history(self):
+        snapshot = {"repositories": ["TWO/repo", "four/new"], "translate_enabled": True}
+        with patch.object(bot, "CLOUDFLARE_SYNC_URL", "https://example.workers.dev/sync"), \
+                patch.object(bot, "SYNC_SECRET", "test-secret"), \
+                patch.object(bot, "request_json", return_value=snapshot) as request:
+            changed = bot.synchronize_cloudflare_state(self.state)
+        self.assertTrue(changed)
+        self.assertEqual(self.state["repositories"], {"TWO/repo": ["2"], "four/new": None})
+        self.assertTrue(self.state["translate_enabled"])
+        self.assertEqual(request.call_args.kwargs["headers"]["Authorization"], "Bearer test-secret")
+
+    def test_cloudflare_invalid_response_does_not_overwrite_history(self):
+        original = copy.deepcopy(self.state)
+        for response in (
+            {"repositories": [], "translate_enabled": "true"},
+            {"repositories": ["one/repo", "ONE/REPO"], "translate_enabled": True},
+            {"repositories": ["bad../repo"], "translate_enabled": True},
+        ):
+            with self.subTest(response=response), \
+                    patch.object(bot, "CLOUDFLARE_SYNC_URL", "https://example.workers.dev/sync"), \
+                    patch.object(bot, "SYNC_SECRET", "test-secret"), \
+                    patch.object(bot, "request_json", return_value=response):
+                with self.assertRaises(RuntimeError):
+                    bot.synchronize_cloudflare_state(self.state)
+                self.assertEqual(self.state, original)
+
     def test_translation_deadline_falls_back_to_original(self):
         with patch.object(bot.time, "monotonic", side_effect=[0, 31]), \
                 patch.object(bot, "translate_fragment") as translate:
