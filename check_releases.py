@@ -835,6 +835,9 @@ def synchronize_cloudflare_state(state):
 
 def write_github_run_summary(started_at, checked, total, sent, errors, deferred_until=None):
     """Current per-run diagnostic, without writing to committed state."""
+    # Unit tests run in Actions too; only the actual monitor step writes the report.
+    if os.getenv("MONITOR_REPORT_ENABLED", "").lower() != "true":
+        return
     summary_path = os.getenv("GITHUB_STEP_SUMMARY", "")
     if not summary_path:
         return
