@@ -255,6 +255,50 @@ class MonitorTests(unittest.TestCase):
         self.assertEqual(fetch.call_count, 3)
         self.assertNotIn("github_backoff_until", self.saved())
 
+    def test_report_status_posts_to_cloudflare_without_persisting_history(self):
+        self.write_state()
+        original = self.state_file.read_bytes()
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", True), \
+                patch.object(bot, "CLOUDFLARE_SYNC_URL", "https://monitor.example.workers.dev/sync"), \
+                patch.object(bot, "SYNC_SECRET", "test-sync"), \
+                patch.dict("os.environ", {"GITHUB_ACTIONS": "true", "GITHUB_RUN_ID": "1234"}), \
+                patch.object(bot, "request_json", return_value={"ok": True}) as api:
+            bot.publish_cloudflare_status("2026-10-28T20:10:00+00:00", 6, 6, 1, [], None)
+        self.assertEqual(self.state_file.read_bytes(), original)
+        self.assertEqual(api.call_args.args[0], "https://monitor.example.workers.dev/report")
+        payload = api.call_args.kwargs["payload"]
+        self.assertEqual(payload["run_id"], "1234")
+        self.assertEqual(payload["status"], "success")
+        self.assertEqual(payload["notifications"], 1)
+        self.assertEqual(api.call_args.kwargs["headers"]["Authorization"], "Bearer test-sync")
+
+    def test_report_rate_limit_and_errors_use_correct_status(self):
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", True), \
+                patch.object(bot, "CLOUDFLARE_SYNC_URL", "https://monitor.example.workers.dev/sync"), \
+                patch.object(bot, "SYNC_SECRET", "test-sync"), \
+                patch.dict("os.environ", {"GITHUB_ACTIONS": "true", "GITHUB_RUN_ID": "987"}), \
+                patch.object(bot, "request_json", return_value={"ok": True}) as api:
+            bot.publish_cloudflare_status("2026-10-28T20:10:00+00:00", 2, 6, 0, [], 4102444800)
+            self.assertEqual(api.call_args.kwargs["payload"]["status"], "rate_limited")
+            self.assertEqual(api.call_args.kwargs["payload"]["retry_at"], 4102444800)
+            bot.publish_cloudflare_status("2026-10-28T20:10:00+00:00", 2, 6, 0, ["repo: APIError"], None)
+            self.assertEqual(api.call_args.kwargs["payload"]["status"], "error")
+            self.assertEqual(api.call_args.kwargs["payload"]["errors"], 1)
+
+    def test_report_endpoint_failure_does_not_block_monitor(self):
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", True), \
+                patch.object(bot, "CLOUDFLARE_SYNC_URL", "https://monitor.example.workers.dev/sync"), \
+                patch.object(bot, "SYNC_SECRET", "test-sync"), \
+                patch.dict("os.environ", {"GITHUB_ACTIONS": "true", "GITHUB_RUN_ID": "777"}), \
+                patch.object(bot, "request_json", side_effect=bot.APIError(404)):
+            bot.publish_cloudflare_status("2026-10-28T20:10:00+00:00", 6, 6, 0, [], None)
+
+    def test_report_is_skipped_if_cloudflare_sync_is_disabled(self):
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "request_json") as api:
+            bot.publish_cloudflare_status("2026-10-28T20:10:00+00:00", 6, 6, 0, [], None)
+        api.assert_not_called()
+
     def test_status_summary_does_not_touch_state_file(self):
         self.write_state()
         original = self.state_file.read_bytes()
