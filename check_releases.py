@@ -119,7 +119,8 @@ def request_json(url, payload=None, headers=None, timeout=25):
     except HTTPError as error:
         # Не выводим в лог URL Telegram с токеном.
         try:
-            description = json.loads(error.read()).get("description", "")
+            details = json.loads(error.read())
+            description = details.get("description") or details.get("message") or ""
         except (ValueError, AttributeError):
             description = ""
         raise APIError(error.code, description, error.headers) from None
