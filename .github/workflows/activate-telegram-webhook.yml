@@ -1,0 +1,78 @@
+name: Activate Telegram Cloudflare webhook
+
+on:
+  push:
+    paths:
+      - '.github/workflows/activate-telegram-webhook.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  activate:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Verify D1 and register Telegram webhook
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          SYNC_SECRET: ${{ secrets.SYNC_SECRET }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          host = "https://ps5-telegram-webhook.vov4k95777.workers.dev"
+          token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+          webhook_secret = os.environ.get("WEBHOOK_SECRET", "")
+          sync_secret = os.environ.get("SYNC_SECRET", "")
+          if not (token and webhook_secret and sync_secret):
+              raise SystemExit("Missing one or more GitHub Secrets")
+          if len(webhook_secret) < 16:
+              raise SystemExit("WEBHOOK_SECRET is unexpectedly short")
+          req = urllib.request.Request(host + "/sync", headers={
+              "Authorization": "Bearer " + sync_secret,
+              "Accept": "application/json",
+              "User-Agent": "ps5-github-telegram-notifier/1.0",
+          })
+          try:
+              with urllib.request.urlopen(req, timeout=20) as r:
+                  state = json.load(r)
+          except urllib.error.HTTPError as e:
+              raise SystemExit("Cloudflare sync preflight failed: HTTP " + str(e.code))
+          if not isinstance(state.get("repositories"), list) or len(state["repositories"]) != 6:
+              raise SystemExit("Cloudflare D1 expected six subscriptions before activation")
+          if state.get("translate_enabled") is not True:
+              raise SystemExit("Cloudflare translation setting changed unexpectedly")
+
+          def tg(method, payload):
+              url = "https://api.telegram.org/bot" + token + "/" + method
+              req = urllib.request.Request(url, method="POST",
+                  data=json.dumps(payload).encode("utf-8"),
+                  headers={"Content-Type": "application/json", "User-Agent": "ps5-monitor-cutover"})
+              try:
+                  with urllib.request.urlopen(req, timeout=25) as r:
+                      response = json.load(r)
+              except urllib.error.HTTPError as e:
+                  raise SystemExit("Telegram " + method + " HTTP " + str(e.code))
+              if not response.get("ok"):
+                  raise SystemExit("Telegram " + method + " returned ok=false")
+              return response["result"]
+
+          url = host + "/telegram"
+          tg("setWebhook", {
+              "url": url,
+              "secret_token": webhook_secret,
+              "allowed_updates": ["message", "callback_query"],
+              "drop_pending_updates": False,
+              "max_connections": 4,
+          })
+          info = tg("getWebhookInfo", {})
+          if info.get("url") != url:
+              raise SystemExit("Webhook endpoint does not match expected URL")
+          print("Webhook ACTIVATED. URL verified; pending_updates:",
+                info.get("pending_update_count", 0))
+          if info.get("last_error_message"):
+              print("Telegram delivery status reports an error (code omitted); inspect webhook after sending a command")
+          PY
