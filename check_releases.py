@@ -45,10 +45,63 @@ SYNC_SECRET = os.getenv("SYNC_SECRET", "").strip()
 
 class APIError(RuntimeError):
     """Keep a structured error for decisions, without logging URLs or tokens."""
-    def __init__(self, code, description=""):
+    def __init__(self, code, description="", headers=None):
         super().__init__(f"HTTP {code} при обращении к API")
         self.code = code
         self.description = description
+        self.headers = {str(key).lower(): str(value) for key, value in (headers or {}).items()}
+
+
+class GitHubRateLimited(RuntimeError):
+    """Stop the current scan and defer requests across scheduled runs."""
+
+    def __init__(self, retry_at):
+        super().__init__("GitHub API rate limit; retry deferred")
+        self.retry_at = int(retry_at)
+
+
+def is_github_rate_limited(error):
+    """Distinguish quota errors from ordinary 403 permission denials."""
+    if not isinstance(error, APIError) or error.code not in (403, 429):
+        return False
+    message = error.description.lower()
+    return (error.code == 429 or error.headers.get("x-ratelimit-remaining") == "0"
+            or "rate limit" in message or "rate-limit" in message
+            or bool(error.headers.get("retry-after")))
+
+
+def github_retry_at(error, now=None):
+    """Honor GitHub response headers, with >=60s fallback for secondary limits."""
+    now = time.time() if now is None else now
+    retry_after = error.headers.get("retry-after", "")
+    try:
+        if retry_after:
+            return int(now + max(1.0, float(retry_after))) + 1
+    except (ValueError, TypeError, OverflowError):
+        pass
+    if error.headers.get("x-ratelimit-remaining") == "0":
+        try:
+            return max(int(now) + 1, int(float(error.headers["x-ratelimit-reset"])) + 2)
+        except (KeyError, ValueError, TypeError, OverflowError):
+            pass
+    return int(now) + 60
+
+
+def github_request_json(url, headers=None):
+    """One short retry for transient GitHub failures; never retry rate limits early."""
+    for attempt in range(2):
+        try:
+            return request_json(url, headers=headers)
+        except APIError as error:
+            if is_github_rate_limited(error):
+                raise GitHubRateLimited(github_retry_at(error)) from None
+            if attempt or error.code not in (500, 502, 503, 504):
+                raise
+        except RuntimeError:
+            if attempt:
+                raise
+        time.sleep(1)
+    raise RuntimeError("GitHub retry was not successful")
 
 
 def request_json(url, payload=None, headers=None, timeout=25):
@@ -69,7 +122,7 @@ def request_json(url, payload=None, headers=None, timeout=25):
             description = json.loads(error.read()).get("description", "")
         except (ValueError, AttributeError):
             description = ""
-        raise APIError(error.code, description) from None
+        raise APIError(error.code, description, error.headers) from None
     except URLError as error:
         raise RuntimeError(f"Не удалось подключиться к API: {error.reason}") from None
     except TimeoutError:
@@ -81,7 +134,7 @@ def fetch_releases(repo):
     if GITHUB_TOKEN:
         headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
     url = f"https://api.github.com/repos/{repo}/releases?per_page={RELEASE_LIMIT}"
-    items = request_json(url, headers=headers)
+    items = github_request_json(url, headers=headers)
     if not isinstance(items, list):
         raise RuntimeError(f"Неожиданный ответ GitHub для {repo}")
     return [item for item in items if not item.get("draft")]
@@ -92,7 +145,7 @@ def resolve_github_repo(repo):
     headers = {"Accept": "application/vnd.github+json"}
     if GITHUB_TOKEN:
         headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
-    result = request_json(f"https://api.github.com/repos/{repo}", headers=headers)
+    result = github_request_json(f"https://api.github.com/repos/{repo}", headers=headers)
     if result.get("private") or not result.get("full_name"):
         raise RuntimeError("Репозиторий недоступен для публичного отслеживания")
     return result["full_name"]
@@ -779,6 +832,41 @@ def synchronize_cloudflare_state(state):
     return changed
 
 
+def write_github_run_summary(started_at, checked, total, sent, errors, deferred_until=None):
+    """Current per-run diagnostic, without writing to committed state."""
+    summary_path = os.getenv("GITHUB_STEP_SUMMARY", "")
+    if not summary_path:
+        return
+    if deferred_until:
+        status = "⏳ Отложено: GitHub API ограничил запросы"
+        after = datetime.fromtimestamp(deferred_until, timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    elif errors:
+        status = "⚠️ Проверка с ошибками"
+        after = "—"
+    else:
+        status = "✅ Проверка выполнена"
+        after = "—"
+    lines = [
+        "## PS5 GitHub Monitor — отчёт о запуске",
+        "",
+        f"**Результат:** {status}",
+        f"**Начало (UTC):** {started_at}",
+        f"**Окончание (UTC):** {datetime.now(timezone.utc).isoformat()}",
+        f"**Проверено репозиториев:** {checked} / {total}",
+        f"**Новых уведомлений:** {sent}",
+        f"**Ошибок:** {len(errors)}",
+        f"**Повторить запросы не ранее:** {after}",
+        "",
+        "Статистика относится к этому запуску GitHub Actions.",
+        "Время в release_state.json обновляется только вместе с историей релизов или настройками.",
+    ]
+    try:
+        with open(summary_path, "a", encoding="utf-8") as summary:
+            summary.write("\n".join(lines) + "\n")
+    except OSError as error:
+        print(f"Не удалось записать сводку GitHub Actions: {type(error).__name__}")
+
+
 def main():
     if not TOKEN or not CHAT_ID:
         raise RuntimeError("Добавь TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID в GitHub Actions Secrets")
@@ -796,6 +884,7 @@ def main():
     event = os.getenv("GITHUB_EVENT_NAME", "local")
     errors = []
     processed = checked = sent = 0
+    deferred_until = None
 
     def record_error(stage, error):
         # No API URL, token, chat ID, or message contents in persistent diagnostics.
@@ -829,39 +918,51 @@ def main():
             processed += 1
             save_state(state)
 
-        for repo in list(state["repositories"]):
-            if time.monotonic() >= deadline:
-                record_error("Остальные репозитории отложены до следующего запуска", RuntimeError())
-                break
-            try:
-                releases = fetch_releases(repo)
-            except (RuntimeError, OSError, ValueError) as error:
-                record_error(repo, error)
-                continue
-            checked += 1
-            previous = state["repositories"][repo]
-            if previous is None:
-                state["repositories"][repo] = [str(r["id"]) for r in releases]
-                save_state(state)
-                continue
-            seen = set(map(str, previous))
-            for release in reversed(releases):
-                release_id = str(release["id"])
-                if release_id in seen:
-                    continue
+        backoff_until = int(state.get("github_backoff_until") or 0)
+        if backoff_until > time.time():
+            deferred_until = backoff_until
+            print("GitHub API: проверка отложена до окончания ранее установленной паузы")
+        else:
+            if "github_backoff_until" in state:
+                del state["github_backoff_until"]
+            for repo in list(state["repositories"]):
                 if time.monotonic() >= deadline:
-                    record_error(f"{repo}: отправка отложена", RuntimeError())
+                    record_error("Остальные репозитории отложены до следующего запуска", RuntimeError())
                     break
                 try:
-                    send_telegram(format_release(repo, release, state["translate_enabled"]))
-                except (RuntimeError, OSError, ValueError) as error:
-                    record_error(f"{repo}: sendMessage", error)
+                    releases = fetch_releases(repo)
+                except GitHubRateLimited as error:
+                    deferred_until = error.retry_at
+                    state["github_backoff_until"] = error.retry_at
+                    print("GitHub API: ограничение частоты; остальные запросы отложены")
                     break
-                # Never mark an unsent release as delivered; retain all known IDs.
-                state["repositories"][repo].append(release_id)
-                seen.add(release_id)
-                sent += 1
-                save_state(state)
+                except (RuntimeError, OSError, ValueError) as error:
+                    record_error(repo, error)
+                    continue
+                checked += 1
+                previous = state["repositories"][repo]
+                if previous is None:
+                    state["repositories"][repo] = [str(r["id"]) for r in releases]
+                    save_state(state)
+                    continue
+                seen = set(map(str, previous))
+                for release in reversed(releases):
+                    release_id = str(release["id"])
+                    if release_id in seen:
+                        continue
+                    if time.monotonic() >= deadline:
+                        record_error(f"{repo}: отправка отложена", RuntimeError())
+                        break
+                    try:
+                        send_telegram(format_release(repo, release, state["translate_enabled"]))
+                    except (RuntimeError, OSError, ValueError) as error:
+                        record_error(f"{repo}: sendMessage", error)
+                        break
+                    # Never mark an unsent release as delivered; retain all known IDs.
+                    state["repositories"][repo].append(release_id)
+                    seen.add(release_id)
+                    sent += 1
+                    save_state(state)
 
         if first_run:
             send_telegram("✅ <b>PS5 GitHub Monitor запущен!</b>\n"
@@ -891,6 +992,8 @@ def main():
             print("Изменения подписок, настроек или релизов сохранены в release_state.json")
         else:
             print("Изменений состояния нет: release_state.json не переписываем")
+    write_github_run_summary(started_at, checked, len(state["repositories"]),
+                             sent, errors, deferred_until=deferred_until)
     print(f"Событие: {event}; проверено {checked} репозиториев; отправлено релизов: {sent}; "
           f"обработано updates: {processed}; ошибок: {len(errors)}")
     if errors:
