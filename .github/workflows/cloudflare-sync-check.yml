@@ -18,7 +18,7 @@ jobs:
           SYNC_SECRET: ${{ secrets.SYNC_SECRET }}
         run: |
           python3 - <<'PY'
-          import json, os, urllib.request
+          import json, os, urllib.request, urllib.error
           secret = os.environ.get("SYNC_SECRET", "")
           if not secret:
               raise SystemExit("SYNC_SECRET is not configured in GitHub Actions Secrets")
@@ -29,6 +29,8 @@ jobs:
           try:
               with urllib.request.urlopen(request, timeout=20) as response:
                   payload = json.load(response)
+          except urllib.error.HTTPError as error:
+              raise SystemExit(f"Cloudflare sync rejected request: HTTP {error.code} (no secret disclosed)")
           except Exception as error:
               raise SystemExit("Cloudflare sync request failed: " + type(error).__name__)
           repos = payload.get("repositories")
