@@ -10,7 +10,10 @@ import hashlib
 import json
 import os
 import re
-from datetime import datetime, timezone
+import time
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta, timezone
+from functools import lru_cache
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -37,7 +40,15 @@ CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 GITHUB_TOKEN = os.getenv("GH_TOKEN", "").strip()
 
 
-def request_json(url, payload=None, headers=None):
+class APIError(RuntimeError):
+    """Keep a structured error for decisions, without logging URLs or tokens."""
+    def __init__(self, code, description=""):
+        super().__init__(f"HTTP {code} при обращении к API")
+        self.code = code
+        self.description = description
+
+
+def request_json(url, payload=None, headers=None, timeout=25):
     common_headers = {"User-Agent": "ps5-github-telegram-notifier/1.0"}
     if headers:
         common_headers.update(headers)
@@ -47,13 +58,19 @@ def request_json(url, payload=None, headers=None):
         common_headers["Content-Type"] = "application/json; charset=utf-8"
     req = Request(url, data=data, headers=common_headers)
     try:
-        with urlopen(req, timeout=25) as response:
+        with urlopen(req, timeout=timeout) as response:
             return json.load(response)
     except HTTPError as error:
         # Не выводим в лог URL Telegram с токеном.
-        raise RuntimeError(f"HTTP {error.code} при обращении к API") from None
+        try:
+            description = json.loads(error.read()).get("description", "")
+        except (ValueError, AttributeError):
+            description = ""
+        raise APIError(error.code, description) from None
     except URLError as error:
         raise RuntimeError(f"Не удалось подключиться к API: {error.reason}") from None
+    except TimeoutError:
+        raise RuntimeError("Превышено время ожидания API") from None
 
 
 def fetch_releases(repo):
@@ -189,6 +206,18 @@ def removal_text(subscriptions, deleted=None):
             "Нажми на название, чтобы удалить. После удаления можно выбрать следующую.")
 
 
+def edit_telegram_message(payload):
+    try:
+        result = request_json(f"https://api.telegram.org/bot{TOKEN}/editMessageText", payload=payload)
+    except APIError as error:
+        if error.code == 400 and "message is not modified" in error.description.lower():
+            return  # A retry after an already successful edit is harmless.
+        raise
+    if not result.get("ok"):
+        if "message is not modified" not in str(result.get("description", "")).lower():
+            raise RuntimeError("Не удалось обновить меню Telegram")
+
+
 def tg_callback(query, state):
     """Delete exactly the selected subscription, edit the same Telegram message."""
     sender = query.get("from") or {}
@@ -198,11 +227,16 @@ def tg_callback(query, state):
     if not qid:
         return False
     def answer(text):
-        result = request_json(
-            f"https://api.telegram.org/bot{TOKEN}/answerCallbackQuery",
-            payload={"callback_query_id": qid, "text": text})
-        if not result.get("ok"):
-            raise RuntimeError("Telegram не подтвердил нажатие кнопки")
+        # A callback acknowledgement can expire before the next scheduled run.
+        # It is only a popup: its failure must not undo a successful menu edit.
+        try:
+            result = request_json(
+                f"https://api.telegram.org/bot{TOKEN}/answerCallbackQuery",
+                payload={"callback_query_id": qid, "text": text})
+            if not result.get("ok"):
+                raise RuntimeError("Telegram не подтвердил нажатие кнопки")
+        except RuntimeError:
+            print("Telegram: всплывающее подтверждение кнопки недоступно")
 
     if (str(sender.get("id")) != CHAT_ID or str(chat.get("id")) != CHAT_ID
             or chat.get("type") != "private" or not message.get("message_id")):
@@ -210,13 +244,11 @@ def tg_callback(query, state):
         return False
     data = query.get("data", "")
     if data == "rm:close":
+        edit_telegram_message({
+            "chat_id": CHAT_ID, "message_id": message["message_id"],
+            "text": "✅ Меню удаления закрыто. Остальные подписки сохранены.",
+            "reply_markup": {"inline_keyboard": []}})
         answer("Меню закрыто")
-        result = request_json(
-            f"https://api.telegram.org/bot{TOKEN}/editMessageText",
-            payload={"chat_id": CHAT_ID, "message_id": message["message_id"],
-                     "text": "✅ Меню удаления закрыто. Остальные подписки сохранены."})
-        if not result.get("ok"):
-            raise RuntimeError("Не удалось закрыть меню")
         return False
     if not re.fullmatch(r"rm:[0-9a-f]{16}", data):
         answer("Неизвестная кнопка")
@@ -229,15 +261,13 @@ def tg_callback(query, state):
         answer("Эта подписка уже удалена")
         return False
 
-    # Refresh the same message so the other buttons remain available.
+    # Only change state after the menu edit succeeds, so a failed request is retryable.
+    remaining = {name: history for name, history in subs.items() if name != repo}
+    edit_telegram_message({
+        "chat_id": CHAT_ID, "message_id": message["message_id"],
+        "text": removal_text(remaining, deleted=repo), "parse_mode": "HTML",
+        "reply_markup": removal_buttons(remaining) if remaining else {"inline_keyboard": []}})
     del subs[repo]
-    result = request_json(
-        f"https://api.telegram.org/bot{TOKEN}/editMessageText",
-        payload={"chat_id": CHAT_ID, "message_id": message["message_id"],
-                 "text": removal_text(subs, deleted=repo), "parse_mode": "HTML",
-                 "reply_markup": removal_buttons(subs) if subs else {"inline_keyboard": []}})
-    if not result.get("ok"):
-        raise RuntimeError("Не удалось обновить список подписок")
     answer("Подписка удалена")
     return True
 
@@ -266,19 +296,13 @@ def process_update(update, state):
         send_telegram(list_message(subs, state["translate_enabled"]))
         return False
     if cmd == "/status":
-        send_telegram(
-            f"📊 <b>Мониторинг включён</b>\n"
-            f"📦 Подписок: {len(subs)}\n"
-            f"🌐 Перевод: {'включён' if state['translate_enabled'] else 'выключен'}\n"
-            "⏱ Проверка: примерно каждые 5 минут через GitHub Actions\n"
-            "🔔 Уведомления только о новых Releases, включая Alpha и Beta"
-        )
+        send_telegram(status_message(state))
         return False
     if cmd in {"/translate_on", "/translate_off"}:
         desired = (cmd == "/translate_on")
         changed = state["translate_enabled"] != desired
-        state["translate_enabled"] = desired
         send_telegram("🇷🇺 Перевод описаний " + ("включён ✅" if desired else "выключен ✅"))
+        state["translate_enabled"] = desired
         return changed
     if cmd == "/remove":
         if not subs:
@@ -339,17 +363,50 @@ def send_telegram(message, reply_markup=None):
         raise RuntimeError("Telegram не принял сообщение")
 
 
+def moscow_time(value):
+    try:
+        return datetime.fromisoformat(value).astimezone(
+            timezone(timedelta(hours=3))).strftime("%d.%m.%Y %H:%M:%S МСК")
+    except (ValueError, TypeError):
+        return "ещё не записано"
+
+
+def status_message(state):
+    last = state.get("last_run") or {}
+    event = os.getenv("GITHUB_EVENT_NAME", "local")
+    gap = ""
+    if last.get("started_at"):
+        try:
+            minutes = int((datetime.now(timezone.utc) - datetime.fromisoformat(last["started_at"])).total_seconds() / 60)
+            gap = f"\n↔️ С предыдущего запуска: {max(0, minutes)} мин."
+        except (ValueError, TypeError):
+            pass
+    return (
+        "📊 <b>Бот обрабатывает команды</b>\n"
+        f"📦 Подписок: {len(state['repositories'])}\n"
+        f"🌐 Перевод: {'включён' if state['translate_enabled'] else 'выключен'}\n"
+        "⏱ Расписание задано каждые 5 минут; GitHub может задерживать запуски.\n"
+        f"▶️ Текущий запуск: {html.escape(event)}\n"
+        f"🕒 Предыдущая проверка: {moscow_time(last.get('completed_at'))}{gap}\n"
+        f"📅 Последний запуск schedule: {moscow_time(state.get('last_schedule_at'))}\n"
+        f"⚠️ Ошибок в предыдущем запуске: {len(last.get('errors', []))}\n"
+        "🔔 Новые Releases, включая Alpha, Beta и Pre-release"
+    )
+
+
 
 # MyMemory: бесплатный перевод без ключа (анонимно до 5000 символов/день).
 # Ограничение сервиса: до 500 байт на один фрагмент.
 TRANSLATION_MAX_BYTES = 400
 CHANGELOG_MAX_CHARS = 1150
+TRANSLATION_BUDGET_SECONDS = 30
 PROTECT_RE = re.compile(
-    r"https?://[^\s)]+|`[^`\n]+`|"
+    r"https?://[^\s)]+|`[^`\n]+`|@[A-Za-z0-9_-]+|"
+    r"\bv?\d+\.\d+(?:\.\d+)*(?:-[A-Za-z0-9.]+)?\b|"
     r"(?<![\w])(?:ShadowMountPlus|ps5-y2jb-autoloader|"
     r"kstuff-lite|MihawkOS|WebKit|GitHub|"
     r"FPKG|PKG|ELF|HV|Y2JB|SMB2|SMB3|SMB|PS5|PS4|"
-    r"Proton|Linux|DXVK|Vulkan|Alpha|Beta)(?![\w])",
+    r"Proton|Linux|DXVK|Vulkan|Alpha|Beta|Relapse|FW|elfldr)(?![\w])",
     re.IGNORECASE,
 )
 
@@ -377,10 +434,11 @@ def split_text_for_translation(text, max_bytes=TRANSLATION_MAX_BYTES):
     return parts
 
 
-def translate_fragment(fragment):
+@lru_cache(maxsize=256)
+def translate_fragment(fragment, timeout=10):
     """Переводит один небольшой фрагмент через MyMemory (en -> ru)."""
     params = urlencode({"q": fragment, "langpair": "en|ru"})
-    data = request_json("https://api.mymemory.translated.net/get?" + params)
+    data = request_json("https://api.mymemory.translated.net/get?" + params, timeout=timeout)
     if int(data.get("responseStatus", 0)) != 200:
         raise RuntimeError("Сервис перевода временно недоступен или исчерпан лимит")
     translated = html.unescape(str(data.get("responseData", {}).get("translatedText", "")))
@@ -389,7 +447,7 @@ def translate_fragment(fragment):
     return translated
 
 
-def translate_line(line):
+def translate_line(line, deadline=None):
     """Не переводит ссылки, код и технические имена."""
     stripped = line.strip()
     if not stripped or stripped.startswith(("|", "![", "<")):
@@ -411,10 +469,18 @@ def translate_line(line):
         return f"ZXQTERM{len(saved)-1}ZXQ"
 
     safe_text = PROTECT_RE.sub(protect, body)
+    if not re.search(r"[A-Za-zА-Яа-я]", re.sub(r"ZXQTERM\d+ZXQ", "", safe_text)):
+        return line
     pieces = split_text_for_translation(safe_text)
     if not pieces:
         return line
-    output = " ".join(translate_fragment(part) for part in pieces)
+    output_parts = []
+    for part in pieces:
+        remaining = 10 if deadline is None else deadline - time.monotonic()
+        if remaining <= 0:
+            raise RuntimeError("Исчерпано время на перевод")
+        output_parts.append(translate_fragment(part, timeout=min(10, remaining)))
+    output = " ".join(output_parts)
     for i, term in enumerate(saved):
         placeholder = f"ZXQTERM{i}ZXQ"
         # Иногда переводчик добавляет пробелы внутри маркера — убираем их.
@@ -436,17 +502,22 @@ def translate_changelog(text):
         return text, True, "Оригинал уже на русском"
 
     try:
-        translated_lines = []
+        lines_to_translate = []
         in_code = False
+        deadline = time.monotonic() + TRANSLATION_BUDGET_SECONDS
         for line in text.split("\n"):
             if line.lstrip().startswith("```"):
                 in_code = not in_code
-                translated_lines.append(line)
+                lines_to_translate.append((line, False))
             elif in_code:
-                translated_lines.append(line)
+                lines_to_translate.append((line, False))
             else:
-                translated_lines.append(translate_line(line))
-        result = "\n".join(translated_lines)
+                lines_to_translate.append((line, True))
+        # Independent short lines can be translated together within one time budget.
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            pending = [pool.submit(translate_line, line, deadline) if translate else line
+                       for line, translate in lines_to_translate]
+            result = "\n".join(item if isinstance(item, str) else item.result() for item in pending)
         return result, True, "Переведено автоматически (MyMemory)"
     except Exception as error:
         # Сбой переводчика не мешает отправке нового релиза.
@@ -478,12 +549,28 @@ def format_release(repo, release, translate_enabled=True):
 
 def load_state():
     if not STATE_FILE.exists():
+        if os.getenv("GITHUB_ACTIONS") == "true":
+            raise RuntimeError("release_state.json отсутствует — восстанови историю из Git, не создавай пустую")
         return {"repositories": {}, "last_heartbeat": ""}, True
     with STATE_FILE.open("r", encoding="utf-8") as f:
         saved = json.load(f)
     if not isinstance(saved, dict) or not isinstance(saved.get("repositories"), dict):
         raise RuntimeError("Некорректный release_state.json — не перезаписываем историю")
+    if any(ids is not None and (not isinstance(ids, list) or
+            any(not isinstance(item, (str, int)) for item in ids))
+            for ids in saved["repositories"].values()):
+        raise RuntimeError("Повреждена история релизов — не перезаписываем состояние")
     return saved, False
+
+
+def save_state(state):
+    """Atomic local checkpoint; Actions persists this file even after a failed scan."""
+    content = json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    if STATE_FILE.exists() and STATE_FILE.read_text(encoding="utf-8") == content:
+        return
+    temporary = STATE_FILE.with_suffix(".json.tmp")
+    temporary.write_text(content, encoding="utf-8")
+    temporary.replace(STATE_FILE)
 
 
 def main():
@@ -494,69 +581,106 @@ def main():
     if first_run:
         state["repositories"] = {repo: None for repo in DEFAULT_REPOS}
     state.setdefault("translate_enabled", True)  # preserves previously enabled translation
-    changed = first_run
+    started_at = datetime.now(timezone.utc).isoformat()
+    deadline = time.monotonic() + 240
+    event = os.getenv("GITHUB_EVENT_NAME", "local")
+    if event == "schedule":
+        state["last_schedule_at"] = started_at
+    errors = []
+    processed = checked = sent = 0
+
+    def record_error(stage, error):
+        # No API URL, token, chat ID, or message contents in persistent diagnostics.
+        errors.append(f"{stage}: {type(error).__name__}")
+        print(f"Ошибка {stage}: {type(error).__name__}")
+
     if not state.get("commands_menu_configured"):
         try:
             configure_commands_menu()
             state["commands_menu_configured"] = True
-            changed = True
         except (RuntimeError, ValueError) as error:
-            # Keep monitoring releases even if Telegram refuses a UI setting.
             print(f"Меню команд пока не настроено: {type(error).__name__}")
 
-    updates = tg_updates(state.get("telegram_offset"))
-    for update in updates:
-        update_id = update.get("update_id")
-        if not isinstance(update_id, int):
-            continue
-        if process_update(update, state):
-            changed = True
-        state["telegram_offset"] = update_id
-        changed = True
-
-    # Fetch all first: on GitHub API failure do not overwrite observed versions.
-    current = {repo: fetch_releases(repo) for repo in list(state["repositories"])}
-    notifications = []
-    for repo, releases in current.items():
-        previous = state["repositories"].get(repo)
-        current_ids = [str(release["id"]) for release in releases]
-        if previous is not None:
-            old_ids = set(map(str, previous))
-            notifications.extend((repo, release) for release in reversed(releases)
-                                 if str(release["id"]) not in old_ids)
-        if previous != current_ids:
-            changed = True
-        state["repositories"][repo] = current_ids
-
-    if first_run:
-        send_telegram("✅ <b>PS5 GitHub Monitor запущен!</b>\n"
-                      f"Отслеживаются {len(current)} репозиториев. "
-                      "Чтобы добавить новый, пришли его ссылку GitHub.\n"
-                      "⏱ Проверка примерно каждые 5 минут.")
-    for repo, release in notifications:
-        send_telegram(format_release(repo, release, state["translate_enabled"]))
-    if state.pop("manual_check_requested", False):
-        changed = True
-        send_telegram(f"✅ Проверка завершена: {len(current)} репозиториев, новых релизов: {len(notifications)}.")
-
-    # Keep repo active so GitHub Actions schedule doesn't get disabled for inactivity.
-    now = datetime.now(timezone.utc)
-    last_heartbeat = state.get("last_heartbeat", "")
     try:
-        heartbeat_age = (now - datetime.fromisoformat(last_heartbeat)).total_seconds()
-    except (ValueError, TypeError):
-        heartbeat_age = float("inf")
-    if heartbeat_age >= 30 * 86400:
-        state["last_heartbeat"] = now.isoformat()
-        changed = True
+        try:
+            updates = tg_updates(state.get("telegram_offset"))
+        except (RuntimeError, OSError, ValueError) as error:
+            record_error("getUpdates", error)
+            updates = []
+        for update in updates:
+            update_id = update.get("update_id")
+            if not isinstance(update_id, int):
+                continue
+            try:
+                process_update(update, state)
+            except (RuntimeError, OSError, ValueError) as error:
+                record_error("Telegram update", error)
+                # Keep this update and later ones unacknowledged for the next run.
+                break
+            state["telegram_offset"] = update_id
+            processed += 1
+            save_state(state)
 
-    if changed:
-        STATE_FILE.write_text(
-            json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
-        )
-    print(f"Проверено {len(current)} репозиториев; новых релизов: {len(notifications)}; "
-          f"обработано команд: {len(updates)}")
+        for repo in list(state["repositories"]):
+            if time.monotonic() >= deadline:
+                record_error("Остальные репозитории отложены до следующего запуска", RuntimeError())
+                break
+            try:
+                releases = fetch_releases(repo)
+            except (RuntimeError, OSError, ValueError) as error:
+                record_error(repo, error)
+                continue
+            checked += 1
+            previous = state["repositories"][repo]
+            if previous is None:
+                state["repositories"][repo] = [str(r["id"]) for r in releases]
+                save_state(state)
+                continue
+            seen = set(map(str, previous))
+            for release in reversed(releases):
+                release_id = str(release["id"])
+                if release_id in seen:
+                    continue
+                if time.monotonic() >= deadline:
+                    record_error(f"{repo}: отправка отложена", RuntimeError())
+                    break
+                try:
+                    send_telegram(format_release(repo, release, state["translate_enabled"]))
+                except (RuntimeError, OSError, ValueError) as error:
+                    record_error(f"{repo}: sendMessage", error)
+                    break
+                # Never mark an unsent release as delivered; retain all known IDs.
+                state["repositories"][repo].append(release_id)
+                seen.add(release_id)
+                sent += 1
+                save_state(state)
+
+        if first_run:
+            send_telegram("✅ <b>PS5 GitHub Monitor запущен!</b>\n"
+                          f"Отслеживаются {len(state['repositories'])} репозиториев. "
+                          "Чтобы добавить новый, пришли его ссылку GitHub.")
+        if state.get("manual_check_requested"):
+            try:
+                prefix = "⚠️ Проверка завершена с ошибками" if errors else "✅ Проверка завершена"
+                send_telegram(f"{prefix}: проверено {checked} из {len(state['repositories'])} "
+                              f"репозиториев, отправлено релизов: {sent}; ошибок: {len(errors)}.")
+                state.pop("manual_check_requested", None)
+            except (RuntimeError, OSError, ValueError) as error:
+                record_error("Отчёт /check", error)
+    finally:
+        now = datetime.now(timezone.utc).isoformat()
+        state["last_heartbeat"] = now
+        state["last_run"] = {
+            "started_at": started_at, "completed_at": now, "event": event,
+            "run_id": os.getenv("GITHUB_RUN_ID", ""),
+            "checked_repositories": checked, "notifications_sent": sent,
+            "updates_processed": processed, "errors": errors,
+        }
+        save_state(state)
+    print(f"Событие: {event}; проверено {checked} репозиториев; отправлено релизов: {sent}; "
+          f"обработано updates: {processed}; ошибок: {len(errors)}")
+    if errors:
+        raise RuntimeError("Проверка завершена с ошибками; успешные операции сохранены для следующего запуска")
 
 
 if __name__ == "__main__":
