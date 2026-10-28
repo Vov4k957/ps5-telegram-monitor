@@ -871,6 +871,48 @@ def write_github_run_summary(started_at, checked, total, sent, errors, deferred_
         print(f"Не удалось записать сводку GitHub Actions: {type(error).__name__}")
 
 
+def publish_cloudflare_status(started_at, checked, total, sent, errors, deferred_until):
+    """Best-effort heartbeat to D1, separate from committed release history.
+
+    Cloudflare /report may not be deployed yet. That must never turn a
+    successful release scan into a failed GitHub Actions job.
+    """
+    if not (CLOUDFLARE_SYNC_ENABLED and
+            CLOUDFLARE_SYNC_URL.endswith("/sync") and SYNC_SECRET and
+            os.getenv("GITHUB_ACTIONS") == "true"):
+        return
+    run_id = os.getenv("GITHUB_RUN_ID", "").strip()
+    if not run_id.isdigit():
+        return
+    status = ("rate_limited" if deferred_until else
+              "error" if errors else "success")
+    report = {
+        "run_id": run_id,
+        "completed_at": datetime.now(timezone.utc).isoformat(),
+        "status": status,
+        "checked": checked,
+        "total": total,
+        "notifications": sent,
+        "errors": len(errors),
+        "retry_at": deferred_until,
+    }
+    url = CLOUDFLARE_SYNC_URL[:-len("/sync")] + "/report"
+    try:
+        response = request_json(
+            url, payload=report,
+            headers={"Authorization": f"Bearer {SYNC_SECRET}",
+                     "Accept": "application/json"},
+            timeout=7,
+        )
+        if not isinstance(response, dict) or response.get("ok") is not True:
+            raise RuntimeError("Cloudflare report endpoint rejected the heartbeat")
+        print("Cloudflare: текущая проверка записана в D1 для Telegram /status")
+    except (RuntimeError, OSError, ValueError) as error:
+        # This endpoint is activated after the updated Worker is deployed.
+        print("Cloudflare: отчёт /status не записан (без влияния на мониторинг): "
+              + type(error).__name__)
+
+
 def main():
     if not TOKEN or not CHAT_ID:
         raise RuntimeError("Добавь TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID в GitHub Actions Secrets")
@@ -998,6 +1040,8 @@ def main():
             print("Изменений состояния нет: release_state.json не переписываем")
     write_github_run_summary(started_at, checked, len(state["repositories"]),
                              sent, errors, deferred_until=deferred_until)
+    publish_cloudflare_status(started_at, checked, len(state["repositories"]),
+                              sent, errors, deferred_until)
     print(f"Событие: {event}; проверено {checked} репозиториев; отправлено релизов: {sent}; "
           f"обработано updates: {processed}; ошибок: {len(errors)}")
     if errors:
