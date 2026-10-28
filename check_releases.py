@@ -172,29 +172,24 @@ def extract_github_links(text):
 
 
 def configure_commands_menu():
-    """Force the command menu for the authorized private chat."""
-    commands = [
-        {"command": "start", "description": "Главное меню"},
-        {"command": "list", "description": "Мои подписки GitHub"},
-        {"command": "remove", "description": "Удалить подписки кнопками"},
-        {"command": "translate_on", "description": "Включить русский перевод"},
-        {"command": "translate_off", "description": "Выключить перевод"},
-        {"command": "status", "description": "Состояние мониторинга"},
-        {"command": "check", "description": "Проверить обновления"},
-        {"command": "help", "description": "Список команд и помощь"},
-    ]
+    """One-time removal of an obsolete chat-specific command list.
+
+    The user manages the DEFAULT command list in BotFather. A previously
+    registered Telegram chat-scoped list has priority over BotFather defaults.
+    Delete only that one override; preserve the menu button and bot commands.
+    """
     api = f"https://api.telegram.org/bot{TOKEN}/"
-    result = request_json(api + "setMyCommands", payload={
-        "commands": commands, "scope": {"type": "chat", "chat_id": int(CHAT_ID)}
+    result = request_json(api + "deleteMyCommands", payload={
+        "scope": {"type": "chat", "chat_id": int(CHAT_ID)}
     })
     if not result.get("ok"):
-        raise RuntimeError("Telegram отказал в настройке списка команд")
+        raise RuntimeError("Telegram отказал в удалении старого списка команд для чата")
     result = request_json(api + "setChatMenuButton", payload={
         "chat_id": int(CHAT_ID), "menu_button": {"type": "commands"}
     })
     if not result.get("ok"):
         raise RuntimeError("Telegram отказал в настройке кнопки меню")
-    print("Telegram: меню команд установлено для личного чата")
+    print("Telegram: персональное меню удалено; используются команды BotFather")
 
 
 def tg_updates(offset):
@@ -937,12 +932,12 @@ def main():
         errors.append(f"{stage}: {type(error).__name__}")
         print(f"Ошибка {stage}: {type(error).__name__}")
 
-    if not state.get("commands_menu_configured"):
+    if not state.get("commands_menu_scope_cleared"):
         try:
             configure_commands_menu()
-            state["commands_menu_configured"] = True
+            state["commands_menu_scope_cleared"] = True
         except (RuntimeError, ValueError) as error:
-            print(f"Меню команд пока не настроено: {type(error).__name__}")
+            print(f"Не удалось снять старое меню команд Telegram: {type(error).__name__}")
 
     try:
         try:
