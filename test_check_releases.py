@@ -176,6 +176,60 @@ class MonitorTests(unittest.TestCase):
         self.assertEqual(send.call_count, 1)
         self.assertIn("v3", send.call_args.args[0])
 
+    def test_no_new_release_keeps_state_file_byte_for_byte(self):
+        self.write_state()
+        original = self.state_file.read_bytes()
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
+                patch.object(bot, "fetch_releases", side_effect=lambda repo: [
+                    release(int(self.state["repositories"][repo][0]))
+                ]), \
+                patch.object(bot, "send_telegram") as send:
+            bot.main()
+        self.assertEqual(self.state_file.read_bytes(), original)
+        send.assert_not_called()
+
+    def test_schedule_without_real_changes_does_not_update_state_file(self):
+        self.write_state()
+        original = self.state_file.read_bytes()
+        with patch.dict("os.environ", {"GITHUB_EVENT_NAME": "schedule"}), \
+                patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
+                patch.object(bot, "fetch_releases", side_effect=lambda repo: [
+                    release(int(self.state["repositories"][repo][0]))
+                ]):
+            bot.main()
+        self.assertEqual(self.state_file.read_bytes(), original)
+
+    def test_real_new_release_still_updates_persisted_history(self):
+        self.write_state()
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
+                patch.object(bot, "fetch_releases", side_effect=lambda repo: [
+                    release(9), release(int(self.state["repositories"][repo][0]))
+                ]), \
+                patch.object(bot, "send_telegram") as send:
+            bot.main()
+        self.assertEqual(send.call_count, 3)
+        saved = self.saved()
+        self.assertIn("9", saved["repositories"]["one/repo"])
+        self.assertIn("9", saved["repositories"]["two/repo"])
+        self.assertIn("9", saved["repositories"]["three/repo"])
+        self.assertIn("completed_at", saved["last_run"])
+
+    def test_cloudflare_changes_save_even_with_no_new_release(self):
+        self.write_state()
+        original = self.state_file.read_bytes()
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", True), \
+                patch.object(bot, "synchronize_cloudflare_state", side_effect=lambda state:
+                    state.update({"translate_enabled": True})), \
+                patch.object(bot, "fetch_releases", side_effect=lambda repo: [
+                    release(int(self.state["repositories"][repo][0]))
+                ]):
+            bot.main()
+        self.assertNotEqual(self.state_file.read_bytes(), original)
+        self.assertTrue(self.saved()["translate_enabled"])
+
     def test_history_outside_api_window_is_not_deleted(self):
         self.state["repositories"] = {"one/repo": ["1", "old"]}
         self.write_state()
