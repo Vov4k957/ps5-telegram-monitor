@@ -555,6 +555,106 @@ class MonitorTests(unittest.TestCase):
         self.assertIn("my-project &lt;b&gt;bad&lt;/b&gt;", message)
         self.assertNotIn("my-project <b>bad</b>", message)
 
+    def test_mihawkos_alpha5_github_readme_becomes_clean_highlights(self):
+        # Faithful excerpt from the 19,491-character Alpha 5 release. Its
+        # decorative SVG images and Markdown tables must never dominate alerts.
+        start = '''
+<p align="center"><picture><source media="(prefers-color-scheme: dark)"
+srcset="https://raw.githubusercontent.com/mihawk-99/PS5_MihawkOS/v5.0.0-alpha-5/docs/media/readme/banner-night.svg"><img
+src="https://raw.githubusercontent.com/mihawk-99/PS5_MihawkOS/v5.0.0-alpha-5/docs/media/readme/banner-day.svg"
+alt="MihawkOS banner"></picture></p>
+
+## MihawkOS is a passion project, not a piracy project.
+
+- **Piracy is not condoned.**
+
+The fifth alpha of MihawkOS runs Windows games on PS5.
+
+## <picture><img src="https://raw.githubusercontent.com/mihawk-99/PS5_MihawkOS/v5.0.0-alpha-5/docs/media/readme/orb-this-pc-day.svg"></picture> At a glance
+
+| What's new |
+| --- |
+| <img src="https://raw.githubusercontent.com/mihawk-99/PS5_MihawkOS/v5.0.0-alpha-5/themes/windows11/icons/original/games.svg"> **Big games with Steam open.** Steam's browser now pauses while you play. |
+| <img src="https://raw.githubusercontent.com/mihawk-99/PS5_MihawkOS/v5.0.0-alpha-5/themes/windows11/icons/original/drive.svg"> **Memory limits made for your console.** |
+| <img src="https://raw.githubusercontent.com/mihawk-99/PS5_MihawkOS/v5.0.0-alpha-5/themes/windows11/icons/original/document.svg"> **A warning, then a clean close, instead of a crash.** |
+| <img src="https://raw.githubusercontent.com/mihawk-99/PS5_MihawkOS/v5.0.0-alpha-5/themes/windows11/icons/original/app-generic.svg"> **Fixes for the problems you reported.** |
+
+## Big games with Steam open
+
+More information follows.
+'''
+        source = start + "\n## Known limits\n" + ("A very long section.\n" * 400)
+        cleaned = bot.normalize_release_markdown(source)
+        self.assertNotIn("raw.githubusercontent.com", cleaned)
+        self.assertNotIn("<picture>", cleaned)
+        self.assertNotIn("<img", cleaned)
+        self.assertNotIn("| --- |", cleaned)
+        self.assertIn("- **Big games with Steam open.**", cleaned)
+        self.assertIn("- **Memory limits made for your console.**", cleaned)
+        selected = bot.summarize_release_markdown(cleaned)
+        self.assertIn("At a glance", selected)
+        self.assertIn("Fixes for the problems you reported.", selected)
+        self.assertNotIn("Piracy is not condoned", selected)
+        self.assertNotIn("A very long section", selected)
+        self.assertIn("Подробности в релизе на GitHub", selected)
+        rendered = bot.render_release_telegram(selected)
+        self.assertIn("<b>At a glance</b>", rendered)
+        self.assertIn("• <b>Big games with Steam open.</b>", rendered)
+        self.assertNotIn("<picture>", rendered)
+        self.assertNotIn("| --- |", rendered)
+        self.assertNotIn("raw.githubusercontent.com", rendered)
+
+    def test_mihawkos_alpha5_telegram_notification_keeps_substantive_changes(self):
+        src = (
+            "## At a glance\n"
+            "| What's new |\n| --- |\n"
+            "| <img src='https://example.com/badge.svg'> **Steam browser pauses.** New games load. |\n"
+            "| **PS5 13.60 is supported.** No crash in the demo. |\n"
+            "\n## Details\n" + "Long explanation.\n" * 400
+        )
+        with patch.object(bot, "translate_changelog", side_effect=lambda text: (
+                text, True, "Переведено автоматически (MyMemory)")):
+            result = bot.format_release("mihawk-99/PS5_MihawkOS", {
+                "name": "PS5_MihawkOS-v5.0.0-alpha-5", "tag_name": "v5.0.0-alpha-5",
+                "body": src, "prerelease": True,
+                "html_url": "https://github.com/mihawk-99/PS5_MihawkOS/releases/tag/v5.0.0-alpha-5",
+            }, True)
+        self.assertIn("🧪 Pre-release", result)
+        self.assertIn("<b>Новая версия: PS5_MihawkOS v5.0.0-alpha-5</b>", result)
+        self.assertIn("Steam browser pauses.", result)
+        self.assertIn("PS5 13.60 is supported.", result)
+        self.assertNotIn("example.com/badge.svg", result)
+        self.assertNotIn("| --- |", result)
+        self.assertNotIn("Изменения на русском:", result)
+        self.assertNotIn("Переведено автоматически (MyMemory)", result)
+        self.assertLess(len(result), 4096)
+
+    def test_markdown_tables_convert_to_readable_bullets(self):
+        source = ("| Console | Warning | Old limit |\n"
+                  "| :--- | ---: | --- |\n"
+                  "| PS5 13.60 | 1,750 MiB | 1,800 MiB |\n"
+                  "| PS5 Pro | 850 MiB | 990 MiB |")
+        cleaned = bot.normalize_release_markdown(source)
+        self.assertIn("PS5 13.60", cleaned)
+        self.assertIn("1,750 MiB", cleaned)
+        self.assertIn("Old limit: 990 MiB", cleaned)
+        self.assertNotIn("| :--- |", cleaned)
+        self.assertIn("• <b>PS5 13.60</b>", bot.render_release_telegram(cleaned))
+
+    def test_github_media_keeps_video_and_attachment_but_omits_svg_icons(self):
+        body = (
+            '<img src="https://raw.githubusercontent.com/example/icon.svg" alt="icon">\n'
+            '<video><source src="https://example.com/demo.mp4" type="video/mp4"></video>\n'
+            '![UI example](https://example.com/screenshot.png)\n'
+            'https://github.com/user-attachments/assets/97953c34-5b00-435f-bb4c-30240cb0d294'
+        )
+        cleaned = bot.normalize_release_markdown(body)
+        rendered = bot.render_release_telegram(cleaned)
+        self.assertNotIn("example/icon.svg", rendered)
+        self.assertIn("https://example.com/demo.mp4", rendered)
+        self.assertIn('href="https://example.com/screenshot.png"', rendered)
+        self.assertIn("97953c34-5b00-435f-bb4c-30240cb0d294", rendered)
+
     def test_real_y2jb_release_russian_terminology_and_telegram_markup(self):
         body = "## Changelog:\r\n\r\n- Relapse: Switched to @notmaj0r's port\r\n- Autoloader: Fix socket readiness polling for elfldr, eliminating the 1-second startup delay\r\n- Performance: Removed network log server check\r\n- Updater optimizations\r\n\r\n**Full Changelog (since last stable release)**: https://github.com/itsPLK/ps5-y2jb-autoloader/compare/v1.0.4-35c4413...v1.1.0-ba879c8\r\n\r\n\r\nhttps://github.com/user-attachments/assets/97953c34-5b00-435f-bb4c-30240cb0d294\r\n\r\n\r\n---\r\n<details>\r\n<summary>Bundled Binaries</summary>\r\n\r\nThis build integrates the following external dependency versions:\r\n- [itsPLK/ps5-elfldr](https://github.com/itsPLK/ps5-elfldr): [v0.27-b57d0e9](https://github.com/itsPLK/ps5-elfldr/releases/tag/v0.27-b57d0e9)\r\n- [itsPLK/ps5-kexp](https://github.com/itsPLK/ps5-kexp): [v0.8-24cf6e5](https://github.com/itsPLK/ps5-kexp/releases/tag/v0.8-24cf6e5)\r\n- [itsPLK/ps5-unified-autoloader](https://github.com/itsPLK/ps5-unified-autoloader): [v0.1.6-e7093cd](https://github.com/itsPLK/ps5-unified-autoloader/releases/tag/v0.1.6-e7093cd)\r\n\r\n</details>\r\n"
         r = {
