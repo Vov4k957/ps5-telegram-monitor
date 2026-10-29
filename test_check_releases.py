@@ -523,9 +523,9 @@ class MonitorTests(unittest.TestCase):
 
     def test_translated_release_does_not_show_redundant_labels(self):
         upstream = {"name": "v1.2.0", "tag_name": "v1.2.0",
-                    "body": "## Changelog:\\n- Fixed socket handling"}
+                    "body": "## Changelog:\n- Fixed socket handling"}
         with patch.object(bot, "translate_changelog", return_value=(
-                "## Список изменений:\\n- Исправлена работа сокета",
+                "## Список изменений:\n- Исправлена работа сокета",
                 True, "Переведено автоматически (MyMemory)")):
             rendered = bot.format_release("owner/repo", upstream, True)
         self.assertIn("Исправлена работа сокета", rendered)
@@ -537,9 +537,9 @@ class MonitorTests(unittest.TestCase):
 
     def test_untranslated_release_keeps_clear_fallback_reason(self):
         upstream = {"name": "v1.2.0", "tag_name": "v1.2.0",
-                    "body": "## Changelog:\\n- Fixed socket handling"}
+                    "body": "## Changelog:\n- Fixed socket handling"}
         with patch.object(bot, "translate_changelog", return_value=(
-                "## Changelog:\\n- Fixed socket handling",
+                "## Changelog:\n- Fixed socket handling",
                 False, "Автоперевод недоступен")):
             rendered = bot.format_release("owner/repo", upstream, True)
         self.assertIn("Что изменилось (оригинал)", rendered)
