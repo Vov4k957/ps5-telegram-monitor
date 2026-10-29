@@ -499,6 +499,10 @@ class MonitorTests(unittest.TestCase):
             ("itsPLK/ps5-payload-manager",
              {"name": "v0.6.3", "tag_name": "v0.6.3"},
              "ps5-payload-manager v0.6.3"),
+            ("TheMojoMan/oneplus-erhai-ubuntu",
+             {"name": "erhai-ubuntu installation files (2026-10-18)",
+              "tag_name": "installer-20261018"},
+             "erhai-ubuntu installation files (2026-10-18)"),
             ("owner/test",
              {"name": "test", "tag_name": "v3.0"},
              "test v3.0"),
@@ -506,6 +510,22 @@ class MonitorTests(unittest.TestCase):
         for repo, release_data, expected in cases:
             with self.subTest(repo=repo, name=release_data["name"]):
                 self.assertEqual(bot.release_display_title(repo, release_data), expected)
+
+    def test_oneplus_ubuntu_release_notification_has_no_repeated_project_prefix(self):
+        release_data = {
+            "name": "erhai-ubuntu installation files (2026-10-18)",
+            "tag_name": "installer-20261018",
+            "body": "Ubuntu installer updated",
+            "html_url": "https://github.com/TheMojoMan/oneplus-erhai-ubuntu/releases/tag/installer-20261018",
+        }
+        with patch.object(bot, "translate_changelog", return_value=(
+                "Обновлён установщик Ubuntu", True, "Переведено автоматически (MyMemory)")):
+            message = bot.format_release("TheMojoMan/oneplus-erhai-ubuntu", release_data, True)
+        self.assertEqual(message.splitlines()[0],
+                         "🚀 <b>Новая версия: erhai-ubuntu installation files (2026-10-18)</b>")
+        self.assertNotIn("oneplus-erhai-ubuntu erhai-ubuntu", message)
+        self.assertNotIn("Изменения на русском", message)
+        self.assertNotIn("Переведено автоматически (MyMemory)", message)
 
     def test_release_notification_has_one_heading_without_duplicate_version(self):
         release_data = {"name": "ShadowMountPlus 1.7beta10",
