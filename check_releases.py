@@ -7,6 +7,7 @@ release_state.json, который GitHub Actions коммитит в репоз
 
 import html
 import hashlib
+from difflib import SequenceMatcher
 import json
 import os
 import re
@@ -35,6 +36,8 @@ GITHUB_LINK_RE = re.compile(
     re.IGNORECASE,
 )
 RELEASE_LIMIT = 30
+EDIT_WINDOW_SECONDS = 48 * 60 * 60
+EDIT_SETTLE_SECONDS = 3 * 60
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 GITHUB_TOKEN = os.getenv("GH_TOKEN", "").strip()
@@ -413,6 +416,9 @@ def send_telegram(message, reply_markup=None):
     result = request_json(url, payload=payload)
     if not result.get("ok"):
         raise RuntimeError("Telegram не принял сообщение")
+    sent = result.get("result") or {}
+    message_id = sent.get("message_id") if isinstance(sent, dict) else None
+    return message_id if type(message_id) is int and message_id > 0 else None
 
 
 def moscow_time(value):
@@ -905,6 +911,174 @@ def format_release(repo, release, translate_enabled=True):
         f"{description}\n\n"
         f'<a href="{url}">🔗 Открыть релиз на GitHub</a>'
     )
+
+
+
+def canonical_release_text(body):
+    """Compare GitHub content, not decorative markup, image URLs or translations."""
+    cleaned = normalize_release_markdown(str(body or ""))
+    lines, bullets = [], []
+    in_code = False
+    for line in cleaned.split("\n"):
+        if line.strip().startswith(chr(96) * 3):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        bullet = bool(re.match(r"^\s*(?:[-*+]\s+|\d+[.)]\s+)", line))
+        normalized = re.sub(r"\[([^\]]+)\]\(https?://[^)]+\)", r"\1", line)
+        normalized = re.sub(r"https?://\S+", "", normalized)
+        normalized = re.sub(r"(?i)\bfull changelog\b.*$", "", normalized)
+        normalized = re.sub(r"[#*_~|>\[\]()]|^\s*[-+]\s+", " ", normalized)
+        normalized = re.sub(r"[^\w\s.,:;!?-]", " ", normalized, flags=re.UNICODE)
+        normalized = " ".join(normalized.casefold().split()).strip(".,:;!?- ")
+        if not normalized or normalized in ("список изменений", "changelog"):
+            continue
+        lines.append(normalized)
+        if bullet and len(normalized) >= 25:
+            bullets.append(normalized[:600])
+    return " ".join(lines)[:8500], bullets[:40]
+
+
+def release_edit_fingerprint(body):
+    content, bullets = canonical_release_text(body)
+    return {"digest": hashlib.sha256(content.encode("utf-8")).hexdigest(),
+            "body": content, "bullets": bullets}
+
+
+def release_published_at(release):
+    value = release.get("published_at") or release.get("created_at")
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00")).timestamp()
+    except (ValueError, TypeError, AttributeError):
+        return None
+
+
+def watchable_release(release, now=None):
+    now = time.time() if now is None else now
+    published = release_published_at(release)
+    return published is not None and 0 <= now - published <= EDIT_WINDOW_SECONDS
+
+
+def new_substantial_bullets(previous, current):
+    old = previous.get("bullets") or []
+    return [line for line in current.get("bullets", [])
+            if not any(SequenceMatcher(None, line, past).ratio() >= 0.80 for past in old)]
+
+
+def substantially_expanded(previous, current):
+    if len(new_substantial_bullets(previous, current)) >= 2:
+        return True
+    before, after = previous.get("body", ""), current.get("body", "")
+    return (len(after) >= len(before) + 300 and
+            len(after) >= max(350, int(len(before) * 1.5)))
+
+
+def release_watch_entry(release, message_id=None):
+    snap = release_edit_fingerprint(release.get("body"))
+    return {**snap, "message_id": message_id if type(message_id) is int else None,
+            "eligible": type(message_id) is int, "notified": False}
+
+
+def edit_release_notification(repo, release, entry, translated):
+    mid = entry.get("message_id")
+    if type(mid) is not int or mid <= 0:
+        return False
+    edit_telegram_message({
+        "chat_id": CHAT_ID, "message_id": mid,
+        "text": format_release(repo, release, translated),
+        "parse_mode": "HTML",
+        "link_preview_options": {"is_disabled": True},
+    })
+    return True
+
+
+def release_edit_followup(repo, release, count):
+    detail = (f"Добавлено {count} новых пунктов изменений." if count >= 2
+              else "Разработчик существенно дополнил описание релиза.")
+    url = html.escape(str(release.get("html_url") or
+                          f"https://github.com/{repo}/releases"), quote=True)
+    name = html.escape(release_display_title(repo, release))
+    return (f"📝 <b>Дополнено описание: {name}</b>\n\n"
+            f"{detail}\n"
+            f'<a href="{url}">🔗 Открыть обновлённый релиз</a>')
+
+
+def process_release_edits(repo, releases, state, persist, now=None):
+    """One debounced edit; at most one extra notification per release."""
+    now = time.time() if now is None else now
+    recent = {str(r["id"]): r for r in releases
+              if watchable_release(r, now) and
+              str(r["id"]) in set(map(str, state["repositories"].get(repo) or []))}
+    if not recent and repo not in state.get("release_watch", {}):
+        return False
+    watches = state.setdefault("release_watch", {})
+    entries = watches.setdefault(repo, {})
+    changed = False
+
+    for rid in list(entries):
+        if rid not in recent:
+            entries.pop(rid)
+            changed = True
+    for rid, release in recent.items():
+        current = release_edit_fingerprint(release.get("body"))
+        if rid not in entries:
+            # Existing delivered releases have no Telegram message ID.
+            # Baseline silently; never alert on old releases during migration.
+            entries[rid] = release_watch_entry(release)
+            changed = True
+            continue
+        entry = entries[rid]
+        if entry.get("notify_pending") and not entry.get("notified"):
+            count = int(entry.get("notify_count") or 0)
+            send_telegram(release_edit_followup(repo, release, count))
+            entry["notified"] = True
+            entry.pop("notify_pending", None)
+            entry.pop("notify_count", None)
+            persist()
+
+        pending = entry.get("pending")
+        if current["digest"] == entry.get("digest"):
+            if pending:
+                entry.pop("pending")
+                changed = True
+            continue
+        if not pending or pending.get("digest") != current["digest"]:
+            entry["pending"] = {"digest": current["digest"], "first_seen": now}
+            changed = True
+            continue
+        if now - float(pending["first_seen"]) < EDIT_SETTLE_SECONDS:
+            continue
+        previous = {"body": entry.get("body", ""), "bullets": entry.get("bullets", [])}
+        count = len(new_substantial_bullets(previous, current))
+        important = substantially_expanded(previous, current)
+        if entry.get("eligible") and entry.get("message_id"):
+            try:
+                edit_release_notification(repo, release, entry, state["translate_enabled"])
+            except APIError as error:
+                if error.code != 400:
+                    raise
+                # A permanently missing/deleted message should not be retried.
+                entry["message_id"] = None
+        entry.update(current)
+        entry.pop("pending", None)
+        changed = True
+        if important and entry.get("eligible") and not entry.get("notified"):
+            entry["notify_pending"] = True
+            entry["notify_count"] = count
+        persist()
+        if entry.get("notify_pending"):
+            send_telegram(release_edit_followup(repo, release, count))
+            entry["notified"] = True
+            entry.pop("notify_pending", None)
+            entry.pop("notify_count", None)
+            persist()
+    if not entries and repo in watches:
+        watches.pop(repo)
+        changed = True
+    return changed
 
 
 def load_state():
