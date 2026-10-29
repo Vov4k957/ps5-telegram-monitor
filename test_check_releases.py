@@ -366,6 +366,70 @@ class MonitorTests(unittest.TestCase):
         self.assertIn("Проверено репозиториев:", markdown)
         self.assertIn("3 / 3", markdown)
 
+    def test_shadowmount_beta11_link_only_then_nine_changes(self):
+        repo = "drakmor/ShadowMountPlus"
+        baseline = {
+            "id": 428410044, "tag_name": "1.7beta11",
+            "name": "ShadowMountPlus 1.7beta11",
+            "published_at": "2026-10-29T21:22:45Z",
+            "body": "**Full Changelog**: https://github.com/drakmor/ShadowMountPlus/compare/1.7beta10...1.7beta11",
+            "html_url": "https://github.com/drakmor/ShadowMountPlus/releases/tag/1.7beta11",
+        }
+        updated = {**baseline, "body": (
+            "- Unified PKG installation queue with cover cards for PC, local storage and SMB.\n"
+            "- Select up to 32 PC files; additional selections append without duplicates.\n"
+            "- Automatic game → update → DLC ordering for PC batches.\n"
+            "- Failed or cancelled queues retain unfinished packages.\n"
+            "- Improved PS4 DLC and PS5 media PKG detection.\n"
+            "- Fixed premature DLC installation failures (0x80E90004).\n"
+            "- Fixed json-c memory leaks during repeated scans.\n"
+            "- Added estimated remaining installation time.\n"
+            "- Improved read-only destination handling.\n\n"
+            "**Full Changelog**: https://github.com/drakmor/ShadowMountPlus/compare/1.7beta10...1.7beta11")}
+        self.state["repositories"][repo] = ["428410044"]
+        self.state["release_watch"] = {
+            repo: {"428410044": bot.release_watch_entry(baseline, 99)}}
+        now = bot.release_published_at(baseline)+180
+        with patch.object(bot, "edit_release_notification") as edit, \
+                patch.object(bot, "send_telegram") as notify:
+            bot.process_release_edits(repo, [updated], self.state, lambda: None, now=now)
+            edit.assert_not_called()
+            bot.process_release_edits(repo, [updated], self.state, lambda: None, now=now+181)
+            edit.assert_called_once()
+            notify.assert_called_once()
+            self.assertIn("9 новых пунктов", notify.call_args.args[0])
+
+    def test_reverted_description_cancels_pending_without_alert(self):
+        repo = "one/repo"
+        initial = {**release(1), "published_at": "2033-05-18T03:33:20Z",
+                   "body": "Original body."}
+        modified = {**initial, "body": "- First major extra note with new payloads.\n"
+                                            "- Second major extra note with faster loads."}
+        t = bot.release_published_at(initial) + 20
+        self.state["release_watch"] = {repo: {"1": bot.release_watch_entry(initial, 12)}}
+        with patch.object(bot, "edit_release_notification") as edit, \
+                patch.object(bot, "send_telegram") as alert:
+            bot.process_release_edits(repo, [modified], self.state, lambda: None, now=t)
+            bot.process_release_edits(repo, [initial], self.state, lambda: None, now=t+110)
+            bot.process_release_edits(repo, [initial], self.state, lambda: None, now=t+500)
+            edit.assert_not_called()
+            alert.assert_not_called()
+        self.assertNotIn("pending", self.state["release_watch"][repo]["1"])
+
+    def test_image_only_edits_are_ignored(self):
+        repo = "one/repo"
+        first = {**release(1), "published_at": "2033-05-18T03:33:20Z",
+                 "body": ("- Changes to installer with better load times.\n"
+                          "![Screenshot one](https://example.com/old.png)")}
+        second = {**first, "body": ("- Changes to installer with better load times.\n"
+                                    "![Different image](https://example.com/new.png)")}
+        t = bot.release_published_at(first)+20
+        self.state["release_watch"] = {repo: {"1": bot.release_watch_entry(first, 12)}}
+        before = copy.deepcopy(self.state)
+        self.assertFalse(bot.process_release_edits(
+            repo, [second], self.state, lambda: None, now=t))
+        self.assertEqual(self.state, before)
+
     def test_send_telegram_returns_message_id_for_later_edits(self):
         with patch.object(bot, "request_json", return_value={
                 "ok": True, "result": {"message_id": 871}}) as api:
