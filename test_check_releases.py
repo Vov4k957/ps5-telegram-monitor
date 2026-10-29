@@ -521,6 +521,32 @@ class MonitorTests(unittest.TestCase):
         self.assertIn(asset, short)
         self.assertIn("Описание сокращено", short)
 
+    def test_translated_release_does_not_show_redundant_labels(self):
+        upstream = {"name": "v1.2.0", "tag_name": "v1.2.0",
+                    "body": "## Changelog:\\n- Fixed socket handling"}
+        with patch.object(bot, "translate_changelog", return_value=(
+                "## Список изменений:\\n- Исправлена работа сокета",
+                True, "Переведено автоматически (MyMemory)")):
+            rendered = bot.format_release("owner/repo", upstream, True)
+        self.assertIn("Исправлена работа сокета", rendered)
+        self.assertIn("<b>Список изменений:</b>", rendered)
+        self.assertIn("Открыть релиз на GitHub", rendered)
+        self.assertNotIn("Изменения на русском:", rendered)
+        self.assertNotIn("Переведено автоматически (MyMemory)", rendered)
+        self.assertNotIn("Что изменилось (оригинал)", rendered)
+
+    def test_untranslated_release_keeps_clear_fallback_reason(self):
+        upstream = {"name": "v1.2.0", "tag_name": "v1.2.0",
+                    "body": "## Changelog:\\n- Fixed socket handling"}
+        with patch.object(bot, "translate_changelog", return_value=(
+                "## Changelog:\\n- Fixed socket handling",
+                False, "Автоперевод недоступен")):
+            rendered = bot.format_release("owner/repo", upstream, True)
+        self.assertIn("Что изменилось (оригинал)", rendered)
+        self.assertIn("Автоперевод недоступен", rendered)
+        self.assertNotIn("Изменения на русском:", rendered)
+        self.assertNotIn("Переведено автоматически (MyMemory)", rendered)
+
     def test_fallback_original_still_gets_markdown_formatting(self):
         content = "## Changelog\n- **Fixed** `elfldr`"
         with patch.object(bot, "translate_fragment", side_effect=RuntimeError("unavailable")):
