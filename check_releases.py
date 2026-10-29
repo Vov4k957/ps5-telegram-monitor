@@ -738,8 +738,8 @@ def release_display_title(repo, release):
 
     # GitHub release names vary: "ShadowMountPlus 1.7beta10", "v1.1.0",
     # "Kstuff Lite 1.11 Beta" (slug kstuff-lite), and "PS5_MihawkOS-v4".
-    canonical = re.sub(r"[\\s_-]+", "", project).casefold()
-    normalized_name = re.sub(r"[\\s_-]+", "", name).casefold()
+    canonical = re.sub(r"[\s_-]+", "", project).casefold()
+    normalized_name = re.sub(r"[\s_-]+", "", name).casefold()
     if normalized_name == canonical:
         return f"{name} {tag}".strip()
     if name.casefold().startswith(project.casefold()):
