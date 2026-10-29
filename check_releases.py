@@ -749,6 +749,17 @@ def release_display_title(repo, release):
         return name
     if normalized_name.startswith(canonical):
         return name
+    # Some repositories include a vendor prefix in their slug, while the
+    # authored release name begins with the distinctive project suffix:
+    # oneplus-erhai-ubuntu -> "erhai-ubuntu installation files (...)"
+    parts = re.split(r"[-_]", project)
+    if len(parts) >= 3:
+        for delimiter in ("-", "_"):
+            suffix = delimiter.join(parts[1:])
+            if name.casefold().startswith(suffix.casefold()):
+                tail = name[len(suffix):]
+                if not tail or tail[0] in "-_: (":
+                    return name
     return f"{project} {name}"
 
 
