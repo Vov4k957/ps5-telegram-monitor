@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-10-29T08:38:20.151823+00:00",
+  "last_heartbeat": "2026-10-29T17:35:25.805569+00:00",
   "last_run": {
-    "checked_repositories": 7,
-    "completed_at": "2026-10-29T08:38:20.151823+00:00",
+    "checked_repositories": 8,
+    "completed_at": "2026-10-29T17:35:25.805569+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "40843559825",
-    "started_at": "2026-10-29T08:38:16.374803+00:00",
+    "run_id": "40922748520",
+    "started_at": "2026-10-29T17:35:22.277224+00:00",
     "updates_processed": 0
   },
   "repositories": {
@@ -115,6 +115,12 @@
       "418829460",
       "418479107",
       "417877460"
+    ],
+    "owendswang/ps5-aria2": [
+      "403774307",
+      "402632325",
+      "402015363",
+      "395974568"
     ],
     "quer3q/ps5-dump-forge": [
       "425438524",
