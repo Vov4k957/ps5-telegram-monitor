@@ -486,10 +486,60 @@ FULL_CHANGELOG_RE = re.compile(
 )
 
 
+def flatten_release_tables(text):
+    """Convert GitHub pipe tables to readable lists before translation."""
+    lines = text.split("\n")
+    output = []
+    index = 0
+
+    def table_line(line):
+        return line.strip().startswith("|") and line.strip().endswith("|")
+
+    def cells(line):
+        return [cell.strip() for cell in line.strip().strip("|").split("|")]
+
+    def separator(line):
+        return all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells(line))
+
+    while index < len(lines):
+        if not table_line(lines[index]):
+            output.append(lines[index])
+            index += 1
+            continue
+        group = []
+        while index < len(lines) and table_line(lines[index]):
+            group.append(cells(lines[index]))
+            index += 1
+        has_header = len(group) >= 2 and all(
+            re.fullmatch(r":?-{3,}:?", item) for item in group[1]
+        )
+        headers = group[0] if has_header else []
+        rows = group[2:] if has_header else group
+        if len(headers) == 1 and headers[0]:
+            output.append("**" + headers[0] + "**")
+        for row in rows:
+            if not row or all(not item for item in row):
+                continue
+            if len(row) == 1:
+                output.append("- " + row[0])
+            else:
+                first, tail = row[0], row[1:]
+                details = []
+                for col, value in enumerate(tail, 1):
+                    if not value:
+                        continue
+                    if len(headers) > col and headers[col]:
+                        details.append(headers[col] + ": " + value)
+                    else:
+                        details.append(value)
+                output.append("- " + ("**" + first + "** — " if first else "") +
+                              "; ".join(details))
+    return "\n".join(output)
+
+
 def normalize_release_markdown(text):
-    """Convert GitHub's HTML disclosure into readable Markdown, retaining assets."""
+    """Remove decorative GitHub HTML and turn complex Markdown into plain lists."""
     text = text.replace("\r\n", "\n").replace("\r", "\n")
-    # <summary> renders in GitHub but not in Telegram.
     text = re.sub(
         r"<summary\b[^>]*>(.*?)</summary\s*>",
         lambda m: "\n## " + re.sub(r"<[^>]+>", "", m.group(1)).strip() + "\n",
@@ -497,9 +547,34 @@ def normalize_release_markdown(text):
     )
     text = re.sub(r"</?details\b[^>]*>", "", text, flags=re.IGNORECASE)
     text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
-    # Preserve links from HTML media tags instead of dropping them.
+
+    # SVG icons, banners, README badges and <picture> source variants are
+    # decoration. Their long raw.githubusercontent.com URLs are not release notes.
+    text = re.sub(r"<source\b[^>]*>", "", text, flags=re.IGNORECASE)
+
+    def image_to_link(match):
+        tag = match.group(0)
+        src = re.search(r'\bsrc\s*=\s*["\x27](https?://[^"\x27]+)["\x27]',
+                        tag, flags=re.IGNORECASE)
+        if not src:
+            return ""
+        url = html.unescape(src.group(1))
+        if re.search(r"\.svg(?:[?#]|$)", url, flags=re.IGNORECASE):
+            return ""
+        if any(word in url.lower() for word in ("/badges/", "banner-", "/icons/")):
+            return ""
+        alt = re.search(r'\balt\s*=\s*["\x27]([^"\x27]*)["\x27]',
+                        tag, flags=re.IGNORECASE)
+        caption = (html.unescape(alt.group(1)).strip() if alt else "")
+        caption = caption[:75] if caption else "Иллюстрация"
+        return "[📷 " + caption + "](" + url + ")"
+
+    text = re.sub(r"<img\b[^>]*>", image_to_link, text, flags=re.IGNORECASE)
+    text = re.sub(r"</?picture\b[^>]*>", "", text, flags=re.IGNORECASE)
+
+    # Keep real video attachments, unlike decorative SVG artwork.
     text = re.sub(
-        r"<(?:video|source|img)\b[^>]*\bsrc=['\"](https?://[^'\"]+)['\"][^>]*>",
+        r"<(?:video|source)\b[^>]*\bsrc=['\"](https?://[^'\"]+)['\"][^>]*>",
         lambda m: "\n" + html.unescape(m.group(1)) + "\n",
         text, flags=re.IGNORECASE,
     )
@@ -509,26 +584,65 @@ def normalize_release_markdown(text):
                   html.unescape(m.group(1)) + ")",
         text, flags=re.IGNORECASE | re.DOTALL,
     )
-    # Never forward arbitrary unsupported HTML tags to Telegram.
+    text = re.sub(r"\[([^\]\n]+)\]\(#[^)\n]+\)", r"\1", text)
+    # Keep ordinary Markdown screenshots as clickable links, not huge image syntax.
+    text = re.sub(
+        r"!\[([^\]\n]*)\]\((https?://[^)\s]+)\)",
+        lambda m: "" if re.search(r"\.svg(?:[?#]|$)", m.group(2), re.IGNORECASE)
+        else "[📷 " + (m.group(1) or "Изображение")[:75] + "](" + m.group(2) + ")",
+        text,
+    )
+    text = re.sub(r"https?://[^\s)\]>]+\.svg(?:\?[^\s)\]>]*)?", "", text,
+                  flags=re.IGNORECASE)
+    # Strip unsupported HTML, retaining its textual content.
     text = re.sub(r"</?[A-Za-z][^>\n]*>", "", text)
+    text = html.unescape(text)
+    text = re.sub(r"(?m)^[ \t]*#{1,6}[ \t]*$", "", text)
+    text = re.sub(r"(?m)[ \t]+$", "", text)
+    text = flatten_release_tables(text)
     return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
-def trim_release_markdown(text, limit=CHANGELOG_MAX_CHARS):
-    """Truncate at line boundaries and retain GitHub attachment links."""
+HIGHLIGHTS_HEADING_RE = re.compile(
+    r"(?im)^#{1,3}\s+(?:at a glance|highlights|what['’]?s new|"
+    r"key changes|key features|основные изменения|что нового|главное)"
+    r"\s*:?\s*$"
+)
+
+
+def summarize_release_markdown(text, limit=CHANGELOG_MAX_CHARS):
+    """Prefer authored highlights over the beginning of an oversized README."""
     if len(text) <= limit:
         return text
-    cut = text[:limit]
-    boundary = cut.rfind("\n")
-    if boundary >= limit // 2:
-        cut = cut[:boundary]
-    # Include assets even when a long changelog would otherwise hide them.
+    highlight = HIGHLIGHTS_HEADING_RE.search(text)
+    if highlight:
+        section_end = re.search(r"(?m)^#{1,3}\s+", text[highlight.end():])
+        ending = highlight.end() + section_end.start() if section_end else len(text)
+        section = text[highlight.start():ending].strip()
+        if len(section) >= 100:
+            return section + "\n\n… Подробности в релизе на GitHub."
+    return text
+
+
+def trim_release_markdown(text, limit=CHANGELOG_MAX_CHARS):
+    """Keep Telegram descriptions bounded, retaining at most two real attachments."""
+    if len(text) <= limit:
+        return text
     assets = re.findall(
         r"https://github\.com/user-attachments/assets/[A-Za-z0-9-]+",
         text,
     )
-    remaining = [url for url in dict.fromkeys(assets) if url not in cut]
-    return cut.rstrip() + "\n\n… Описание сокращено.\n" + "\n".join(remaining)
+    assets = list(dict.fromkeys(assets))[:2]
+    asset_lines = [url for url in assets if url not in text[:max(0, limit - 200)]]
+    suffix = "\n\n… Описание сокращено."
+    if asset_lines:
+        suffix += "\n" + "\n".join(asset_lines)
+    available = max(0, limit - len(suffix))
+    cut = text[:available]
+    boundary = cut.rfind("\n")
+    if boundary >= max(0, available // 2):
+        cut = cut[:boundary]
+    return cut.rstrip() + suffix
 
 
 def telegram_inline_markdown(line):
@@ -768,6 +882,7 @@ def format_release(repo, release, translate_enabled=True):
     url = html.escape(str(release.get("html_url") or f"https://github.com/{repo}/releases"), quote=True)
     kind = "🧪 Pre-release / Alpha / Beta" if release.get("prerelease") else "✅ Обычный релиз"
     body = normalize_release_markdown(str(release.get("body") or "Описание изменений не указано."))
+    body = summarize_release_markdown(body)
     body = trim_release_markdown(body)
     if translate_enabled:
         translated_body, translated, note = translate_changelog(body)
