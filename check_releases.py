@@ -926,7 +926,9 @@ def canonical_release_text(body):
         if in_code:
             continue
         bullet = bool(re.match(r"^\s*(?:[-*+]\s+|\d+[.)]\s+)", line))
-        normalized = re.sub(r"\[([^\]]+)\]\(https?://[^)]+\)", r"\1", line)
+        # Image captions can be edited without changing the actual release notes.
+        normalized = re.sub(r"\[📷[^\]]*\]\(https?://[^)]+\)", "", line)
+        normalized = re.sub(r"\[([^\]]+)\]\(https?://[^)]+\)", r"\1", normalized)
         normalized = re.sub(r"https?://\S+", "", normalized)
         normalized = re.sub(r"(?i)\bfull changelog\b.*$", "", normalized)
         normalized = re.sub(r"[#*_~|>\[\]()]|^\s*[-+]\s+", " ", normalized)
