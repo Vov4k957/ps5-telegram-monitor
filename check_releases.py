@@ -728,9 +728,32 @@ def translate_changelog(text):
         return text, False, "Автоперевод недоступен; показываю оригинал"
 
 
+def release_display_title(repo, release):
+    """One readable heading without owner/repo and repeated release versions."""
+    project = repo.rsplit("/", 1)[-1]
+    name = str(release.get("name") or "").strip()
+    tag = str(release.get("tag_name") or "").strip()
+    if not name:
+        return f"{project} {tag}".strip()
+
+    # GitHub release names vary: "ShadowMountPlus 1.7beta10", "v1.1.0",
+    # "Kstuff Lite 1.11 Beta" (slug kstuff-lite), and "PS5_MihawkOS-v4".
+    canonical = re.sub(r"[\\s_-]+", "", project).casefold()
+    normalized_name = re.sub(r"[\\s_-]+", "", name).casefold()
+    if normalized_name == canonical:
+        return f"{name} {tag}".strip()
+    if name.casefold().startswith(project.casefold()):
+        remainder = name[len(project):]
+        if remainder and remainder[0] in "-_: ":
+            return f"{project} {remainder.lstrip('-_: ')}".strip()
+        return name
+    if normalized_name.startswith(canonical):
+        return name
+    return f"{project} {name}"
+
+
 def format_release(repo, release, translate_enabled=True):
-    title = html.escape(str(release.get("name") or release.get("tag_name") or "Без названия"))
-    tag = html.escape(str(release.get("tag_name") or "—"))
+    heading = html.escape(release_display_title(repo, release))
     url = html.escape(str(release.get("html_url") or f"https://github.com/{repo}/releases"), quote=True)
     kind = "🧪 Pre-release / Alpha / Beta" if release.get("prerelease") else "✅ Обычный релиз"
     body = normalize_release_markdown(str(release.get("body") or "Описание изменений не указано."))
@@ -745,8 +768,8 @@ def format_release(repo, release, translate_enabled=True):
         description = (f"<b>Что изменилось (оригинал):</b>\n{description}\n"
                        f"<i>{html.escape(note)}</i>")
     return (
-        f"🚀 <b>Новая версия: {html.escape(repo)}</b>\n"
-        f"<b>{title}</b> ({tag})\n{kind}\n\n"
+        f"🚀 <b>Новая версия: {heading}</b>\n"
+        f"{kind}\n\n"
         f"{description}\n\n"
         f'<a href="{url}">🔗 Открыть релиз на GitHub</a>'
     )
