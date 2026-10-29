@@ -366,6 +366,174 @@ class MonitorTests(unittest.TestCase):
         self.assertIn("Проверено репозиториев:", markdown)
         self.assertIn("3 / 3", markdown)
 
+    def test_send_telegram_returns_message_id_for_later_edits(self):
+        with patch.object(bot, "request_json", return_value={
+                "ok": True, "result": {"message_id": 871}}) as api:
+            self.assertEqual(bot.send_telegram("<b>Release</b>"), 871)
+        self.assertIn("sendMessage", api.call_args.args[0])
+        self.assertEqual(api.call_args.kwargs["payload"]["parse_mode"], "HTML")
+
+    def test_release_edit_debounce_one_followup_and_silent_later_edits(self):
+        repo = "one/repo"
+        start = 2000000000
+        original = {**release(1), "published_at": "2033-05-18T03:33:20Z",
+                    "body": "**Full Changelog**: https://github.com/owner/repo/compare/a...b"}
+        # Pin time relative to an explicit published_at for deterministic tests.
+        start = bot.release_published_at(original) + 10
+        edited = {**original, "body": (
+            "- Unified PKG installation queue for Windows and PS5 games.\n"
+            "- Automatic game update DLC installation ordering now works.\n"
+            "- Failed queues retain unfinished downloads for later retries.\n"
+            "**Full Changelog**: https://github.com/owner/repo/compare/a...b")}
+        second_edit = {**edited, "body": edited["body"] +
+                       "\n- Installer now displays remaining download time."}
+        self.state["release_watch"] = {repo: {"1": bot.release_watch_entry(original, 871)}}
+        self.assertTrue(self.state["release_watch"][repo]["1"]["eligible"])
+        edits, notices = [], []
+        with patch.object(bot, "edit_release_notification",
+                          side_effect=lambda *args: edits.append(args)) as edit, \
+                patch.object(bot, "send_telegram",
+                             side_effect=lambda message: notices.append(message)):
+            persist = lambda: None
+            bot.process_release_edits(repo, [edited], self.state, persist, now=start)
+            bot.process_release_edits(repo, [edited], self.state, persist, now=start+120)
+            self.assertEqual(len(edits), 0)
+            self.assertEqual(len(notices), 0)
+            # At 3 minutes of stable content, one edit and one alert.
+            bot.process_release_edits(repo, [edited], self.state, persist, now=start+180)
+            self.assertEqual(len(edits), 1)
+            self.assertEqual(len(notices), 1)
+            self.assertIn("Дополнено описание:", notices[0])
+            self.assertIn("3 новых пунктов", notices[0])
+            bot.process_release_edits(repo, [edited], self.state, persist, now=start+220)
+            self.assertEqual(len(edits), 1)
+            self.assertEqual(len(notices), 1)
+            bot.process_release_edits(repo, [second_edit], self.state, persist, now=start+240)
+            bot.process_release_edits(repo, [second_edit], self.state, persist, now=start+421)
+            self.assertEqual(len(edits), 2)
+            # Later changes edit the original quietly, no extra notification.
+            self.assertEqual(len(notices), 1)
+        self.assertTrue(self.state["release_watch"][repo]["1"]["notified"])
+
+    def test_edits_wait_for_three_minutes_since_last_change(self):
+        repo = "one/repo"
+        original = {**release(1), "published_at": "2033-05-18T03:33:20Z",
+                    "body": "Initial release note."}
+        now = bot.release_published_at(original)+60
+        a = {**original, "body": "- First meaningful change to installer.\n"
+                                 "- Second meaningful change to packaging."}
+        b = {**a, "body": a["body"] + "\n- Third meaningful change to metadata."}
+        self.state["release_watch"] = {repo: {"1": bot.release_watch_entry(original, 99)}}
+        with patch.object(bot, "edit_release_notification") as edit, \
+                patch.object(bot, "send_telegram") as alert:
+            bot.process_release_edits(repo, [a], self.state, lambda: None, now=now)
+            bot.process_release_edits(repo, [b], self.state, lambda: None, now=now+100)
+            bot.process_release_edits(repo, [b], self.state, lambda: None, now=now+180)
+            edit.assert_not_called()
+            alert.assert_not_called()
+            bot.process_release_edits(repo, [b], self.state, lambda: None, now=now+281)
+            edit.assert_called_once()
+            alert.assert_called_once()
+
+    def test_cosmetic_edits_do_not_alert_or_write_state(self):
+        repo = "one/repo"
+        original = {**release(1), "published_at": "2033-05-18T03:33:20Z",
+                    "body": "- **Fixed** USB handling (supported on PS5)."}
+        changed = {**original, "body":
+                   "- Fixed USB handling (supported on PS5).\n"
+                   "https://github.com/owner/repo/compare/a...b"}
+        now = bot.release_published_at(original)+60
+        self.state["release_watch"] = {repo: {"1": bot.release_watch_entry(original, 99)}}
+        before = copy.deepcopy(self.state)
+        with patch.object(bot, "edit_release_notification") as edit, \
+                patch.object(bot, "send_telegram") as alert:
+            self.assertFalse(bot.process_release_edits(
+                repo, [changed], self.state, lambda: None, now=now))
+        self.assertEqual(self.state, before)
+        edit.assert_not_called()
+        alert.assert_not_called()
+
+    def test_one_short_added_bullet_silently_updates_message(self):
+        repo = "one/repo"
+        original = {**release(1), "published_at": "2033-05-18T03:33:20Z",
+                    "body": "- Initial note about installing PKG with SMB."}
+        edited = {**original, "body": original["body"] +
+                  "\n- Added an extra small check for USB devices."}
+        now = bot.release_published_at(original)+10
+        self.state["release_watch"] = {repo: {"1": bot.release_watch_entry(original, 91)}}
+        with patch.object(bot, "edit_release_notification") as edit, \
+                patch.object(bot, "send_telegram") as alert:
+            bot.process_release_edits(repo, [edited], self.state, lambda: None, now=now)
+            bot.process_release_edits(repo, [edited], self.state, lambda: None, now=now+181)
+            edit.assert_called_once()
+            alert.assert_not_called()
+
+    def test_existing_releases_get_silent_baseline_without_backlog_spam(self):
+        repo = "one/repo"
+        original = {**release(1), "published_at": "2033-05-18T03:33:20Z",
+                    "body": "Old original note."}
+        now = bot.release_published_at(original)+10
+        with patch.object(bot, "send_telegram") as alert, \
+                patch.object(bot, "edit_release_notification") as edit:
+            bot.process_release_edits(repo, [original], self.state, lambda: None, now=now)
+            watched = self.state["release_watch"][repo]["1"]
+            self.assertFalse(watched["eligible"])
+            updated = {**original, "body": (
+                "- More features in version one for various users.\n"
+                "- More changes for compatibility with PS5 firmware.\n"
+                "- Improved many details for installer startup.")}
+            bot.process_release_edits(repo, [updated], self.state, lambda: None, now=now+30)
+            bot.process_release_edits(repo, [updated], self.state, lambda: None, now=now+230)
+            edit.assert_not_called()
+            alert.assert_not_called()
+
+    def test_expired_release_watch_is_pruned_after_48_hours(self):
+        repo = "one/repo"
+        original = {**release(1), "published_at": "2033-05-18T03:33:20Z",
+                    "body": "Some description"}
+        published = bot.release_published_at(original)
+        self.state["release_watch"] = {repo: {"1": bot.release_watch_entry(original, 91)}}
+        self.assertTrue(bot.process_release_edits(
+            repo, [original], self.state, lambda: None,
+            now=published + bot.EDIT_WINDOW_SECONDS + 1))
+        self.assertNotIn(repo, self.state["release_watch"])
+
+    def test_failed_followup_retries_without_duplicate_edit(self):
+        repo = "one/repo"
+        original = {**release(1), "published_at": "2033-05-18T03:33:20Z",
+                    "body": "Old note"}
+        edited = {**original, "body": (
+            "- Major correction in PS5 compatibility and firmware.\n"
+            "- Added support for faster transfer from SMB shares.\n"
+            "- Increased system stability and reduced crashes.")}
+        now = bot.release_published_at(original)+10
+        self.state["release_watch"] = {repo: {"1": bot.release_watch_entry(original, 91)}}
+        writes = []
+        with patch.object(bot, "edit_release_notification") as edit, \
+                patch.object(bot, "send_telegram",
+                             side_effect=[RuntimeError("Telegram offline"), 492]) as alert:
+            bot.process_release_edits(repo, [edited], self.state, lambda: writes.append(1), now=now)
+            with self.assertRaises(RuntimeError):
+                bot.process_release_edits(repo, [edited], self.state, lambda: writes.append(1), now=now+181)
+            self.assertEqual(edit.call_count, 1)
+            self.assertTrue(self.state["release_watch"][repo]["1"]["notify_pending"])
+            bot.process_release_edits(repo, [edited], self.state, lambda: writes.append(1), now=now+200)
+            self.assertEqual(edit.call_count, 1)
+            self.assertEqual(alert.call_count, 2)
+        self.assertTrue(self.state["release_watch"][repo]["1"]["notified"])
+
+    def test_edit_message_uses_existing_id_and_html(self):
+        repo = "one/repo"
+        origin = {**release(1), "published_at": "2033-05-18T03:33:20Z"}
+        entry = bot.release_watch_entry(origin, 786)
+        with patch.object(bot, "format_release", return_value="<b>Updated</b>"), \
+                patch.object(bot, "edit_telegram_message") as edit:
+            self.assertTrue(bot.edit_release_notification(repo, origin, entry, True))
+        payload = edit.call_args.args[0]
+        self.assertEqual(payload["message_id"], 786)
+        self.assertEqual(payload["parse_mode"], "HTML")
+        self.assertTrue(payload["link_preview_options"]["is_disabled"])
+
     def test_no_new_release_keeps_state_file_byte_for_byte(self):
         self.write_state()
         original = self.state_file.read_bytes()
