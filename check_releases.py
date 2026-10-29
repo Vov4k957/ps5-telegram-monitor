@@ -739,12 +739,15 @@ def format_release(repo, release, translate_enabled=True):
         translated_body, translated, note = translate_changelog(body)
     else:
         translated_body, translated, note = body, False, "Автоперевод выключен"
-    body_label = "Изменения на русском" if translated else "Что изменилось (оригинал)"
+    description = render_release_telegram(translated_body)
+    if not translated:
+        # If translation was disabled or failed, say so without hiding the cause.
+        description = (f"<b>Что изменилось (оригинал):</b>\n{description}\n"
+                       f"<i>{html.escape(note)}</i>")
     return (
         f"🚀 <b>Новая версия: {html.escape(repo)}</b>\n"
         f"<b>{title}</b> ({tag})\n{kind}\n\n"
-        f"<b>{body_label}:</b>\n{render_release_telegram(translated_body)}\n"
-        f"<i>{html.escape(note)}</i>\n\n"
+        f"{description}\n\n"
         f'<a href="{url}">🔗 Открыть релиз на GitHub</a>'
     )
 
