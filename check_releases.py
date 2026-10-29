@@ -549,7 +549,13 @@ def normalize_release_markdown(text):
     text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
 
     # SVG icons, banners, README badges and <picture> source variants are
-    # decoration. Their long raw.githubusercontent.com URLs are not release notes.
+    # decoration. Preserve real video source URLs before removing <source>.
+    text = re.sub(
+        r"<source\b[^>]*\bsrc=['\"](https?://[^'\"]+)['\"][^>]*>",
+        lambda m: "\n" + html.unescape(m.group(1)) + "\n"
+        if not re.search(r"\.svg(?:[?#]|$)", m.group(1), re.IGNORECASE) else "",
+        text, flags=re.IGNORECASE,
+    )
     text = re.sub(r"<source\b[^>]*>", "", text, flags=re.IGNORECASE)
 
     def image_to_link(match):
