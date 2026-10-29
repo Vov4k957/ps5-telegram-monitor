@@ -1,16 +1,223 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-10-29T21:23:18.511598+00:00",
+  "last_heartbeat": "2026-10-29T21:37:18.998673+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-10-29T21:23:18.511598+00:00",
+    "completed_at": "2026-10-29T21:37:18.998673+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 1,
-    "run_id": "40957338774",
-    "started_at": "2026-10-29T21:23:14.645388+00:00",
+    "notifications_sent": 0,
+    "run_id": "40959307928",
+    "started_at": "2026-10-29T21:37:15.090383+00:00",
     "updates_processed": 0
+  },
+  "release_watch": {
+    "drakmor/ShadowMountPlus": {
+      "427230821": {
+        "body": "added safe usb drive ejection from the web interface enabled library scans and operations on other games during gameplay while protecting the active game fixed smb guest connections and added a guest authenticated access switch added a read-only mode for smb connections removed forced closure of fpkg games when entering rest mode",
+        "bullets": [
+          "added safe usb drive ejection from the web interface",
+          "enabled library scans and operations on other games during gameplay while protecting the active game",
+          "fixed smb guest connections and added a guest authenticated access switch",
+          "added a read-only mode for smb connections",
+          "removed forced closure of fpkg games when entering rest mode"
+        ],
+        "digest": "55fcffd161751fe3b3cfb512a45967ffc1b65319f148362cea5f23a65f12d5e8",
+        "eligible": false,
+        "message_id": null,
+        "notified": false
+      },
+      "428410044": {
+        "body": "unified pkg installation queue with cover cards for pc, local storage and smb select up to 32 pc files; additional selections append without duplicates automatic game update dlc ordering for pc batches failed or cancelled queues retain unfinished packages improved ps4 dlc and ps5 media pkg detection fixed premature dlc installation failures 0x80e90004 fixed json-c memory leaks during repeated scans added estimated remaining installation time improved read-only destination handling",
+        "bullets": [
+          "unified pkg installation queue with cover cards for pc, local storage and smb",
+          "select up to 32 pc files; additional selections append without duplicates",
+          "automatic game update dlc ordering for pc batches",
+          "failed or cancelled queues retain unfinished packages",
+          "improved ps4 dlc and ps5 media pkg detection",
+          "fixed premature dlc installation failures 0x80e90004",
+          "fixed json-c memory leaks during repeated scans",
+          "added estimated remaining installation time",
+          "improved read-only destination handling"
+        ],
+        "digest": "1f85c79c9b84b6e7452a2c91183b03735bc6f73b3ecd0ac999aed6d4983d55ca",
+        "eligible": false,
+        "message_id": null,
+        "notified": false
+      }
+    },
+    "itsPLK/ps5-y2jb-autoloader": {
+      "426135358": {
+        "body": "added missing fw 11.40 relapse offsets thanks notmaj0r updated elfldr to v0.27 ci: set splash.html permissions to read-only in download0.dat bundled binaries this build integrates the following external dependency versions itsplk ps5-elfldr: v0.27-b57d0e9 itsplk ps5-kexp: v0.8-24cf6e5 itsplk ps5-unified-autoloader: v0.1.6-e7093cd",
+        "bullets": [
+          "added missing fw 11.40 relapse offsets thanks notmaj0r",
+          "ci: set splash.html permissions to read-only in download0.dat",
+          "itsplk ps5-elfldr: v0.27-b57d0e9",
+          "itsplk ps5-kexp: v0.8-24cf6e5",
+          "itsplk ps5-unified-autoloader: v0.1.6-e7093cd"
+        ],
+        "digest": "7313563c81372dda6c7e2d1e0e0d4d446de71c2885f065f71f34a7cb0f1ad1f1",
+        "eligible": false,
+        "message_id": null,
+        "notified": false
+      },
+      "426764815": {
+        "body": "relapse: switched to notmaj0r s port autoloader: fix socket readiness polling for elfldr, eliminating the 1-second startup delay performance: removed network log server check updater optimizations bundled binaries this build integrates the following external dependency versions itsplk ps5-elfldr: v0.27-b57d0e9 itsplk ps5-kexp: v0.8-24cf6e5 itsplk ps5-unified-autoloader: v0.1.6-e7093cd",
+        "bullets": [
+          "relapse: switched to notmaj0r s port",
+          "autoloader: fix socket readiness polling for elfldr, eliminating the 1-second startup delay",
+          "performance: removed network log server check",
+          "itsplk ps5-elfldr: v0.27-b57d0e9",
+          "itsplk ps5-kexp: v0.8-24cf6e5",
+          "itsplk ps5-unified-autoloader: v0.1.6-e7093cd"
+        ],
+        "digest": "021136a86e4215dbf9a106186204385f7506a934250898561ba46d85488a30c8",
+        "eligible": false,
+        "message_id": null,
+        "notified": false
+      }
+    },
+    "mihawk-99/PS5_MihawkOS": {
+      "426049299": {
+        "body": "ps5 mihawkos-v4.0.0-alpha-4 mihawkos is a passion project, not a piracy project it exists so you can play the games you own on the console you own piracy is not condoned no games, saves, keys, firmware or exploits are included, and they never will be use only games and programs you have the right to run : your own copies, bought or installed by you requests for, or links to, games, keys, firmware or exploits are not welcome in this project s issues or discussions steam on your tv, smooth. your games from your phone. a setup that speaks your language the fourth alpha of mihawkos, the homebrew title that runs windows games on a ps5 from a desktop of their own mihawk os. it is still experimental at a glance what s new smooth steam big picture. far fewer hitches when it opens, while you scroll and in its menus steam, built in. download, install and sign in once with your phone, guided all the way. after that, big picture opens from the launcher steam games start in about half the time your browser companion. add games, find their art, make home-screen tiles, back up saves and change settings from your phone or computer install over ftp, in ten languages. the guided setup takes the runtime over ftp too, and now speaks polish more room for your games. helpers use less of the console s shared memory, and a game can run inside mihawkos itself fixes found by wine s own tests , run on the console and compared with a pc in this release steam your browser companion first launch more room every firmware fixes played on the console known limits installing or updating source and credits steam, built in choose steam in the launcher s library. the first time, guided screens in the setup s style say what will happen and keep saying it until you are signed in 1. download. steam s installer comes from valve s servers and is checked before it runs 2. install. about half a minute when mihawkos is already set up 3. first start. steam updates itself, about five minutes. a still screen is normal: the guide shows the download and the time 4. sign in once. open the steam app on your phone, tap the shield and scan the code. mihawkos closes steam as soon as your sign-in is saved 5. big picture. from then on, steam opens straight into big picture, made for the controller steam games start in about half the time. steam s own file check is skipped, and a game s file reads, opens and look-ups are much cheaper. a 2d game launched from its library entry reached steady play in 66 seconds, down from 120 choose the controller your games see. settings controller : xbox 360 the default , xbox one or dualsense . steam no longer sees your pad twice, and its button glyphs match your choice something went wrong? no internet, the console s clock, a stalled update, a cancelled sign-in: the guide says which, with try again or back big picture, smooth big picture used to stutter. on a standard ps5 firmware 13.60 at 120 hz, the frames that took longer than 20 ms the first minute before: 79; now: 16 scrolling the library before: 162 worst frame 190 ms ; now: 7 worst frame 53 ms the menus before: 74; now: 24 how: on firmware 12.00 and later, steam s built-in browser now runs as separate processes. that costs memory steam s helpers use 429 mib instead of 320. with a game started from big picture, the console s shared memory peaked at 1,123 mib and the game held 60 frames a second on the ps5 pro firmware 10.01 , which has less memory to spare, the browser stays one process with a larger code budget. frames over 20 ms while scrolling fell from about 125 to 57 worst frame 51 ms and in the first minute from 140 to 109; the menus are unchanged on the pro about 76 mihawkos is not affiliated with valve. nothing of valve s is in this release your browser companion while the launcher is on screen, mihawkos serves a page on port 6767 . scan the qr code under the library, or in settings web ui , with your phone, or type on a computer on the same network my games: every game with its picture and whether it is ready to play. give one its own game mode and controller add a game: choose its folder on your computer, copy it to the console a stopped copy carries on , and set it up with its program suggested picture and details: look the game up in the steam store, or use your own picture home screen: a tile that opens mihawkos straight into one game. it appears a few seconds after mihawkos closes saves: download a game s saves as a zip, and put them back settings and help: the launcher s settings, theme and music, and a bug report with every address masked the page uses the guided setup s ten languages and stops when a game starts, so it holds no memory while you play use it on a trusted network, and do not forward port 6767 to the internet a first launch in your language install over ftp. beside the usb drive, the setup s how to install now offers ftp : copy every file inside the release s mihawkos folder to data ps5proton install , then check files and install ten languages: english us , français, español, deutsch, italiano, русский, 简体中文, 日本語, português brasil and now polski the frutiger aero look , on the loading screen before a game too, and the bubble earth wallpaper on the mihawk 11 desktop usb keyboard and mouse load first, before anything else starts. a tester s console where neither worked now reads both more room for your games every windows program but the desktop s runs in a helper, and all helpers share one small memory pool with the console s own processes. this alpha leaves more of it for your game a game can run inside mihawkos itself , off the shared pool. its entry names it wine ps5 title process .exe . this works for 64-bit games each helper s converted code has a budget: 64 mib to start, raised only when code it let go keeps coming back for games, steam and the game launchers alike. steam s web helper went from 234-250 mib to 173-193 mib, and every helper starts about 8 mib lighter a memory notice that knows your console. the ps5 s memory is getting full now appears where each firmware starts to swap, not at one figure for all one loader on every firmware testers on firmware 11.00, 12.40 and 13.x saw mihawkos stop before the desktop with errno 92 . the cause: a helper asked the console to load wine s modules, and on those consoles the jailbreak tools could not load them inside a helper. on 12.40 the console s own log showed it helpers now load wine s modules with mihawkos s own loader, on every firmware , so they no longer depend on the jailbreak s support for fake-signed programs. this removes the cause testers reported standard ps5 on 13.60: the full test battery passed, 102 of 102, with every helper on the new loader ps5 pro on 10.01 , whose helpers used the console s loader until now: steam ran with all its helpers on the new loader. it costs about 20 mib more across steam s helpers no tester has confirmed it on firmware 11.00 yet , nor on other firmwares we have no console for. if you are on 11.00, 12.40 or another untested firmware, your report is welcome fixes wine s own test suite now runs on the console, each test file compared with the same file on a pc: 1,337 of 1,708 test files match . what it found was fixed for every program files keep their windows attributes hidden, read-only, system , though the ps5 s disk has none symbolic links and junctions work , and so does a directory s reparse tag programs hear about folder changes at once each 4 kib page keeps its own protection , on a console whose pages are 16 kib programs can debug the programs they start a 32-bit video demuxer no longer reads memory it may only run encryption without a starting vector begins from zeros, as windows does crash dumps of a running program work mihawkos keeps running when one program misbehaves: a server that cannot reach a program, a display scale of 0 fonts: chinese text in windows programs draws in its right weight, and games that bring their own fonts can use them opengl: swapping buffers with no current context, copying between windows, and a context deleted while another thread still uses it are all answered as windows answers them also fixed, found with real programs programs that use privileged processor instructions sgdt, sidt, sldt, smsw, str in their start-up code no longer crash on the ps5: mihawkos answers them the way linux does on a pc. a steam game s start-up code showed the crash vulkan programs that ask for immediate or mailbox presentation now get a window instead of a refusal",
+        "bullets": [
+          "no games, saves, keys, firmware or exploits are included, and they never will be",
+          "use only games and programs you have the right to run : your own copies, bought or installed by you",
+          "requests for, or links to, games, keys, firmware or exploits are not welcome in this project s issues or discussions",
+          "smooth steam big picture. far fewer hitches when it opens, while you scroll and in its menus",
+          "steam, built in. download, install and sign in once with your phone, guided all the way. after that, big picture opens from the launcher",
+          "steam games start in about half the time",
+          "your browser companion. add games, find their art, make home-screen tiles, back up saves and change settings from your phone or computer",
+          "install over ftp, in ten languages. the guided setup takes the runtime over ftp too, and now speaks polish",
+          "more room for your games. helpers use less of the console s shared memory, and a game can run inside mihawkos itself",
+          "fixes found by wine s own tests , run on the console and compared with a pc",
+          "1. download. steam s installer comes from valve s servers and is checked before it runs",
+          "2. install. about half a minute when mihawkos is already set up",
+          "3. first start. steam updates itself, about five minutes. a still screen is normal: the guide shows the download",
+          "4. sign in once. open the steam app on your phone, tap the shield and scan the code. mihawkos closes steam as soon",
+          "5. big picture. from then on, steam opens straight into big picture, made for the controller",
+          "steam games start in about half the time. steam s own file check is skipped, and a game s file reads, opens and",
+          "choose the controller your games see. settings controller : xbox 360 the default , xbox one or",
+          "something went wrong? no internet, the console s clock, a stalled update, a cancelled sign-in: the guide says",
+          "the first minute before: 79; now: 16",
+          "scrolling the library before: 162 worst frame 190 ms ; now: 7 worst frame 53 ms",
+          "the menus before: 74; now: 24",
+          "how: on firmware 12.00 and later, steam s built-in browser now runs as separate processes. that costs memory",
+          "on the ps5 pro firmware 10.01 , which has less memory to spare, the browser stays one process with a larger code",
+          "my games: every game with its picture and whether it is ready to play. give one its own game mode and",
+          "add a game: choose its folder on your computer, copy it to the console a stopped copy carries on , and set it up",
+          "picture and details: look the game up in the steam store, or use your own picture",
+          "home screen: a tile that opens mihawkos straight into one game. it appears a few seconds after mihawkos closes",
+          "saves: download a game s saves as a zip, and put them back",
+          "settings and help: the launcher s settings, theme and music, and a bug report with every address masked",
+          "install over ftp. beside the usb drive, the setup s how to install now offers ftp : copy every file inside",
+          "ten languages: english us , français, español, deutsch, italiano, русский, 简体中文, 日本語, português brasil",
+          "the frutiger aero look , on the loading screen before a game too, and the bubble earth wallpaper on the mihawk",
+          "usb keyboard and mouse load first, before anything else starts. a tester s console where neither worked now",
+          "a game can run inside mihawkos itself , off the shared pool. its entry names it",
+          "each helper s converted code has a budget: 64 mib to start, raised only when code it let go keeps coming back",
+          "a memory notice that knows your console. the ps5 s memory is getting full now appears where each firmware",
+          "standard ps5 on 13.60: the full test battery passed, 102 of 102, with every helper on the new loader",
+          "ps5 pro on 10.01 , whose helpers used the console s loader until now: steam ran with all its helpers on the new",
+          "files keep their windows attributes hidden, read-only, system , though the ps5 s disk has none",
+          "symbolic links and junctions work , and so does a directory s reparse tag"
+        ],
+        "digest": "64fd569070565b89249e04ae54b55cc8fe603423e5283bbfaebf8cccebf0f36f",
+        "eligible": false,
+        "message_id": null,
+        "notified": false
+      },
+      "428264216": {
+        "body": "mihawkos is a passion project, not a piracy project it exists so you can play the games you own on the console you own piracy is not condoned no games, saves, keys, firmware or exploits are included, and they never will be use only games and programs you have the right to run : your own copies, bought or installed by you requests for, or links to, games, keys, firmware or exploits are not welcome in this project s issues or discussions bigger games with steam open. limits made for your console. clear answers instead of crashes the fifth alpha of mihawkos, the homebrew title that runs windows games on a ps5 from a desktop of their own mihawk os. it is still experimental at a glance what s new big games with steam open. steam s built-in browser now pauses while you play, freeing room on the console. resident evil 3 s demo runs through steam on a standard ps5 memory limits made for your console. mihawkos recognises your model and real firmware and sets its limits from them: original and slim ps5s below 12.00 get far more room than before a warning, then a clean close, instead of a crash. when the console runs short, you are warned first; if a game still runs it out, mihawkos closes the game cleanly and brings you back to the launcher a payload checklist at start. mihawkos checks that the official payload set is loaded, and says exactly what to load or close fixes for the problems you reported: the black screen after restoring steam, games crashing when they go fullscreen, errno 92 after an update, and steam closing before its sign-in screen installers start their programs faster in this release steam and big games memory made for your console payload checklist fixes played on the console known limits installing or updating source and credits big games with steam open the console keeps a fixed number of page tables , the records it uses to track memory. steam s built-in browser alone used more than half of what steam needed, and a large game could not start beside it steam s browser pauses while you play. when a game from your steam library starts, mihawkos pauses steam s browser; when the game ends, the browser comes back and big picture returns as it was. this works for every game in your steam library, with no list to maintain what it frees: on a ps5 pro with a game running, page tables in use fell from about 6,100 to about 4,910 steam keeps working while it is paused: it stays signed in, the game stays licensed, and cloud saves are written when the game ends already set up steam? your steam entry gets the new rule automatically; nothing to redo resident evil 3: raccoon city demo, through steam standard ps5 13.60 : it plays without crashing, with some hitches ps5 pro 10.01 : five minutes in game at about 23-46 frames a second, at least 4,909 page tables left free memory made for your console volunteers on original, slim and pro consoles, from firmware 5.50 to 13.60, ran a memory test that found where each console starts to struggle. thank you to everyone who did. mihawkos now uses those results it recognises your console: original, slim or pro, and the firmware actually installed, even when your tools report a different version limits per console original or slim, firmware 12.00 and later a warning appears at: about 1,750 mib; alpha 4 stopped at: 1,800 mib original or slim, below 12.00 a warning appears at: about 1,650 mib; alpha 4 stopped at: 990 mib ps5 pro, any firmware a warning appears at: about 850 mib and a clean stop at 950 mib ; alpha 4 stopped at: 990 or 1,800 mib a warning first, a clean close last. past the warning, an original or slim console starts to swap; the game gets slower but keeps going. mihawkos closes it cleanly, back to the launcher, only when the game stalls or new programs start much slower a safety net for the page tables. if they run low, the game is closed cleanly before the console runs out instead of a crash know what your payloads cost. the launcher shows how much memory your payloads used in your last session, and says when closing them would free room a payload checklist at start most problems testers sent came from a different set of payloads. mihawkos now opens only with the official set, and shows a checklist page that says what to load or close kstuff lite 1.11 beta or later required shadowmountplus 1.7beta10 or later required websrv required nanodns required elfldr required klog, ftpsrv, pldmgr allowed anything else close it first: it takes memory your games need shadowmountplus 1.7beta6 and later already include the fix that lets the webui s home-screen tiles keep working, so no extra tool is needed for it fixes reported by players no more black screen after restoring steam s window games no longer crash when they switch to fullscreen. the binding of isaac, which asks for a picture one pixel wider than the screen, now plays its intro and runs at about 61 frames a second errno 92 after an update: if your console still holds an older windows runtime, mihawkos now notices on every start, however you launch it, and offers to install the right one, instead of failing with errno 92. the helper that starts windows programs now ships inside the app folder, so it always matches your mihawkos steam closing before its sign-in screen: a windows setup whose first install never finished could not see the network, so steam gave up after 30 seconds. mihawkos now finishes that install itself on the next start resident evil 3 finds your dualsense on its own , without choosing a controller in the launcher first every log names its build: the app, the runtime and the helper, so a report shows at a glance what it was faster installers and launchers start their programs faster: a helper is ready in 0.03 s instead of 0.2 s, and its windows parts load in 0.37 s instead of 0.59 s closer to windows: wine s own test suite, run on the console and compared with a pc: 1,410 of 1,708 test files match 1,337 in alpha 4 . among the fixes it found: direct3d 9 games leave fullscreen as on windows and keep the mouse inside the screen, soft shadows draw correctly in older games, games that share textures between processes no longer crash, and video playback in games is fixed played on the console this release s build , the full test battery of 104 cases the release differs from the tested build only by its version label, which the wallpaper shows standard ps5, firmware 13.60: 102 of 104 passed, the other two skipped by a test-network setting alpha5-base-2026-10-29-04 . resident evil 3 through steam then played on it with no crash ps5 pro, firmware 10.01: 102 of 104 passed, the same two skipped alpha5-pro-2026-10-29-04 on the way there , on a ps5 pro firmware 10.01 and a standard ps5 firmware 13.60 full batteries how it went: ps5 pro: 102 of 104 on three builds of this series, the other two skipped by a test-network setting alpha5-batch-pro-2026-10-29-01 , memplan-pro-gate-2026-10-28-02 , steam-hold-pro-2026-10-29-01 . standard ps5: 104 of 104 with the payload checklist payloads-gate-2026-10-29-01 steam s browser paused during a game how it went: ps5 pro: the binding of isaac from steam s library for 3 minutes. page tables during the game about 4,910 against 6,100 without the pause; steam stayed signed in, the cloud save was written, big picture came back on screen. a steam entry from before this release got the pause too resident evil 3 demo through steam how it went: standard ps5: played with no crash, some hitches. ps5 pro: 5 minutes in game, at least 4,909 page tables free, the memory guard never acted, 474 mib at its peak against the pro s 850 mib warning limits per console how it went: both consoles: mihawkos recognised the model and the installed firmware, including a ps5 reporting 13.59 for 13.60 and a pro reporting 12.09 for 10.01 the safety net how it went: ps5 pro: in a heavy test it closed the session cleanly before the pool ran out payload checklist how it went: standard ps5 with the official set: all 10 payload processes seen 85 mib , shadowmountplus 1.7beta10 and websrv v0.34 read the binding of isaac how it went: ps5 pro: intro and play at about 61 frames a second for 5 minutes not shown on the console: mihawkos on an original or slim console below firmware 13.60, or on a pro other than 10.01; the memory limits on firmware 6.xx to 9.xx they use the below 12.00 values ; a full resident evil 3 session past the demo s opening known limits steam big picture is a little less smooth than in alpha 4 on a standard ps5. alpha 4 ran",
+        "bullets": [
+          "no games, saves, keys, firmware or exploits are included, and they never will be",
+          "use only games and programs you have the right to run : your own copies, bought or installed by you",
+          "requests for, or links to, games, keys, firmware or exploits are not welcome in this project s issues or discussions",
+          "big games with steam open. steam s built-in browser now pauses while you play, freeing room on the console. resident evil 3 s demo runs through steam on a standard ps5",
+          "memory limits made for your console. mihawkos recognises your model and real firmware and sets its limits from them: original and slim ps5s below 12.00 get far more room than before",
+          "a warning, then a clean close, instead of a crash. when the console runs short, you are warned first; if a game still runs it out, mihawkos closes the game cleanly and brings you back to the launcher",
+          "a payload checklist at start. mihawkos checks that the official payload set is loaded, and says exactly what to load or close",
+          "fixes for the problems you reported: the black screen after restoring steam, games crashing when they go fullscreen, errno 92 after an update, and steam closing before its sign-in screen",
+          "installers start their programs faster",
+          "steam s browser pauses while you play. when a game from your steam library starts, mihawkos pauses steam s",
+          "what it frees: on a ps5 pro with a game running, page tables in use fell from about 6,100 to about 4,910",
+          "steam keeps working while it is paused: it stays signed in, the game stays licensed, and cloud saves are written",
+          "already set up steam? your steam entry gets the new rule automatically; nothing to redo",
+          "resident evil 3: raccoon city demo, through steam",
+          "standard ps5 13.60 : it plays without crashing, with some hitches",
+          "ps5 pro 10.01 : five minutes in game at about 23-46 frames a second, at least 4,909 page tables left free",
+          "it recognises your console: original, slim or pro, and the firmware actually installed, even when your tools",
+          "original or slim, firmware 12.00 and later a warning appears at: about 1,750 mib; alpha 4 stopped at: 1,800 mib",
+          "original or slim, below 12.00 a warning appears at: about 1,650 mib; alpha 4 stopped at: 990 mib",
+          "ps5 pro, any firmware a warning appears at: about 850 mib and a clean stop at 950 mib ; alpha 4 stopped at: 990 or 1,800 mib",
+          "a warning first, a clean close last. past the warning, an original or slim console starts to swap; the game gets",
+          "a safety net for the page tables. if they run low, the game is closed cleanly before the console runs out",
+          "know what your payloads cost. the launcher shows how much memory your payloads used in your last session, and",
+          "kstuff lite 1.11 beta or later required",
+          "shadowmountplus 1.7beta10 or later required",
+          "klog, ftpsrv, pldmgr allowed",
+          "anything else close it first: it takes memory your games need",
+          "no more black screen after restoring steam s window",
+          "games no longer crash when they switch to fullscreen. the binding of isaac, which asks for a picture one pixel",
+          "errno 92 after an update: if your console still holds an older windows runtime, mihawkos now notices on every",
+          "steam closing before its sign-in screen: a windows setup whose first install never finished could not see the",
+          "resident evil 3 finds your dualsense on its own , without choosing a controller in the launcher first",
+          "every log names its build: the app, the runtime and the helper, so a report shows at a glance what it was",
+          "installers and launchers start their programs faster: a helper is ready in 0.03 s instead of 0.2 s, and its",
+          "standard ps5, firmware 13.60: 102 of 104 passed, the other two skipped by a test-network setting alpha5-base-2026-10-29-04 . resident evil 3 through steam then played on it with no crash",
+          "ps5 pro, firmware 10.01: 102 of 104 passed, the same two skipped alpha5-pro-2026-10-29-04",
+          "full batteries how it went: ps5 pro: 102 of 104 on three builds of this series, the other two skipped by a test-network setting alpha5-batch-pro-2026-10-29-01 , memplan-pro-gate-2026-10-28-02 , steam-hold-pro-2026-10-29-01 . standard ps5: 104 of 104 with the payload checklist payloads-gate-2026-10-29-01",
+          "steam s browser paused during a game how it went: ps5 pro: the binding of isaac from steam s library for 3 minutes. page tables during the game about 4,910 against 6,100 without the pause; steam stayed signed in, the cloud save was written, big picture came back on screen. a steam entry from before this release got the pause too",
+          "resident evil 3 demo through steam how it went: standard ps5: played with no crash, some hitches. ps5 pro: 5 minutes in game, at least 4,909 page tables free, the memory guard never acted, 474 mib at its peak against the pro s 850 mib warning",
+          "limits per console how it went: both consoles: mihawkos recognised the model and the installed firmware, including a ps5 reporting 13.59 for 13.60 and a pro reporting 12.09 for 10.01"
+        ],
+        "digest": "4dccee8ce2ffa510fb2ac8544e475f197f5a9a1e08ba58cc795f002c4ebfd46d",
+        "eligible": false,
+        "message_id": null,
+        "notified": false
+      },
+      "428361297": {
+        "body": "a hotfix for alpha 5. if mihawkos showed every payload as missing even though they were loaded, or games could not start with no access to data , this fixes it. everything else is the same as alpha 5 what s fixed mihawkos gets its access to data even when dev.conf is missing or points somewhere unreachable. its access helper used to quit at once when it could not reach its log server set in data homebrew dev.conf , so mihawkos never got access to your files. the helper now keeps running and writes its log to a file instead. you no longer need to create or fix dev.conf the payload checklist tells you what s really wrong. when mihawkos cannot see your payloads because it has no access to data , the checklist no longer calls every payload missing . it says what is blocking it, and how to fix it played on the console standard ps5, firmware 13.60, with the payloads loaded through payload manager a dev.conf pointing at an address nobody answers the reported case : the access helper kept running mihawkos got data , and the payload checklist passed the full test battery of 104 cases: 102 passed, the other two skipped by a test-network setting alpha5-hotfix-base-2026-10-29-01 . the payload checklist passed at every one of its 143 starts installing or updating new install: the same as alpha 5: copy ppsa99170 to data homebrew , open mihawkos, and the guided setup installs the runtime from a usb drive or over ftp updating from alpha 5 or alpha 4 1. replace the ppsa99170 folder in data homebrew with the new one 2. put the new runtime pieces on your usb drive the mihawkos folder from the runtime zip , or have them ready for ftp 3. open mihawkos from its own icon. it sees that the runtime belongs to the previous build and offers to install the new one 4. restart the ps5 , load your payloads, and open mihawkos your prefix, your games in c: games , steam and your settings are kept ps5 mihawkos-v5.0.1-alpha-5-ppsa99170.zip size: 20.0 mb; what it is: the mihawkos title: the ppsa99170 folder ps5 mihawkos-v5.0.1-alpha-5-usb-mihawkos.zip size: 520.2 mb; what it is: the windows runtime: the mihawkos folder, for a usb drive or ftp ps5 mihawkos-v5.0.1-alpha-5-readme.txt size: 1 kb; what it is: the install steps in short ps5 mihawkos-v5.0.1-alpha-5-sha256sums size: 40 kb; what it is: the sha-256 of every file in both folders: sha256sum -c checks a copy ps5 mihawkos-v5.0.1-alpha-5-zips.sha256 size: 1 kb; what it is: the sha-256 of the two zips load the official payload set first see alpha 5 s notes , then open mihawkos",
+        "bullets": [
+          "mihawkos gets its access to data even when dev.conf is missing or points somewhere unreachable. its access",
+          "the payload checklist tells you what s really wrong. when mihawkos cannot see your payloads because it has no",
+          "a dev.conf pointing at an address nobody answers the reported case : the access helper kept running",
+          "the full test battery of 104 cases: 102 passed, the other two skipped by a test-network setting alpha5-hotfix-base-2026-10-29-01 . the payload checklist passed at every one of its 143 starts",
+          "1. replace the ppsa99170 folder in data homebrew with the new one",
+          "2. put the new runtime pieces on your usb drive the mihawkos folder from the runtime zip , or have them ready",
+          "3. open mihawkos from its own icon. it sees that the runtime belongs to the previous build and offers to install",
+          "4. restart the ps5 , load your payloads, and open mihawkos",
+          "ps5 mihawkos-v5.0.1-alpha-5-ppsa99170.zip size: 20.0 mb; what it is: the mihawkos title: the ppsa99170 folder",
+          "ps5 mihawkos-v5.0.1-alpha-5-usb-mihawkos.zip size: 520.2 mb; what it is: the windows runtime: the mihawkos folder, for a usb drive or ftp",
+          "ps5 mihawkos-v5.0.1-alpha-5-readme.txt size: 1 kb; what it is: the install steps in short",
+          "ps5 mihawkos-v5.0.1-alpha-5-sha256sums size: 40 kb; what it is: the sha-256 of every file in both folders: sha256sum -c checks a copy",
+          "ps5 mihawkos-v5.0.1-alpha-5-zips.sha256 size: 1 kb; what it is: the sha-256 of the two zips"
+        ],
+        "digest": "9d5d373c680fb8f2bc4fbe6559f54b5e78c807d4b3232e7961b0f4c50a27ee84",
+        "eligible": false,
+        "message_id": null,
+        "notified": false
+      }
+    },
+    "quer3q/ps5-dump-forge": {
+      "428204826": {
+        "body": "the big one - new pack tab, faster runtime and pkg install new custom ampr-emu runtime. an optional runtime with up to 8x faster load speeds more information here: ampr-emu-ng new zstd pack format. compress an ampr game s assets into the zstd pack format, close to fpkg in size and play speed lz4 packs got a compression level selector. choose fast plain lz4, the default , medium lz4 hc 9 or max lz4 hc 12 : higher levels give smaller packs and take longer to pack package installer on the ps5. storage has a new package installer view that lists every .pkg on the console. install it or delete it from there, or from a .pkg row in the file explorer install pkg from a pc. in connect, a paired ps5 has an install pkg button: pick a .pkg on the computer and the console installs it, reading it over the network ps5 tabs in the file explorer. on a computer, each paired ps5 that is online gets a tab next to this device, with rename, move and delete. drag a row onto another device s tab to copy it there, or drop files from the system to copy them in new logo by xxcco changes lz4 traces removed. lz4 packing uses its built-in rules only",
+        "bullets": [
+          "custom ampr-emu runtime. an optional runtime with up to 8x faster load speeds more information here: ampr-emu-ng",
+          "new zstd pack format. compress an ampr game s assets into the zstd pack format, close to fpkg in size and play speed",
+          "lz4 packs got a compression level selector. choose fast plain lz4, the default , medium lz4 hc 9 or max lz4 hc 12 : higher levels give smaller packs and take longer to pack",
+          "package installer on the ps5. storage has a new package installer view that lists every .pkg on the console. install it or delete it from there, or from a .pkg row in the file explorer",
+          "install pkg from a pc. in connect, a paired ps5 has an install pkg button: pick a .pkg on the computer and the console installs it, reading it over the network",
+          "ps5 tabs in the file explorer. on a computer, each paired ps5 that is online gets a tab next to this device, with rename, move and delete. drag a row onto another device s tab to copy it there, or drop files from the system to copy them in",
+          "lz4 traces removed. lz4 packing uses its built-in rules only"
+        ],
+        "digest": "54e5fd9cb1248a7307dbd7fefd17190770d5bbf1c4653624b0941163057cd873",
+        "eligible": false,
+        "message_id": null,
+        "notified": false
+      }
+    }
   },
   "repositories": {
     "EchoStretch/kstuff-lite": [
