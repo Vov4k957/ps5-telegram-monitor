@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-10-29T17:35:25.805569+00:00",
+  "last_heartbeat": "2026-10-29T17:51:22.166084+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-10-29T17:35:25.805569+00:00",
+    "completed_at": "2026-10-29T17:51:22.166084+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "40922748520",
-    "started_at": "2026-10-29T17:35:22.277224+00:00",
+    "notifications_sent": 1,
+    "run_id": "40925253249",
+    "started_at": "2026-10-29T17:51:14.868545+00:00",
     "updates_processed": 0
   },
   "repositories": {
@@ -127,7 +127,8 @@
       "423022981",
       "422614336",
       "418406972",
-      "416564215"
+      "416564215",
+      "428204826"
     ]
   },
   "ru_translation_enabled_notice": true,
