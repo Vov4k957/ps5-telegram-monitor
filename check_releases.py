@@ -1252,6 +1252,11 @@ def main():
     if CLOUDFLARE_SYNC_ENABLED:
         # Do not continue scanning stale repositories if D1 is unavailable.
         synchronize_cloudflare_state(state)
+    # A removed subscription must never be watched or notified again.
+    if "release_watch" in state:
+        for old_repo in list(state["release_watch"]):
+            if old_repo not in state["repositories"]:
+                del state["release_watch"][old_repo]
     started_at = datetime.now(timezone.utc).isoformat()
     deadline = time.monotonic() + 240
     event = os.getenv("GITHUB_EVENT_NAME", "local")
@@ -1317,6 +1322,9 @@ def main():
                 if previous is None:
                     state["repositories"][repo] = [str(r["id"]) for r in releases]
                     save_state(state)
+                    # Record a silent baseline for new subscriptions.
+                    if process_release_edits(repo, releases, state, lambda: save_state(state)):
+                        save_state(state)
                     continue
                 seen = set(map(str, previous))
                 for release in reversed(releases):
@@ -1327,15 +1335,25 @@ def main():
                         record_error(f"{repo}: отправка отложена", RuntimeError())
                         break
                     try:
-                        send_telegram(format_release(repo, release, state["translate_enabled"]))
+                        message_id = send_telegram(
+                            format_release(repo, release, state["translate_enabled"]))
                     except (RuntimeError, OSError, ValueError) as error:
                         record_error(f"{repo}: sendMessage", error)
                         break
-                    # Never mark an unsent release as delivered; retain all known IDs.
+                    # Save the sent Telegram message ID alongside the release ID.
                     state["repositories"][repo].append(release_id)
+                    if watchable_release(release):
+                        state.setdefault("release_watch", {}).setdefault(repo, {})[release_id] = (
+                            release_watch_entry(release, message_id))
                     seen.add(release_id)
                     sent += 1
                     save_state(state)
+                try:
+                    if process_release_edits(repo, releases, state,
+                                             lambda: save_state(state)):
+                        save_state(state)
+                except (RuntimeError, OSError, ValueError) as error:
+                    record_error(f"{repo}: обновление описания", error)
 
         if first_run:
             send_telegram("✅ <b>PS5 GitHub Monitor запущен!</b>\n"
