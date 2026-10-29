@@ -430,6 +430,54 @@ class MonitorTests(unittest.TestCase):
             repo, [second], self.state, lambda: None, now=t))
         self.assertEqual(self.state, before)
 
+    def test_main_records_telegram_id_for_new_release_and_does_not_repeat(self):
+        self.write_state()
+        # No external requests or real Telegram messages. Simulate the newer
+        # published GitHub release being delivered in the normal monitor loop.
+        from datetime import datetime, timezone
+        published = datetime.now(timezone.utc).isoformat()
+        updated = {**release(912), "name": "Major update",
+                   "published_at": published,
+                   "body": "- New installer support for large games."}
+        def fetch(repo):
+            original_id = int(self.state["repositories"][repo][0])
+            if repo == "one/repo":
+                return [updated, release(original_id)]
+            return [release(original_id)]
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
+                patch.object(bot, "fetch_releases", side_effect=fetch), \
+                patch.object(bot, "send_telegram", return_value=12345) as send:
+            bot.main()
+            bot.main()
+        self.assertEqual(send.call_count, 1)
+        actual = self.saved()
+        self.assertIn("912", actual["repositories"]["one/repo"])
+        entry = actual["release_watch"]["one/repo"]["912"]
+        self.assertEqual(entry["message_id"], 12345)
+        self.assertTrue(entry["eligible"])
+        self.assertFalse(entry["notified"])
+        self.assertNotIn("pending", entry)
+
+    def test_unchanged_recent_release_watch_does_not_commit_every_minute(self):
+        self.write_state()
+        from datetime import datetime, timezone
+        fresh = {**release(1), "published_at": datetime.now(timezone.utc).isoformat()}
+        self.state["release_watch"] = {"one/repo": {
+            "1": bot.release_watch_entry(fresh, 123)}}
+        self.write_state()
+        original = self.state_file.read_bytes()
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", False), \
+                patch.object(bot, "tg_updates", return_value=[]), \
+                patch.object(bot, "fetch_releases", side_effect=lambda repo: (
+                    [fresh] if repo == "one/repo" else
+                    [release(int(self.state["repositories"][repo][0]))])), \
+                patch.object(bot, "send_telegram") as send:
+            bot.main()
+            bot.main()
+        self.assertEqual(self.state_file.read_bytes(), original)
+        send.assert_not_called()
+
     def test_send_telegram_returns_message_id_for_later_edits(self):
         with patch.object(bot, "request_json", return_value={
                 "ok": True, "result": {"message_id": 871}}) as api:
