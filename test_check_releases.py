@@ -479,6 +479,62 @@ class MonitorTests(unittest.TestCase):
                     bot.synchronize_cloudflare_state(self.state)
                 self.assertEqual(self.state, original)
 
+    def test_release_headings_for_all_monitored_project_naming_styles(self):
+        cases = [
+            ("drakmor/ShadowMountPlus",
+             {"name": "ShadowMountPlus 1.7beta10", "tag_name": "1.7beta10"},
+             "ShadowMountPlus 1.7beta10"),
+            ("itsPLK/ps5-y2jb-autoloader",
+             {"name": "v1.1.0", "tag_name": "v1.1.0-ba879c8"},
+             "ps5-y2jb-autoloader v1.1.0"),
+            ("EchoStretch/kstuff-lite",
+             {"name": "Kstuff Lite 1.11 Beta", "tag_name": "v1.11"},
+             "Kstuff Lite 1.11 Beta"),
+            ("mihawk-99/PS5_MihawkOS",
+             {"name": "PS5_MihawkOS-v4.0.0-alpha-4", "tag_name": "v4.0.0-alpha-4"},
+             "PS5_MihawkOS v4.0.0-alpha-4"),
+            ("quer3q/ps5-dump-forge",
+             {"name": "", "tag_name": "v0.4.2"},
+             "ps5-dump-forge v0.4.2"),
+            ("itsPLK/ps5-payload-manager",
+             {"name": "v0.6.3", "tag_name": "v0.6.3"},
+             "ps5-payload-manager v0.6.3"),
+            ("owner/test",
+             {"name": "test", "tag_name": "v3.0"},
+             "test v3.0"),
+        ]
+        for repo, release_data, expected in cases:
+            with self.subTest(repo=repo, name=release_data["name"]):
+                self.assertEqual(bot.release_display_title(repo, release_data), expected)
+
+    def test_release_notification_has_one_heading_without_duplicate_version(self):
+        release_data = {"name": "ShadowMountPlus 1.7beta10",
+                        "tag_name": "1.7beta10", "prerelease": False,
+                        "body": "Safe USB eject",
+                        "html_url": "https://github.com/drakmor/ShadowMountPlus/releases/tag/1.7beta10"}
+        with patch.object(bot, "translate_changelog", return_value=(
+                "Безопасное извлечение USB", True, "Переведено автоматически (MyMemory)")):
+            rendered = bot.format_release("drakmor/ShadowMountPlus", release_data, True)
+        self.assertEqual(rendered.splitlines()[0],
+                         "🚀 <b>Новая версия: ShadowMountPlus 1.7beta10</b>")
+        self.assertEqual(rendered.count("🚀 <b>"), 1)
+        self.assertNotIn("drakmor/ShadowMountPlus</b>", rendered)
+        self.assertNotIn("<b>ShadowMountPlus 1.7beta10</b> (1.7beta10)", rendered)
+        self.assertNotIn("Изменения на русском:", rendered)
+        self.assertNotIn("Переведено автоматически (MyMemory)", rendered)
+        self.assertIn("Безопасное извлечение USB", rendered)
+
+    def test_release_heading_escapes_upstream_html(self):
+        rendered = bot.release_display_title(
+            "owner/my-project", {"name": "<b>bad</b>", "tag_name": "v2"})
+        self.assertEqual(rendered, "my-project <b>bad</b>")
+        with patch.object(bot, "translate_changelog", return_value=("Ok", True, "")):
+            message = bot.format_release(
+                "owner/my-project", {"name": "<b>bad</b>", "tag_name": "v2",
+                                    "body": "Ok"}, True)
+        self.assertIn("my-project &lt;b&gt;bad&lt;/b&gt;", message)
+        self.assertNotIn("my-project <b>bad</b>", message)
+
     def test_real_y2jb_release_russian_terminology_and_telegram_markup(self):
         body = "## Changelog:\r\n\r\n- Relapse: Switched to @notmaj0r's port\r\n- Autoloader: Fix socket readiness polling for elfldr, eliminating the 1-second startup delay\r\n- Performance: Removed network log server check\r\n- Updater optimizations\r\n\r\n**Full Changelog (since last stable release)**: https://github.com/itsPLK/ps5-y2jb-autoloader/compare/v1.0.4-35c4413...v1.1.0-ba879c8\r\n\r\n\r\nhttps://github.com/user-attachments/assets/97953c34-5b00-435f-bb4c-30240cb0d294\r\n\r\n\r\n---\r\n<details>\r\n<summary>Bundled Binaries</summary>\r\n\r\nThis build integrates the following external dependency versions:\r\n- [itsPLK/ps5-elfldr](https://github.com/itsPLK/ps5-elfldr): [v0.27-b57d0e9](https://github.com/itsPLK/ps5-elfldr/releases/tag/v0.27-b57d0e9)\r\n- [itsPLK/ps5-kexp](https://github.com/itsPLK/ps5-kexp): [v0.8-24cf6e5](https://github.com/itsPLK/ps5-kexp/releases/tag/v0.8-24cf6e5)\r\n- [itsPLK/ps5-unified-autoloader](https://github.com/itsPLK/ps5-unified-autoloader): [v0.1.6-e7093cd](https://github.com/itsPLK/ps5-unified-autoloader/releases/tag/v0.1.6-e7093cd)\r\n\r\n</details>\r\n"
         r = {
