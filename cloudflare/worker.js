@@ -442,7 +442,7 @@ async function handleMessage(message, env) {
           : escapeHtml(published.tag))
         : (published ? "нет опубликованных релизов" : "ожидается первая проверка");
       const ago = published?.tag ? elapsedSincePublication(published.published_at) : "";
-      const entry = `${i + 1}. <a href="https://github.com/${encodeURI(repo)}">${escapeHtml(repo)}</a>\n    🏷 ${version}${ago ? "\n    🕒 " + ago + " назад" : ""}\n`;
+      const entry = `${i + 1}. <a href="https://github.com/${encodeURI(repo)}">${escapeHtml(repo)}</a>\n    🏷 ${version}${ago ? "\n    🕒 " + (ago === "только что" ? ago : ago + " назад") : ""}\n`;
       if (current.length + entry.length > LIST_MESSAGE_LIMIT && current !== header) {
         await send(env, current.trimEnd());
         current = "📋 <b>Подписки — продолжение</b>\n";
