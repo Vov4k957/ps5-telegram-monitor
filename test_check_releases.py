@@ -303,6 +303,58 @@ class MonitorTests(unittest.TestCase):
         self.assertEqual(fetch.call_count, 3)
         self.assertNotIn("github_backoff_until", self.saved())
 
+    def test_list_latest_release_selects_publication_not_creation_and_all_types(self):
+        current = [
+            {"name": "Stable v2", "tag_name": "v2", "prerelease": False,
+             "published_at": "2026-10-29T20:00:00Z",
+             "html_url": "https://github.com/owner/repo/releases/tag/v2"},
+            {"name": "3.0-alpha", "tag_name": "v3-alpha", "prerelease": True,
+             "published_at": "2026-10-30T06:00:00Z",
+             "html_url": "https://github.com/owner/repo/releases/tag/v3-alpha"},
+            {"name": "Unreleased", "tag_name": "v9", "draft": True,
+             "published_at": "2026-11-01T00:00:00Z"},
+        ]
+        # Even when GitHub returns stable first, the newest published alpha wins.
+        self.assertEqual(bot.newest_published_release(current), {
+            "tag": "v3-alpha",
+            "url": "https://github.com/owner/repo/releases/tag/v3-alpha",
+        })
+        self.assertIsNone(bot.newest_published_release([]))
+        self.assertIsNone(bot.newest_published_release([current[2]]))
+
+    def test_latest_versions_catalog_uses_cloudflare_and_not_repo_state(self):
+        self.write_state()
+        original = self.state_file.read_bytes()
+        catalog = {"owner/repo": {"tag": "1.7beta11",
+                   "url": "https://github.com/owner/repo/releases/tag/1.7beta11"}}
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", True), \
+                patch.object(bot, "CLOUDFLARE_SYNC_URL", "https://worker.example.workers.dev/sync"), \
+                patch.object(bot, "SYNC_SECRET", "test-sync"), \
+                patch.dict("os.environ", {"GITHUB_ACTIONS": "true"}), \
+                patch.object(bot, "request_json", return_value={"ok": True}) as api:
+            bot.publish_cloudflare_catalog(catalog)
+        self.assertEqual(api.call_args.args[0],
+                         "https://worker.example.workers.dev/catalog")
+        self.assertEqual(api.call_args.kwargs["payload"]["releases"], catalog)
+        self.assertEqual(api.call_args.kwargs["headers"]["Authorization"], "Bearer test-sync")
+        self.assertEqual(self.state_file.read_bytes(), original)
+
+    def test_unavailable_catalog_endpoint_is_nonfatal(self):
+        with patch.object(bot, "CLOUDFLARE_SYNC_ENABLED", True), \
+                patch.object(bot, "CLOUDFLARE_SYNC_URL", "https://worker.example.workers.dev/sync"), \
+                patch.object(bot, "SYNC_SECRET", "test-sync"), \
+                patch.dict("os.environ", {"GITHUB_ACTIONS": "true"}), \
+                patch.object(bot, "request_json", side_effect=bot.APIError(404)):
+            bot.publish_cloudflare_catalog({"owner/repo": {"tag": "v1", "url": ""}})
+
+    def test_newest_release_tag_is_bounded_and_bad_url_is_not_sent(self):
+        releases = [{"tag_name": "a" * 200, "prerelease": True,
+                     "published_at": "2026-10-30T00:00:00Z",
+                     "html_url": "https://evil.example/releases"}]
+        value = bot.newest_published_release(releases)
+        self.assertEqual(len(value["tag"]), 120)
+        self.assertEqual(value["url"], "")
+
     def test_report_status_posts_to_cloudflare_without_persisting_history(self):
         self.write_state()
         original = self.state_file.read_bytes()
