@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-10-30T05:13:59.068319+00:00",
+  "last_heartbeat": "2026-10-30T14:20:34.437283+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-10-30T05:13:59.068319+00:00",
+    "completed_at": "2026-10-30T14:20:34.437283+00:00",
     "errors": [],
-    "event": "push",
+    "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "41007250421",
-    "started_at": "2026-10-30T05:13:55.792703+00:00",
+    "run_id": "41071002331",
+    "started_at": "2026-10-30T14:20:30.408067+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -45,25 +45,6 @@
           "improved read-only destination handling"
         ],
         "digest": "1f85c79c9b84b6e7452a2c91183b03735bc6f73b3ecd0ac999aed6d4983d55ca",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      }
-    },
-    "itsPLK/ps5-y2jb-autoloader": {
-      "426764815": {
-        "body": "relapse: switched to notmaj0r s port autoloader: fix socket readiness polling for elfldr, eliminating the 1-second startup delay performance: removed network log server check updater optimizations bundled binaries this build integrates the following external dependency versions itsplk ps5-elfldr: v0.27-b57d0e9 itsplk ps5-kexp: v0.8-24cf6e5 itsplk ps5-unified-autoloader: v0.1.6-e7093cd",
-        "body_length": 387,
-        "bullets": [
-          "relapse: switched to notmaj0r s port",
-          "autoloader: fix socket readiness polling for elfldr, eliminating the 1-second startup delay",
-          "performance: removed network log server check",
-          "itsplk ps5-elfldr: v0.27-b57d0e9",
-          "itsplk ps5-kexp: v0.8-24cf6e5",
-          "itsplk ps5-unified-autoloader: v0.1.6-e7093cd"
-        ],
-        "digest": "021136a86e4215dbf9a106186204385f7506a934250898561ba46d85488a30c8",
         "eligible": false,
         "fingerprint_version": 2,
         "message_id": null,
