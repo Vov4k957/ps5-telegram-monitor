@@ -73,6 +73,67 @@ function setup(repos = []) {
   return {DB, env, context, calls, sendUpdate, sendReport, telegramSends};
 }
 
+test('Russian elapsed time uses four ranges, calendar months, plurals and edge cases', () => {
+  const s = setup();
+  const elapsed = (published, now) => s.context.elapsedSincePublication(published, Date.parse(now));
+  assert.equal(elapsed('2026-10-30T09:00:00Z', '2026-10-30T09:00:21Z'), 'только что');
+  assert.equal(elapsed('2026-10-30T09:00:00Z', '2026-10-30T09:01:00Z'), '1 минута');
+  assert.equal(elapsed('2026-10-30T09:00:00Z', '2026-10-30T09:11:00Z'), '11 минут');
+  assert.equal(elapsed('2026-10-30T09:00:00Z', '2026-10-30T10:01:00Z'), '1 час, 1 минута');
+  assert.equal(elapsed('2026-10-30T09:00:00Z', '2026-10-30T20:22:00Z'), '11 часов, 22 минуты');
+  assert.equal(elapsed('2026-10-29T09:00:00Z', '2026-10-30T10:00:00Z'), '1 день, 1 час');
+  assert.equal(elapsed('2026-10-09T09:00:00Z', '2026-10-30T11:00:00Z'), '21 день, 2 часа');
+  assert.equal(elapsed('2026-01-31T00:00:00Z', '2026-03-01T00:00:00Z'), '1 месяц, 1 день');
+  assert.equal(elapsed('2024-01-31T00:00:00Z', '2024-03-01T00:00:00Z'), '1 месяц, 1 день');
+  assert.equal(elapsed('2024-01-31T00:00:00Z', '2025-03-01T00:00:00Z'), '1 год, 1 месяц');
+  assert.equal(elapsed('2024-01-31T00:00:00Z', '2026-01-31T00:00:00Z'), '2 года');
+  assert.equal(elapsed('2026-11-05T00:00:00Z', '2026-10-30T00:00:00Z'), '');
+  assert.equal(elapsed('not-a-date', '2026-10-30T00:00:00Z'), '');
+  assert.equal(elapsed('', '2026-10-30T00:00:00Z'), '');
+});
+
+test('list recomputes elapsed time from publication date without GitHub API calls', async () => {
+  const s = setup(['drakmor/ShadowMountPlus']);
+  const at = new Date(Date.now() - (2 * 24 + 3) * 3600000).toISOString();
+  const payload = {
+    completed_at: new Date().toISOString(),
+    releases: {
+      'drakmor/ShadowMountPlus': {
+        tag:'1.7beta11', published_at:at,
+        url:'https://github.com/drakmor/ShadowMountPlus/releases/tag/1.7beta11',
+      },
+    },
+  };
+  assert.equal((await s.context.worker.fetch(new Request('https://worker.test/catalog', {
+    method:'POST', headers:{Authorization:'Bearer test-sync-secret'},
+    body:JSON.stringify(payload),
+  }),s.env)).status,200);
+  await s.sendUpdate(1100,'/list');
+  const message = JSON.parse(s.telegramSends()[0].options.body).text;
+  assert.match(message,/1\.7beta11/);
+  assert.match(message,/🕒 2 дня, 3 часа назад/);
+  assert.equal(s.calls.filter(x=>x.url.startsWith('https://api.github.com')).length, 0);
+});
+
+test('catalog rejects malformed or future dates and supports older timestamp-free cache', async () => {
+  const s = setup(['owner/project']);
+  const sendCatalog = p => s.context.worker.fetch(new Request('https://worker.test/catalog', {
+    method:'POST',headers:{Authorization:'Bearer test-sync-secret'},body:JSON.stringify(p),
+  }),s.env);
+  const base = {completed_at:new Date().toISOString(),releases:{
+    'owner/project':{tag:'v1',url:'https://github.com/owner/project/releases/tag/v1'}
+  }};
+  assert.equal((await sendCatalog(base)).status,200);
+  await s.sendUpdate(1101,'/list');
+  assert.match(JSON.parse(s.telegramSends()[0].options.body).text,/🏷/);
+  assert.doesNotMatch(JSON.parse(s.telegramSends()[0].options.body).text,/🕒/);
+  for (const timestamp of ['invalid','2038-01-01T00:00:00Z']) {
+    assert.equal((await sendCatalog({...base,releases:{
+      'owner/project':{...base.releases['owner/project'],published_at:timestamp}
+    }})).status,400);
+  }
+});
+
 test('list shows linked latest published version from cached Cloudflare catalog', async () => {
   const s = setup(['drakmor/ShadowMountPlus', 'itsPLK/ps5-y2jb-autoloader', 'owner/no-releases']);
   const catalog = {
