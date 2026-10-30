@@ -3,7 +3,7 @@
 // It does not reconfigure the Telegram webhook or require schema migration.
 const GITHUB_REPO = "Vov4k957/ps5-telegram-monitor";
 const MAX_REPOS = 30;
-const WORKER_VERSION = "3.2-latest-list";
+const WORKER_VERSION = "3.3-release-age";
 const NETWORK_TIMEOUT_MS = 10000;
 const LIST_MESSAGE_LIMIT = 3400;
 const textEncoder = new TextEncoder();
@@ -24,6 +24,58 @@ async function getLatestMonitorRun(db) {
     return null;
   }
 }
+
+function russianNumber(number, singular, paucal, plural) {
+  const n = Math.abs(number);
+  if (n % 100 >= 11 && n % 100 <= 14) return number + " " + plural;
+  const last = n % 10;
+  return number + " " + (last === 1 ? singular : last >= 2 && last <= 4 ? paucal : plural);
+}
+
+function addCalendarMonthsUtc(date, count) {
+  const first = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + count, 1,
+    date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds()));
+  const lastDay = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 0)).getUTCDate();
+  first.setUTCDate(Math.min(date.getUTCDate(), lastDay));
+  return first;
+}
+
+function elapsedSincePublication(publishedAt, nowMs = Date.now()) {
+  if (typeof publishedAt !== "string" || !publishedAt) return "";
+  const publishedMs = Date.parse(publishedAt);
+  if (!Number.isFinite(publishedMs) || publishedMs > nowMs + 60000) return "";
+  if (publishedMs >= nowMs) return "только что";
+  const published = new Date(publishedMs);
+  const now = new Date(nowMs);
+
+  let months = (now.getUTCFullYear() - published.getUTCFullYear()) * 12 +
+    (now.getUTCMonth() - published.getUTCMonth());
+  // Calendar months are not fixed at 30 days; handle February and month ends.
+  if (addCalendarMonthsUtc(published, months).getTime() > nowMs) months -= 1;
+
+  if (months >= 12) {
+    const years = Math.floor(months / 12);
+    const rest = months % 12;
+    return russianNumber(years, "год", "года", "лет") +
+      (rest ? ", " + russianNumber(rest, "месяц", "месяца", "месяцев") : "");
+  }
+  if (months >= 1) {
+    const anchor = addCalendarMonthsUtc(published, months).getTime();
+    const days = Math.floor((nowMs - anchor) / 86400000);
+    return russianNumber(months, "месяц", "месяца", "месяцев") +
+      (days ? ", " + russianNumber(days, "день", "дня", "дней") : "");
+  }
+  const minutes = Math.floor((nowMs - publishedMs) / 60000);
+  if (minutes < 1) return "только что";
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  if (days) return russianNumber(days, "день", "дня", "дней") +
+    (hours % 24 ? ", " + russianNumber(hours % 24, "час", "часа", "часов") : "");
+  if (hours) return russianNumber(hours, "час", "часа", "часов") +
+    (minutes % 60 ? ", " + russianNumber(minutes % 60, "минута", "минуты", "минут") : "");
+  return russianNumber(minutes, "минута", "минуты", "минут");
+}
+
 
 async function getLatestReleases(db) {
   try {
@@ -71,6 +123,13 @@ async function receiveReleaseCatalog(request, env) {
         typeof info !== "object" || typeof info.tag !== "string" ||
         typeof info.url !== "string" || info.tag.length > 120 ||
         /[\r\n\x00-\x1f]/.test(info.tag)) return replyText("Invalid release", 400);
+    const publishedAt = info.published_at ?? "";
+    if (typeof publishedAt !== "string" ||
+        (publishedAt && (!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z$/.test(publishedAt) ||
+          !Number.isFinite(Date.parse(publishedAt)) ||
+          Date.parse(publishedAt) > Date.now() + 60000))) {
+      return replyText("Invalid publication date", 400);
+    }
     if (info.url) {
       try {
         const link = new URL(info.url);
@@ -83,7 +142,7 @@ async function receiveReleaseCatalog(request, env) {
     }
     const id = repo.toLowerCase();
     if (Object.hasOwn(sanitized, id)) return replyText("Duplicate repository", 400);
-    sanitized[id] = { tag: info.tag, url: info.url };
+    sanitized[id] = { tag: info.tag, url: info.url, published_at: publishedAt };
   }
 
   // Merge fresh data only; retain versions for repositories skipped by
@@ -382,7 +441,8 @@ async function handleMessage(message, env) {
           ? `<a href="${escapeHtml(published.url)}">${escapeHtml(published.tag)}</a>`
           : escapeHtml(published.tag))
         : (published ? "нет опубликованных релизов" : "ожидается первая проверка");
-      const entry = `${i + 1}. <a href="https://github.com/${encodeURI(repo)}">${escapeHtml(repo)}</a>\n    🏷 ${version}\n`;
+      const ago = published?.tag ? elapsedSincePublication(published.published_at) : "";
+      const entry = `${i + 1}. <a href="https://github.com/${encodeURI(repo)}">${escapeHtml(repo)}</a>\n    🏷 ${version}${ago ? "\n    🕒 " + ago + " назад" : ""}\n`;
       if (current.length + entry.length > LIST_MESSAGE_LIMIT && current !== header) {
         await send(env, current.trimEnd());
         current = "📋 <b>Подписки — продолжение</b>\n";
