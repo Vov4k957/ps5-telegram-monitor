@@ -3,13 +3,14 @@
 // It does not reconfigure the Telegram webhook or require schema migration.
 const GITHUB_REPO = "Vov4k957/ps5-telegram-monitor";
 const MAX_REPOS = 30;
-const WORKER_VERSION = "3.1-review-fixes";
+const WORKER_VERSION = "3.2-latest-list";
 const NETWORK_TIMEOUT_MS = 10000;
 const LIST_MESSAGE_LIMIT = 3400;
 const textEncoder = new TextEncoder();
 
 // Reported by GitHub Actions on each completed scan, not queried from GitHub API.
 const STATUS_ROW_KEY = "monitor_latest_run";
+const RELEASE_CATALOG_ROW_KEY = "monitor_latest_releases";
 const STATUS_STALE_MS = 5 * 60 * 1000;
 
 async function getLatestMonitorRun(db) {
@@ -23,6 +24,82 @@ async function getLatestMonitorRun(db) {
     return null;
   }
 }
+
+async function getLatestReleases(db) {
+  try {
+    const row = await db.prepare("SELECT value FROM settings WHERE key = ?")
+      .bind(RELEASE_CATALOG_ROW_KEY).first();
+    if (!row?.value) return {};
+    const catalog = JSON.parse(row.value);
+    if (!catalog || typeof catalog !== "object" ||
+        !catalog.releases || typeof catalog.releases !== "object") return {};
+    return catalog.releases;
+  } catch {
+    // A malformed or unavailable cache must not hide subscriptions.
+    return {};
+  }
+}
+
+async function receiveReleaseCatalog(request, env) {
+  if (!env.SYNC_SECRET || request.headers.get("Authorization") !== "Bearer " + env.SYNC_SECRET) {
+    return replyText("Unauthorized", 401);
+  }
+  if (!env.DB) return replyText("Database not configured", 503);
+  let incoming;
+  try {
+    const raw = await request.text();
+    if (raw.length > 16000) return replyText("Too large", 413);
+    incoming = JSON.parse(raw);
+  } catch {
+    return replyText("Bad JSON", 400);
+  }
+
+  const completed = incoming?.completed_at;
+  const validTime = typeof completed === "string" &&
+    /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|\+00:00)$/.test(completed) &&
+    Number.isFinite(Date.parse(completed)) &&
+    Date.parse(completed) <= Date.now() + 60000;
+  const values = incoming?.releases;
+  if (!validTime || !values || typeof values !== "object" || Array.isArray(values)) {
+    return replyText("Invalid catalog", 400);
+  }
+  const items = Object.entries(values);
+  if (items.length > MAX_REPOS) return replyText("Too many repositories", 400);
+  const sanitized = {};
+  for (const [repo, info] of items) {
+    if (!/^[a-z\d-]+\/[a-z\d_.-]+$/i.test(repo) || !info ||
+        typeof info !== "object" || typeof info.tag !== "string" ||
+        typeof info.url !== "string" || info.tag.length > 120 ||
+        /[\r\n\x00-\x1f]/.test(info.tag)) return replyText("Invalid release", 400);
+    if (info.url) {
+      try {
+        const link = new URL(info.url);
+        if (link.protocol !== "https:" || link.hostname !== "github.com" ||
+            link.username || link.password ||
+            !link.pathname.toLowerCase().startsWith("/" + repo.toLowerCase() + "/releases/")) {
+          return replyText("Invalid link", 400);
+        }
+      } catch { return replyText("Invalid link", 400); }
+    }
+    const id = repo.toLowerCase();
+    if (Object.hasOwn(sanitized, id)) return replyText("Duplicate repository", 400);
+    sanitized[id] = { tag: info.tag, url: info.url };
+  }
+
+  // Merge fresh data only; retain versions for repositories skipped by
+  // a temporary API error. Earlier reports may not overwrite newer data.
+  const value = JSON.stringify({ completed_at: completed, releases: sanitized });
+  await env.DB.prepare(
+    "INSERT INTO settings (key, value) VALUES (?, ?) " +
+    "ON CONFLICT(key) DO UPDATE SET value = " +
+    "json_patch(settings.value, excluded.value) " +
+    "WHERE julianday(json_extract(settings.value, '$.completed_at')) IS NULL " +
+    "OR julianday(json_extract(settings.value, '$.completed_at')) <= " +
+    "julianday(json_extract(excluded.value, '$.completed_at'))"
+  ).bind(RELEASE_CATALOG_ROW_KEY, value).run();
+  return Response.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
+}
+
 
 function monitorStatusMessage(run, reposCount, translated) {
   const summary = [
@@ -294,11 +371,18 @@ async function handleMessage(message, env) {
   }
   if (cmd === "/list") {
     const translated = await getTranslateEnabled(env.DB);
+    const latest = await getLatestReleases(env.DB);
     const header = `📋 <b>Подписки (${repos.length})</b>\n`;
     let current = header;
     for (let i = 0; i < repos.length; i++) {
       const repo = repos[i];
-      const entry = `${i + 1}. <a href="https://github.com/${encodeURI(repo)}">${escapeHtml(repo)}</a>\n`;
+      const published = latest[repo.toLowerCase()];
+      const version = published && published.tag
+        ? (published.url
+          ? `<a href="${escapeHtml(published.url)}">${escapeHtml(published.tag)}</a>`
+          : escapeHtml(published.tag))
+        : (published ? "нет опубликованных релизов" : "ожидается первая проверка");
+      const entry = `${i + 1}. <a href="https://github.com/${encodeURI(repo)}">${escapeHtml(repo)}</a>\n    🏷 ${version}\n`;
       if (current.length + entry.length > LIST_MESSAGE_LIMIT && current !== header) {
         await send(env, current.trimEnd());
         current = "📋 <b>Подписки — продолжение</b>\n";
@@ -422,6 +506,9 @@ export default {
     }
     if (request.method === "POST" && path === "/report") {
       return receiveMonitorReport(request, env);
+    }
+    if (request.method === "POST" && path === "/catalog") {
+      return receiveReleaseCatalog(request, env);
     }
     if (request.method === "POST" && path === "/telegram") {
       if (!env.DB || !env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID || !env.WEBHOOK_SECRET) {
