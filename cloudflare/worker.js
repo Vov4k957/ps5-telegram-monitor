@@ -448,7 +448,7 @@ async function handleMessage(message, env) {
         ? (published.url
           ? `<a href="${escapeHtml(published.url)}">${escapeHtml(published.tag)}</a>`
           : escapeHtml(published.tag))
-        : (published ? "Нет опубликованных релизов" : "Ожидается первая проверка");
+        : (published ? "нет опубликованных релизов" : "ожидается первая проверка");
       const ago = published?.tag ? elapsedSincePublication(published.published_at) : "";
       const elapsed = ago ? ` · ${ago === "только что" ? ago : ago + " назад"}` : "";
       const entry = `${i + 1}. <b><a href="https://github.com/${encodeURI(repo)}">${escapeHtml(displayName)}</a></b>\n   ${version}${elapsed}\n\n`;
