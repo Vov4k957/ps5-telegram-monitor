@@ -85,7 +85,7 @@ test('list shows linked latest published version from cached Cloudflare catalog'
   };
   const url = 'https://worker.test/catalog';
   let response = await s.context.worker.fetch(new Request(url, {
-    method:'POST',headers:{Authorization:'Bearer test-sync'},body:JSON.stringify(catalog),
+    method:'POST',headers:{Authorization:'Bearer test-sync-secret'},body:JSON.stringify(catalog),
   }),s.env);
   assert.equal(response.status,200);
   await s.sendUpdate(1001,'/list');
@@ -103,7 +103,7 @@ test('latest releases retain cached values on partial scans and reject delayed r
   const s = setup(['owner/one','owner/two']);
   const url='https://worker.test/catalog';
   const send = async payload => s.context.worker.fetch(new Request(url, {
-    method:'POST',headers:{Authorization:'Bearer test-sync'},body:JSON.stringify(payload),
+    method:'POST',headers:{Authorization:'Bearer test-sync-secret'},body:JSON.stringify(payload),
   }),s.env);
   const t = Date.now();
   const first = new Date(t-60000).toISOString();
@@ -135,8 +135,8 @@ test('catalog input requires shared secret and rejects unsafe HTML or links', as
   assert.equal((await s.context.worker.fetch(mk(content,'wrong'),s.env)).status,401);
   assert.equal((await s.context.worker.fetch(mk({...content,releases:{
     'owner/one':{tag:'v2',url:'https://evil.example/releases/tag/v2'},
-  }},'Bearer test-sync'),s.env)).status,400);
-  assert.equal((await s.context.worker.fetch(mk(content,'Bearer test-sync'),s.env)).status,200);
+  }},'Bearer test-sync-secret'),s.env)).status,400);
+  assert.equal((await s.context.worker.fetch(mk(content,'Bearer test-sync-secret'),s.env)).status,200);
   await s.sendUpdate(1002,'/list');
   const message = JSON.parse(s.telegramSends()[0].options.body).text;
   assert.match(message,/&lt;b&gt;v2&lt;\/b&gt;/);
@@ -153,7 +153,7 @@ test('list remains available with no catalog and splits long lists into Telegram
     repos.map(repo=>[repo,{tag:'v'+('3'.repeat(110)),
       url:'https://github.com/'+repo+'/releases/tag/v3'}]))};
   assert.equal((await s.context.worker.fetch(new Request('https://worker.test/catalog',{
-    method:'POST',headers:{Authorization:'Bearer test-sync'},body:JSON.stringify(catalog),
+    method:'POST',headers:{Authorization:'Bearer test-sync-secret'},body:JSON.stringify(catalog),
   }),s.env)).status,200);
   await s.sendUpdate(1004,'/list');
   messages = s.telegramSends().slice(1).map(x=>JSON.parse(x.options.body).text);
