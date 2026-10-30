@@ -169,7 +169,16 @@ def newest_published_release(releases):
     link = str(current.get("html_url") or "").strip()
     if not link.startswith("https://github.com/"):
         link = ""
-    return {"tag": tag, "url": link}
+    published_at = current.get("published_at") or current.get("created_at") or ""
+    try:
+        published = datetime.fromisoformat(published_at.replace("Z", "+00:00"))
+        # UTC timestamps let Cloudflare calculate calendar-aware elapsed time.
+        if published.tzinfo is None:
+            published = published.replace(tzinfo=timezone.utc)
+        published_at = published.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+    except (ValueError, TypeError, AttributeError, OverflowError):
+        published_at = ""
+    return {"tag": tag, "url": link, "published_at": published_at}
 
 
 def publish_cloudflare_catalog(latest):
