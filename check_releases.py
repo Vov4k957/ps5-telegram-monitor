@@ -147,6 +147,54 @@ def fetch_releases(repo):
     return [item for item in items if not item.get("draft")]
 
 
+def newest_published_release(releases):
+    """Latest publication across stable, alpha, beta and other prereleases."""
+    published = [item for item in releases if not item.get("draft")]
+    if not published:
+        return None
+
+    def published_time(item):
+        value = item.get("published_at") or item.get("created_at") or ""
+        try:
+            timestamp = datetime.fromisoformat(value.replace("Z", "+00:00")).timestamp()
+            return timestamp
+        except (ValueError, TypeError, AttributeError, OverflowError):
+            return float("-inf")
+
+    # GitHub's release list can be ordered by creation date, not publication
+    # time. Prefer the most recently PUBLISHED release, regardless of type.
+    _, current = max(enumerate(published),
+                     key=lambda pair: (published_time(pair[1]), -pair[0]))
+    tag = str(current.get("tag_name") or current.get("name") or "").strip()[:120]
+    link = str(current.get("html_url") or "").strip()
+    if not link.startswith("https://github.com/"):
+        link = ""
+    return {"tag": tag, "url": link}
+
+
+def publish_cloudflare_catalog(latest):
+    """Send latest versions to D1 without adding GitHub API requests or commits."""
+    if not latest or not (CLOUDFLARE_SYNC_ENABLED and
+            CLOUDFLARE_SYNC_URL.endswith("/sync") and SYNC_SECRET and
+            os.getenv("GITHUB_ACTIONS") == "true"):
+        return
+    payload = {"completed_at": datetime.now(timezone.utc).isoformat(),
+               "releases": latest}
+    url = CLOUDFLARE_SYNC_URL[:-len("/sync")] + "/catalog"
+    try:
+        response = request_json(
+            url, payload=payload,
+            headers={"Authorization": f"Bearer {SYNC_SECRET}",
+                     "Accept": "application/json"}, timeout=7)
+        if not isinstance(response, dict) or response.get("ok") is not True:
+            raise RuntimeError("Cloudflare catalog endpoint rejected latest versions")
+        print("Cloudflare: последние версии релизов обновлены для /list")
+    except (RuntimeError, OSError, ValueError) as error:
+        # The old Worker lacks /catalog until the new source is deployed.
+        print("Cloudflare: версии для /list пока не синхронизированы: "
+              + type(error).__name__)
+
+
 def resolve_github_repo(repo):
     """Validate a real public repository and return its canonical full_name."""
     headers = {"Accept": "application/vnd.github+json"}
@@ -1421,6 +1469,7 @@ def main():
     event = os.getenv("GITHUB_EVENT_NAME", "local")
     errors = []
     processed = checked = sent = 0
+    latest_versions = {}
     deferred_until = None
 
     def record_error(stage, error):
@@ -1477,6 +1526,7 @@ def main():
                     record_error(repo, error)
                     continue
                 checked += 1
+                latest_versions[repo] = newest_published_release(releases) or {"tag": "", "url": ""}
                 previous = state["repositories"][repo]
                 if previous is None:
                     state["repositories"][repo] = [str(r["id"]) for r in releases]
@@ -1546,6 +1596,7 @@ def main():
                              sent, errors, deferred_until=deferred_until)
     publish_cloudflare_status(started_at, checked, len(state["repositories"]),
                               sent, errors, deferred_until)
+    publish_cloudflare_catalog(latest_versions)
     print(f"Событие: {event}; проверено {checked} репозиториев; отправлено релизов: {sent}; "
           f"обработано updates: {processed}; ошибок: {len(errors)}")
     if errors:
