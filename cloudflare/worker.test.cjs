@@ -73,6 +73,95 @@ function setup(repos = []) {
   return {DB, env, context, calls, sendUpdate, sendReport, telegramSends};
 }
 
+test('list shows linked latest published version from cached Cloudflare catalog', async () => {
+  const s = setup(['drakmor/ShadowMountPlus', 'itsPLK/ps5-y2jb-autoloader', 'owner/no-releases']);
+  const catalog = {
+    completed_at:new Date().toISOString(),
+    releases:{
+      'drakmor/ShadowMountPlus':{tag:'1.7beta11', url:'https://github.com/drakmor/ShadowMountPlus/releases/tag/1.7beta11'},
+      'itsPLK/ps5-y2jb-autoloader':{tag:'v1.1.0', url:'https://github.com/itsPLK/ps5-y2jb-autoloader/releases/tag/v1.1.0'},
+      'owner/no-releases':{tag:'',url:''},
+    },
+  };
+  const url = 'https://worker.test/catalog';
+  let response = await s.context.worker.fetch(new Request(url, {
+    method:'POST',headers:{Authorization:'Bearer test-sync'},body:JSON.stringify(catalog),
+  }),s.env);
+  assert.equal(response.status,200);
+  await s.sendUpdate(1001,'/list');
+  const message = JSON.parse(s.telegramSends()[0].options.body).text;
+  assert.match(message,/ShadowMountPlus/);
+  assert.match(message,/1\.7beta11/);
+  assert.match(message,/ps5-y2jb-autoloader/);
+  assert.match(message,/v1\.1\.0/);
+  assert.match(message,/нет опубликованных релизов/);
+  assert.match(message,/<a href="https:\/\/github\.com\/drakmor\/ShadowMountPlus\/releases\/tag\/1\.7beta11">/);
+  assert.equal(s.calls.filter(x=>x.url.startsWith('https://api.github.com')).length,0);
+});
+
+test('latest releases retain cached values on partial scans and reject delayed reports', async () => {
+  const s = setup(['owner/one','owner/two']);
+  const url='https://worker.test/catalog';
+  const send = async payload => s.context.worker.fetch(new Request(url, {
+    method:'POST',headers:{Authorization:'Bearer test-sync'},body:JSON.stringify(payload),
+  }),s.env);
+  const t = Date.now();
+  const first = new Date(t-60000).toISOString();
+  const second = new Date(t-10000).toISOString();
+  assert.equal((await send({completed_at:first,releases:{
+    'owner/one':{tag:'v1',url:'https://github.com/owner/one/releases/tag/v1'},
+    'owner/two':{tag:'v2',url:'https://github.com/owner/two/releases/tag/v2'},
+  }})).status,200);
+  assert.equal((await send({completed_at:second,releases:{
+    'owner/one':{tag:'v1.1-alpha',url:'https://github.com/owner/one/releases/tag/v1.1-alpha'},
+  }})).status,200);
+  assert.equal((await send({completed_at:first,releases:{
+    'owner/one':{tag:'OLD',url:'https://github.com/owner/one/releases/tag/OLD'},
+  }})).status,200);
+  const saved=JSON.parse(s.DB.sqlite.prepare("SELECT value FROM settings WHERE key='monitor_latest_releases'").get().value);
+  assert.equal(saved.releases['owner/one'].tag,'v1.1-alpha');
+  assert.equal(saved.releases['owner/two'].tag,'v2');
+  assert.equal(saved.completed_at,second);
+});
+
+test('catalog input requires shared secret and rejects unsafe HTML or links', async () => {
+  const s = setup(['owner/one']);
+  const url='https://worker.test/catalog';
+  const content = {completed_at:new Date().toISOString(),releases:{
+    'owner/one':{tag:'<b>v2</b>',url:'https://github.com/owner/one/releases/tag/v2'},
+  }};
+  const mk = (p,auth) => new Request(url,{method:'POST',
+    headers:{Authorization:auth},body:JSON.stringify(p)});
+  assert.equal((await s.context.worker.fetch(mk(content,'wrong'),s.env)).status,401);
+  assert.equal((await s.context.worker.fetch(mk({...content,releases:{
+    'owner/one':{tag:'v2',url:'https://evil.example/releases/tag/v2'},
+  }},'Bearer test-sync'),s.env)).status,400);
+  assert.equal((await s.context.worker.fetch(mk(content,'Bearer test-sync'),s.env)).status,200);
+  await s.sendUpdate(1002,'/list');
+  const message = JSON.parse(s.telegramSends()[0].options.body).text;
+  assert.match(message,/&lt;b&gt;v2&lt;\/b&gt;/);
+  assert.doesNotMatch(message,/<b>v2<\/b>/);
+});
+
+test('list remains available with no catalog and splits long lists into Telegram-safe messages', async () => {
+  const repos = Array.from({length:30},(_,i)=>'owner/project-'+String(i).padStart(2,'0')+'-long-name');
+  const s=setup(repos);
+  await s.sendUpdate(1003,'/list');
+  let messages = s.telegramSends().map(x=>JSON.parse(x.options.body).text);
+  assert.match(messages[0],/ожидается первая проверка/);
+  const catalog={completed_at:new Date().toISOString(),releases:Object.fromEntries(
+    repos.map(repo=>[repo,{tag:'v'+('3'.repeat(110)),
+      url:'https://github.com/'+repo+'/releases/tag/v3'}]))};
+  assert.equal((await s.context.worker.fetch(new Request('https://worker.test/catalog',{
+    method:'POST',headers:{Authorization:'Bearer test-sync'},body:JSON.stringify(catalog),
+  }),s.env)).status,200);
+  await s.sendUpdate(1004,'/list');
+  messages = s.telegramSends().slice(1).map(x=>JSON.parse(x.options.body).text);
+  assert.ok(messages.length>=2);
+  assert.ok(messages.every(x=>x.length<4096));
+  assert.ok(messages.join('\n').includes('project-29'));
+});
+
 test('webhook authentication and owner/private-chat authorization', async () => {
   const s = setup(['owner/project']);
   assert.equal((await s.sendUpdate(1,'/list',42,42,'private','wrong-secret')).status,403);
