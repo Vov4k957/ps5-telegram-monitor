@@ -318,6 +318,7 @@ class MonitorTests(unittest.TestCase):
         self.assertEqual(bot.newest_published_release(current), {
             "tag": "v3-alpha",
             "url": "https://github.com/owner/repo/releases/tag/v3-alpha",
+            "published_at": "2026-10-30T06:00:00Z",
         })
         self.assertIsNone(bot.newest_published_release([]))
         self.assertIsNone(bot.newest_published_release([current[2]]))
@@ -354,6 +355,16 @@ class MonitorTests(unittest.TestCase):
         value = bot.newest_published_release(releases)
         self.assertEqual(len(value["tag"]), 120)
         self.assertEqual(value["url"], "")
+        self.assertEqual(value["published_at"], "2026-10-30T00:00:00Z")
+
+    def test_release_date_falls_back_to_created_at_and_invalid_dates_hide_age(self):
+        self.assertEqual(bot.newest_published_release([{
+            "tag_name": "v0.1-alpha", "created_at": "2026-10-20T12:30:00Z"
+        }])["published_at"], "2026-10-20T12:30:00Z")
+        self.assertEqual(bot.newest_published_release([{
+            "tag_name": "v2", "published_at": "broken"
+        }])["published_at"], "")
+
 
     def test_report_status_posts_to_cloudflare_without_persisting_history(self):
         self.write_state()
