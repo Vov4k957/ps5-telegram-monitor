@@ -125,13 +125,63 @@ test('catalog rejects malformed or future dates and supports older timestamp-fre
   }};
   assert.equal((await sendCatalog(base)).status,200);
   await s.sendUpdate(1101,'/list');
-  assert.match(JSON.parse(s.telegramSends()[0].options.body).text,/🏷/);
-  assert.doesNotMatch(JSON.parse(s.telegramSends()[0].options.body).text,/🕒/);
+  assert.match(JSON.parse(s.telegramSends()[0].options.body).text, /v1/);
+  assert.doesNotMatch(JSON.parse(s.telegramSends()[0].options.body).text, / · .* назад/);
   for (const timestamp of ['invalid','2038-01-01T00:00:00Z']) {
     assert.equal((await sendCatalog({...base,releases:{
       'owner/project':{...base.releases['owner/project'],published_at:timestamp}
     }})).status,400);
   }
+});
+
+test('list groups eight projects in two readable lines with blank separation', async () => {
+  const repos = [
+    'drakmor/ShadowMountPlus', 'EchoStretch/kstuff-lite',
+    'itsPLK/ps5-payload-manager', 'itsPLK/ps5-y2jb-autoloader',
+    'mihawk-99/PS5_MihawkOS', 'owendswang/ps5-aria2',
+    'quer3q/ps5-dump-forge', 'TheMojoMan/oneplus-erhai-ubuntu',
+  ];
+  const s=setup(repos);
+  const catalog={
+    completed_at:new Date().toISOString(),
+    releases:Object.fromEntries(repos.map((repo,i)=>[
+      repo,{
+        tag:i===0?'1.7beta11':i===7?'installer-20261018':'v1.0',
+        url:'https://github.com/'+repo+'/releases/tag/'+
+          (i===0?'1.7beta11':i===7?'installer-20261018':'v1.0'),
+        published_at:new Date(Date.now()-(10+i)*3600000).toISOString(),
+      },
+    ])),
+  };
+  assert.equal((await s.context.worker.fetch(new Request('https://worker.test/catalog',{
+    method:'POST',headers:{Authorization:'Bearer test-sync-secret'},
+    body:JSON.stringify(catalog),
+  }),s.env)).status,200);
+  await s.sendUpdate(3000,'/list');
+  const messages=s.telegramSends().map(x=>JSON.parse(x.options.body).text);
+  assert.equal(messages.length,1);
+  const message=messages[0];
+  assert.match(message,/^📋 <b>Подписки \(8\)<\/b>\n\n/);
+  for(let i=0;i<repos.length;i++){
+    const project=repos[i].split('/').at(-1);
+    assert.ok(message.includes(String(i+1)+'. <b><a href="https://github.com/'));
+    assert.ok(message.includes('>'+project+'</a></b>\n   '));
+  }
+  assert.match(message,/ShadowMountPlus<\/a><\/b>\n   <a [^\n]+1\.7beta11<\/a> · .* назад\n\n2\. /);
+  assert.match(message,/oneplus-erhai-ubuntu<\/a><\/b>\n   <a [^\n]+installer-20261018<\/a> · .* назад\n\n🌐/);
+  assert.doesNotMatch(message,/🏷|🕒/);
+  assert.doesNotMatch(message,/>drakmor\/ShadowMountPlus<\/a>/);
+  assert.ok(message.length<4096);
+});
+
+test('list disambiguates duplicate names from different owners', async () => {
+  const s=setup(['first/shared-tool','second/shared-tool','third/unique-tool']);
+  await s.sendUpdate(3001,'/list');
+  const message=JSON.parse(s.telegramSends()[0].options.body).text;
+  assert.match(message,/>first\/shared-tool<\/a><\/b>/);
+  assert.match(message,/>second\/shared-tool<\/a><\/b>/);
+  assert.match(message,/>unique-tool<\/a><\/b>/);
+  assert.doesNotMatch(message,/>third\/unique-tool<\/a>/);
 });
 
 test('list shows linked latest published version from cached Cloudflare catalog', async () => {
