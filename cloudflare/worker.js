@@ -41,7 +41,7 @@ async function getLatestReleases(db) {
 }
 
 async function receiveReleaseCatalog(request, env) {
-  if (!env.SYNC_SECRET || request.headers.get("Authorization") !== "Bearer " + env.SYNC_SECRET) {
+  if (!env.SYNC_SECRET || request.headers.get("Authorization") !== ("Bearer " + env.SYNC_SECRET)) {
     return replyText("Unauthorized", 401);
   }
   if (!env.DB) return replyText("Database not configured", 503);
