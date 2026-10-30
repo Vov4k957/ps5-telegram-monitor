@@ -3,7 +3,7 @@
 // It does not reconfigure the Telegram webhook or require schema migration.
 const GITHUB_REPO = "Vov4k957/ps5-telegram-monitor";
 const MAX_REPOS = 30;
-const WORKER_VERSION = "3.3-release-age";
+const WORKER_VERSION = "3.4-clean-list";
 const NETWORK_TIMEOUT_MS = 10000;
 const LIST_MESSAGE_LIMIT = 3400;
 const textEncoder = new TextEncoder();
@@ -431,26 +431,35 @@ async function handleMessage(message, env) {
   if (cmd === "/list") {
     const translated = await getTranslateEnabled(env.DB);
     const latest = await getLatestReleases(env.DB);
-    const header = `📋 <b>Подписки (${repos.length})</b>\n`;
+    const header = `📋 <b>Подписки (${repos.length})</b>\n\n`;
     let current = header;
+    const nameCounts = new Map();
+    for (const repo of repos) {
+      const name = repo.split("/").at(-1).toLowerCase();
+      nameCounts.set(name, (nameCounts.get(name) || 0) + 1);
+    }
     for (let i = 0; i < repos.length; i++) {
       const repo = repos[i];
+      const project = repo.split("/").at(-1);
+      // If different owners use the same project name, show owner/repo.
+      const displayName = nameCounts.get(project.toLowerCase()) > 1 ? repo : project;
       const published = latest[repo.toLowerCase()];
       const version = published && published.tag
         ? (published.url
           ? `<a href="${escapeHtml(published.url)}">${escapeHtml(published.tag)}</a>`
           : escapeHtml(published.tag))
-        : (published ? "нет опубликованных релизов" : "ожидается первая проверка");
+        : (published ? "Нет опубликованных релизов" : "Ожидается первая проверка");
       const ago = published?.tag ? elapsedSincePublication(published.published_at) : "";
-      const entry = `${i + 1}. <a href="https://github.com/${encodeURI(repo)}">${escapeHtml(repo)}</a>\n    🏷 ${version}${ago ? "\n    🕒 " + (ago === "только что" ? ago : ago + " назад") : ""}\n`;
+      const elapsed = ago ? ` · ${ago === "только что" ? ago : ago + " назад"}` : "";
+      const entry = `${i + 1}. <b><a href="https://github.com/${encodeURI(repo)}">${escapeHtml(displayName)}</a></b>\n   ${version}${elapsed}\n\n`;
       if (current.length + entry.length > LIST_MESSAGE_LIMIT && current !== header) {
         await send(env, current.trimEnd());
-        current = "📋 <b>Подписки — продолжение</b>\n";
+        current = "📋 <b>Подписки — продолжение</b>\n\n";
       }
       current += entry;
     }
-    if (!repos.length) current += "Пока нет подписок\n";
-    current += `\n🌐 Перевод: ${translated ? "включён" : "выключен"}`;
+    if (!repos.length) current += "Пока нет подписок\n\n";
+    current += `🌐 Перевод: ${translated ? "включён" : "выключен"}`;
     await send(env, current);
     return;
   }
