@@ -1,0 +1,28 @@
+name: Cloudflare Worker regression tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/**'
+      - '.github/workflows/worker-tests.yml'
+  pull_request:
+    paths:
+      - 'cloudflare/**'
+      - '.github/workflows/worker-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test Worker with local SQLite and mocked network
+        run: node --test cloudflare/worker.test.cjs

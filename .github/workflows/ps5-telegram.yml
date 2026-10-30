@@ -10,7 +10,7 @@ on:
     paths:
       - '.github/workflows/ps5-telegram.yml'
       - 'check_releases.py'
-      - 'test_check_releases.py'
+      - 'test_*.py'
 
 permissions:
   contents: write
@@ -33,7 +33,7 @@ jobs:
           fetch-depth: 0
 
       - name: Test commands, buttons, history and failure recovery
-        run: python3 -m unittest -q test_check_releases.py
+        run: python3 -m unittest discover -q
 
       - name: Check PS5 GitHub releases and notify Telegram
         id: monitor
@@ -82,4 +82,5 @@ jobs:
           path: ${{ runner.temp }}/ps5-release-state.json
           retention-days: 7
           if-no-files-found: warn
+
 

@@ -10,15 +10,19 @@ permissions:
 
 jobs:
   test-connection:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
+      - name: Checkout validation code
+        uses: actions/checkout@v4
       - name: Verify Cloudflare sync secret and subscriptions
         env:
           SYNC_SECRET: ${{ secrets.SYNC_SECRET }}
         run: |
           python3 - <<'PY'
           import json, os, urllib.request, urllib.error
+          from check_releases import validate_cloudflare_sync_payload
           secret = os.environ.get("SYNC_SECRET", "")
           if not secret:
               raise SystemExit("SYNC_SECRET is not configured in GitHub Actions Secrets")
@@ -40,8 +44,11 @@ jobs:
               raise SystemExit("Cloudflare sync request denied; no secret disclosed")
           except Exception as error:
               raise SystemExit("Cloudflare sync request failed: " + type(error).__name__)
-          repos = payload.get("repositories")
-          if not isinstance(repos, list) or len(repos) != 6 or payload.get("translate_enabled") is not True:
-              raise SystemExit("Cloudflare sync data does not match expected 6 subscriptions / translation on")
-          print("Cloudflare D1 sync verified: 6 subscriptions; translation enabled; authorization successful")
+          try:
+              repos, translated = validate_cloudflare_sync_payload(payload)
+          except RuntimeError as error:
+              raise SystemExit(str(error)) from None
+          print("Cloudflare D1 sync verified; subscriptions:", len(repos),
+                "translation enabled:", translated, "; authorization successful")
           PY
+
