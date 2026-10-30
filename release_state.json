@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-10-29T22:22:21.992337+00:00",
+  "last_heartbeat": "2026-10-30T00:31:19.529244+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-10-29T22:22:21.992337+00:00",
+    "completed_at": "2026-10-30T00:31:19.529244+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "40965328175",
-    "started_at": "2026-10-29T22:22:17.324374+00:00",
+    "run_id": "40980187379",
+    "started_at": "2026-10-30T00:31:14.987106+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -48,20 +48,6 @@
       }
     },
     "itsPLK/ps5-y2jb-autoloader": {
-      "426135358": {
-        "body": "added missing fw 11.40 relapse offsets thanks notmaj0r updated elfldr to v0.27 ci: set splash.html permissions to read-only in download0.dat bundled binaries this build integrates the following external dependency versions itsplk ps5-elfldr: v0.27-b57d0e9 itsplk ps5-kexp: v0.8-24cf6e5 itsplk ps5-unified-autoloader: v0.1.6-e7093cd",
-        "bullets": [
-          "added missing fw 11.40 relapse offsets thanks notmaj0r",
-          "ci: set splash.html permissions to read-only in download0.dat",
-          "itsplk ps5-elfldr: v0.27-b57d0e9",
-          "itsplk ps5-kexp: v0.8-24cf6e5",
-          "itsplk ps5-unified-autoloader: v0.1.6-e7093cd"
-        ],
-        "digest": "7313563c81372dda6c7e2d1e0e0d4d446de71c2885f065f71f34a7cb0f1ad1f1",
-        "eligible": false,
-        "message_id": null,
-        "notified": false
-      },
       "426764815": {
         "body": "relapse: switched to notmaj0r s port autoloader: fix socket readiness polling for elfldr, eliminating the 1-second startup delay performance: removed network log server check updater optimizations bundled binaries this build integrates the following external dependency versions itsplk ps5-elfldr: v0.27-b57d0e9 itsplk ps5-kexp: v0.8-24cf6e5 itsplk ps5-unified-autoloader: v0.1.6-e7093cd",
         "bullets": [
