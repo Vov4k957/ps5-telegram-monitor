@@ -111,7 +111,7 @@ test('list recomputes elapsed time from publication date without GitHub API call
   await s.sendUpdate(1100,'/list');
   const message = JSON.parse(s.telegramSends()[0].options.body).text;
   assert.match(message,/1\.7beta11/);
-  assert.match(message,/🕒 2 дня, 3 часа назад/);
+  assert.match(message,/1\.7beta11<\/a> · 2 дня, 3 часа назад/);
   assert.equal(s.calls.filter(x=>x.url.startsWith('https://api.github.com')).length, 0);
 });
 
