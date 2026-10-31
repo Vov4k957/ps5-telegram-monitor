@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-10-30T21:55:27.669303+00:00",
+  "last_heartbeat": "2026-10-31T17:51:19.122288+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-10-30T21:55:27.669303+00:00",
+    "completed_at": "2026-10-31T17:51:19.122288+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "41134531370",
-    "started_at": "2026-10-30T21:55:23.341593+00:00",
+    "run_id": "41226521333",
+    "started_at": "2026-10-31T17:51:15.329256+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -175,26 +175,6 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 113,
-        "notified": false
-      }
-    },
-    "quer3q/ps5-dump-forge": {
-      "428204826": {
-        "body": "the big one - new pack tab, faster runtime and pkg install new custom ampr-emu runtime. an optional runtime with up to 8x faster load speeds more information here: ampr-emu-ng new zstd pack format. compress an ampr game s assets into the zstd pack format, close to fpkg in size and play speed lz4 packs got a compression level selector. choose fast plain lz4, the default , medium lz4 hc 9 or max lz4 hc 12 : higher levels give smaller packs and take longer to pack package installer on the ps5. storage has a new package installer view that lists every .pkg on the console. install it or delete it from there, or from a .pkg row in the file explorer install pkg from a pc. in connect, a paired ps5 has an install pkg button: pick a .pkg on the computer and the console installs it, reading it over the network ps5 tabs in the file explorer. on a computer, each paired ps5 that is online gets a tab next to this device, with rename, move and delete. drag a row onto another device s tab to copy it there, or drop files from the system to copy them in new logo by xxcco changes lz4 traces removed. lz4 packing uses its built-in rules only",
-        "body_length": 1137,
-        "bullets": [
-          "custom ampr-emu runtime. an optional runtime with up to 8x faster load speeds more information here: ampr-emu-ng",
-          "new zstd pack format. compress an ampr game s assets into the zstd pack format, close to fpkg in size and play speed",
-          "lz4 packs got a compression level selector. choose fast plain lz4, the default , medium lz4 hc 9 or max lz4 hc 12 : higher levels give smaller packs and take longer to pack",
-          "package installer on the ps5. storage has a new package installer view that lists every .pkg on the console. install it or delete it from there, or from a .pkg row in the file explorer",
-          "install pkg from a pc. in connect, a paired ps5 has an install pkg button: pick a .pkg on the computer and the console installs it, reading it over the network",
-          "ps5 tabs in the file explorer. on a computer, each paired ps5 that is online gets a tab next to this device, with rename, move and delete. drag a row onto another device s tab to copy it there, or drop files from the system to copy them in",
-          "lz4 traces removed. lz4 packing uses its built-in rules only"
-        ],
-        "digest": "54e5fd9cb1248a7307dbd7fefd17190770d5bbf1c4653624b0941163057cd873",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
         "notified": false
       }
     }
