@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-10-31T21:23:19.447349+00:00",
+  "last_heartbeat": "2026-11-01T07:11:22.024583+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-10-31T21:23:19.447349+00:00",
+    "completed_at": "2026-11-01T07:11:22.024583+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "41243342085",
-    "started_at": "2026-10-31T21:23:15.073206+00:00",
+    "notifications_sent": 1,
+    "run_id": "41283761663",
+    "started_at": "2026-11-01T07:11:15.107108+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -58,6 +58,22 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 113,
+        "notified": false
+      }
+    },
+    "quer3q/ps5-dump-forge": {
+      "430413222": {
+        "body": "new delete the source after conversion. convert and pack have an opt-in switch that deletes the source after a successful, verified job connect speed test. a paired device can be speed tested to know bandwidth limits for current connection smaller ps5 payload size fixes more reliable connect: discovery recovers after a network drop or rest mode, a stalled handshake no longer holds a connection slot, and a long delete or move on a paired device no longer holds up a transfer",
+        "body_length": 477,
+        "bullets": [
+          "delete the source after conversion. convert and pack have an opt-in switch that deletes the source after a successful, verified job",
+          "connect speed test. a paired device can be speed tested to know bandwidth limits for current connection",
+          "more reliable connect: discovery recovers after a network drop or rest mode, a stalled handshake no longer holds a connection slot, and a long delete or move on a paired device no longer holds up a transfer"
+        ],
+        "digest": "658a697b44c246036b01cd6e0ef933c4e088f0559761322ee31f941897cf7825",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 114,
         "notified": false
       }
     }
@@ -182,7 +198,8 @@
       "422614336",
       "418406972",
       "416564215",
-      "428204826"
+      "428204826",
+      "430413222"
     ]
   },
   "ru_translation_enabled_notice": true,
