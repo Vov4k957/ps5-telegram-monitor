@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-01T18:45:36.084785+00:00",
+  "last_heartbeat": "2026-11-02T03:57:27.444946+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-11-01T18:45:36.084785+00:00",
+    "completed_at": "2026-11-02T03:57:27.444946+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "41338228122",
-    "started_at": "2026-11-01T18:45:32.160718+00:00",
+    "notifications_sent": 1,
+    "run_id": "41385781926",
+    "started_at": "2026-11-02T03:57:15.674444+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -92,6 +92,49 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 115,
+        "notified": false
+      },
+      "431055676": {
+        "body": "ps5 mihawkos-v7.1.0-alpha-7 mihawkos is a passion project, not a piracy project it exists so you can play the games you own on the console you own piracy is not condoned no games, saves, keys, firmware or exploits are included, and they never will be use only games and programs you have the right to run : your own copies, bought or installed by you requests for, or links to, games, keys, firmware or exploits are not welcome in this project s issues or discussions mihawkos s own on-screen keyboard. games inside mihawkos no longer freeze waiting for input. updates that say what they re doing an update to the seventh alpha of mihawkos, the homebrew title that runs windows games on a ps5 from a desktop of their own, mihawk os. it is still experimental. from alpha 7, update by replacing the ppsa99170 folder alpha 7 s own update cannot install it ; from 7.1 on, mihawkos updates itself mihawkos s own on-screen keyboard it works on every firmware now. alpha 7 borrowed the ps5 s system keyboard, which cannot be loaded by homebrew on firmware 13.60, so the keyboard never opened there. mihawkos now draws its own at the bottom of the screen, with the game visible above it. open it during a game the way you chose in settings controls a two-finger touchpad click, l3 r3, or options touchpad click frosted meadow look: see-through frosted glass that shows the game blurred behind it, glossy aero keys, soap bubbles rising at its sides, and a soft light that crosses the glass once after it opens, then at most every 30 seconds, never while you are typing instant. a key press shows on screen 2 to 5 ms later measured on a standard ps5, firmware 13.60 while it is open it costs the game about 3 ms per frame; closed, nothing games inside mihawkos no more freezing until the mouse moves. in alpha 7, a game inside mihawkos could stop for seconds at a time, its music still playing, until a mouse or controller input arrived. a wake-up meant for input stayed set when no input came so the game s main loop spun on it and its timers never fired. our own test program shows it: in alpha 7 its first 16 ms wait never returned in 3 minutes; in 7.1 every wait came back on time longest 17 ms . this test is now part of every release s checks clearer crash reports. when a game inside mihawkos fails to read a part of a file it has mapped into memory, the log now says why, so these crashes can be diagnosed from a report updates the update line says what it s doing , in your language: checking, downloading with mb and percent , checking the signature, preparing with percent , ready. if something goes wrong it says why: the update server could not be reached, the download stopped, there is not enough space, or the download did not match mihawkos s signature it is then not used, and mihawkos stays as it is it checks every time you open mihawkos from the home screen , at most once an hour, instead of once a day returning from a game does not check no double check after an update. mihawkos no longer asks again right after restarting into the new version updates that start. alpha 7 s updater wrote the new version without permission to run its programs, so the updated mihawkos could not start. 7.1 s updater sets it, and reads a new signed file that alpha 7 never sees played on the console this release s build was tested on a standard ps5 firmware 13.60 the full test battery of 121 cases on a freshly restarted console: 119 passed and 2 were skipped by a test-network setting v71-fix-gate-base-2026-11-02 7.1 updating itself to a newer test build: it found it, downloaded it 555 mb , checked its signature, switched and the new version started from the switched folder, its programs allowed to run. its own restart and a return from a game did not check again; opening mihawkos did updating from alpha 7 by replacing the folder: on a console set up with alpha 7 and its runtime, the 7.1 folder was copied over the old one. 7.1 topped up its runtime by itself 12 files, 11.7 seconds , every file matched the package its programs were allowed to run, and the prefix and settings were kept the keyboard: its 5 checks pass on the console opening it, moving and typing, changing pages, closing , with 2 to 5 ms from a key press to the screen known limits tested on a standard ps5 firmware 13.60 only. no ps5 pro was run with this build the input-freeze fix is proven with our test program, not yet with a game. testers who saw a game freeze until they moved the mouse: please try again and send logs spelunky 2 stays on a black screen: it asks for memory at addresses the ps5 does not give to programs. under investigation the witcher 3 started from the mihawk os desktop closes itself at once. start it from the library or files only one game at a time runs inside mihawkos. a second game, and 32-bit games, run the old way a game that freezes on its loading screen may not be closed by itself yet: close mihawkos from the ps button menu restart the ps5 now and then. pipe memory runs out after very many program starts; mihawkos says restart the ps5 when that happens the per-boot setup is yours: your payloads after every cold boot. never use rest mode with payloads loaded not supported: drm such as denuvo, and anti-cheat such as easy anti-cheat or battleye everything else from alpha 7 still applies installing or updating ps5 mihawkos-v7.1.0-alpha-7.zip size: 555.4 mb; what it is: the mihawkos title: the ppsa99170 folder, windows runtime included ps5 mihawkos-v7.1.0-alpha-7.zip.sha256 size: 1 kb; what it is: the sha-256 of the zip ps5 mihawkos-v7.1.0-alpha-7-readme.txt size: 1 kb; what it is: the install steps in short ps5 mihawkos-v7.1.0-alpha-7-sha256sums size: 42 kb; what it is: the sha-256 of every file in the folder: sha256sum -c checks a copy mihawkos-update.txt size: 1 kb; what it is: the signed description 7.1 s update check reads from alpha 7: replace the ppsa99170 folder in data homebrew with the new one and open mihawkos: it installs the new runtime by itself. alpha 7 s automatic update is never offered 7.1: it would install it without permission to start, so the update is not published for it. from 7.1 on, the automatic update works new install, or from alpha 6: follow alpha 7 s steps with this release s zip. back up your saves first when updating your prefix, your games in c: games , steam and your settings are kept no games, saves, keys or firmware are supplied. use only games and programs you have the right to run source, licences and credits changes since v7.0.0-alpha-7 . release source: the complete corresponding source is the repository at that tag. the keyboard s drawing over the game lives in ps5 vulkan 66dad9f , pinned by commit. mihawkos is free software under the gnu general public license v3.0 or later ; each component keeps its own licence, listed with its pin in notice.md thank you to the testers who sent their logs and videos , which found the keyboard on firmware 13.60, the freeze that only the mouse could end, and the update line s silent failures; to skeuoss for bubble city , whose bubbles now rise beside the keyboard too; and to the wine , proton , dxvk , vkd3d-proton and mesa developers mihawkos is an independent hobby project, not affiliated with, sponsored by or endorsed by sony interactive entertainment, microsoft, valve, amd, capcom, cd projekt red or any game publisher. playstation, ps5 and dualsense are trademarks of sony interactive entertainment inc.; windows is a trademark of microsoft corporation; steam and proton are trademarks of valve corporation; radeon is a trademark of advanced micro devices, inc. you are responsible for having the right to the programs you run, and for whether modifying your console is lawful where you live legal.md ready to get started? available releases installation guide source and credits ready to get started? available releases installation guide source and credits",
+        "body_length": 7896,
+        "bullets": [
+          "no games, saves, keys, firmware or exploits are included, and they never will be",
+          "use only games and programs you have the right to run : your own copies, bought or installed by you",
+          "requests for, or links to, games, keys, firmware or exploits are not welcome in this project s issues or discussions",
+          "it works on every firmware now. alpha 7 borrowed the ps5 s system keyboard, which cannot be loaded by homebrew on",
+          "at the bottom of the screen, with the game visible above it. open it during a game the way you chose in settings",
+          "frosted meadow look: see-through frosted glass that shows the game blurred behind it, glossy aero keys, soap bubbles",
+          "instant. a key press shows on screen 2 to 5 ms later measured on a standard ps5, firmware 13.60",
+          "while it is open it costs the game about 3 ms per frame; closed, nothing",
+          "no more freezing until the mouse moves. in alpha 7, a game inside mihawkos could stop for seconds at a time, its",
+          "clearer crash reports. when a game inside mihawkos fails to read a part of a file it has mapped into memory, the",
+          "the update line says what it s doing , in your language: checking, downloading with mb and percent , checking",
+          "it checks every time you open mihawkos from the home screen , at most once an hour, instead of once a day",
+          "no double check after an update. mihawkos no longer asks again right after restarting into the new version",
+          "updates that start. alpha 7 s updater wrote the new version without permission to run its programs, so the",
+          "the full test battery of 121 cases on a freshly restarted console: 119 passed and 2 were skipped by a test-network",
+          "7.1 updating itself to a newer test build: it found it, downloaded it 555 mb , checked its signature, switched",
+          "updating from alpha 7 by replacing the folder: on a console set up with alpha 7 and its runtime, the 7.1 folder was",
+          "the keyboard: its 5 checks pass on the console opening it, moving and typing, changing pages, closing , with",
+          "tested on a standard ps5 firmware 13.60 only. no ps5 pro was run with this build",
+          "the input-freeze fix is proven with our test program, not yet with a game. testers who saw a game freeze until",
+          "spelunky 2 stays on a black screen: it asks for memory at addresses the ps5 does not give to programs. under",
+          "the witcher 3 started from the mihawk os desktop closes itself at once. start it from the library or files",
+          "only one game at a time runs inside mihawkos. a second game, and 32-bit games, run the old way",
+          "a game that freezes on its loading screen may not be closed by itself yet: close mihawkos from the ps button menu",
+          "restart the ps5 now and then. pipe memory runs out after very many program starts; mihawkos says restart the",
+          "the per-boot setup is yours: your payloads after every cold boot. never use rest mode with payloads loaded",
+          "not supported: drm such as denuvo, and anti-cheat such as easy anti-cheat or battleye",
+          "ps5 mihawkos-v7.1.0-alpha-7.zip size: 555.4 mb; what it is: the mihawkos title: the ppsa99170 folder, windows runtime included",
+          "ps5 mihawkos-v7.1.0-alpha-7.zip.sha256 size: 1 kb; what it is: the sha-256 of the zip",
+          "ps5 mihawkos-v7.1.0-alpha-7-readme.txt size: 1 kb; what it is: the install steps in short",
+          "ps5 mihawkos-v7.1.0-alpha-7-sha256sums size: 42 kb; what it is: the sha-256 of every file in the folder: sha256sum -c checks a copy",
+          "mihawkos-update.txt size: 1 kb; what it is: the signed description 7.1 s update check reads"
+        ],
+        "digest": "feb50aefafb86a87d505cba3c38ab47a1e6b36fc007c0f21a55b716861cba05e",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 116,
         "notified": false
       }
     },
@@ -219,7 +262,8 @@
       "428264216",
       "428361297",
       "429374136",
-      "430714030"
+      "430714030",
+      "431055676"
     ],
     "owendswang/ps5-aria2": [
       "403774307",
