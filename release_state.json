@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-03T14:12:22.514616+00:00",
+  "last_heartbeat": "2026-11-03T14:15:41.041663+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-11-03T14:12:22.514616+00:00",
+    "completed_at": "2026-11-03T14:15:41.041663+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "41651357317",
-    "started_at": "2026-11-03T14:12:18.409207+00:00",
+    "run_id": "41651892157",
+    "started_at": "2026-11-03T14:15:32.253828+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -140,25 +140,22 @@
     },
     "quer3q/ps5-dump-forge": {
       "432776365": {
-        "body": "new ampr-emu-ng v0.2.0. the bundled ampr-emu-ng is now its v0.2.0 release. games carrying v0.1.0 are still recognized. the ampr tile shows the runtime and its version custom packing rules. zstd and lz4 pack take a toml profile that decides which files are packed and which stay loose: the pack tab s custom rules fold, or cli --pack-profile . the file can be on this device, a paired device or a saved nas. see docs packing.md smarter built-in packing. protected and video folders match in any case, insomniac s sound and movie containers stay loose, and the job log says why each group of files stays loose fixes much faster with many small files: inspecting gran turismo 7 95,382 files on windows went from 185-430 s to 4-5 s, and folder outputs write small files on 4 threads a folder output writes sce sys and eboot.bin last, so shadowmount never finds a half-written game a packed game whose packs also hold a file that is on disk lz4 or zstd is no longer refused: an identical copy keeps the plain file, otherwise the packed copy is used",
-        "body_length": 1043,
+        "body": "new ampr-emu-ng v0.2.0. the bundled ampr-emu-ng is now its v0.2.0 release. games carrying v0.1.0 are still recognized. the ampr tile shows the runtime and its version custom packing rules. zstd and lz4 pack take a toml profile that decides which files are packed and which stay loose: the pack tab s custom rules fold, or cli --pack-profile . the file can be on this device, a paired device or a saved nas. see docs packing.md smarter built-in packing. protected and video folders match in any case, insomniac s sound and movie containers stay loose, and the job log says why each group of files stays loose fixes much faster with many small files: inspecting gran turismo 7 95,382 files on windows went from 185-430 s to 4-5 s, and folder outputs write small files on 4 threads a folder output writes sce sys and eboot.bin last, so shadowmount never finds a half-written game a packed game whose packs also hold a file that is on disk lz4 or zstd is no longer refused: an identical copy keeps the plain file, otherwise the packed copy is used thanks luanquanzteixeira made their first contribution in 17: scanned files are opened for their attributes only on windows, behind the much faster inspection above",
+        "body_length": 1208,
         "bullets": [
           "ampr-emu-ng v0.2.0. the bundled ampr-emu-ng is now its v0.2.0 release. games carrying v0.1.0 are still recognized. the ampr tile shows the runtime and its version",
           "custom packing rules. zstd and lz4 pack take a toml profile that decides which files are packed and which stay loose: the pack tab s custom rules fold, or cli --pack-profile . the file can be on this device, a paired device or a saved nas. see docs packing.md",
           "smarter built-in packing. protected and video folders match in any case, insomniac s sound and movie containers stay loose, and the job log says why each group of files stays loose",
           "much faster with many small files: inspecting gran turismo 7 95,382 files on windows went from 185-430 s to 4-5 s, and folder outputs write small files on 4 threads",
           "a folder output writes sce sys and eboot.bin last, so shadowmount never finds a half-written game",
-          "a packed game whose packs also hold a file that is on disk lz4 or zstd is no longer refused: an identical copy keeps the plain file, otherwise the packed copy is used"
+          "a packed game whose packs also hold a file that is on disk lz4 or zstd is no longer refused: an identical copy keeps the plain file, otherwise the packed copy is used",
+          "luanquanzteixeira made their first contribution in 17: scanned files are opened for their attributes only on windows, behind the much faster inspection above"
         ],
-        "digest": "2f349141c51f5c0de87af284273ec5f033d12a1e00c3c50e0dedfa5a606f467f",
+        "digest": "049a63334d36ad786dc5b424f3033196ef8cce1995580b0fc64057c27e43b8ab",
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 123,
-        "notified": false,
-        "pending": {
-          "digest": "049a63334d36ad786dc5b424f3033196ef8cce1995580b0fc64057c27e43b8ab",
-          "first_seen": 1793715142.1075318
-        }
+        "notified": false
       }
     }
   },
