@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-03T07:11:20.579032+00:00",
+  "last_heartbeat": "2026-11-03T14:09:25.161251+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-11-03T07:11:20.579032+00:00",
+    "completed_at": "2026-11-03T14:09:25.161251+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "41594632041",
-    "started_at": "2026-11-03T07:11:15.703983+00:00",
+    "notifications_sent": 1,
+    "run_id": "41650864343",
+    "started_at": "2026-11-03T14:09:16.608966+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -137,6 +137,25 @@
         "message_id": 116,
         "notified": false
       }
+    },
+    "quer3q/ps5-dump-forge": {
+      "432776365": {
+        "body": "new ampr-emu-ng v0.2.0. the bundled ampr-emu-ng is now its v0.2.0 release. games carrying v0.1.0 are still recognized. the ampr tile shows the runtime and its version custom packing rules. zstd and lz4 pack take a toml profile that decides which files are packed and which stay loose: the pack tab s custom rules fold, or cli --pack-profile . the file can be on this device, a paired device or a saved nas. see docs packing.md smarter built-in packing. protected and video folders match in any case, insomniac s sound and movie containers stay loose, and the job log says why each group of files stays loose fixes much faster with many small files: inspecting gran turismo 7 95,382 files on windows went from 185-430 s to 4-5 s, and folder outputs write small files on 4 threads a folder output writes sce sys and eboot.bin last, so shadowmount never finds a half-written game a packed game whose packs also hold a file that is on disk lz4 or zstd is no longer refused: an identical copy keeps the plain file, otherwise the packed copy is used",
+        "body_length": 1043,
+        "bullets": [
+          "ampr-emu-ng v0.2.0. the bundled ampr-emu-ng is now its v0.2.0 release. games carrying v0.1.0 are still recognized. the ampr tile shows the runtime and its version",
+          "custom packing rules. zstd and lz4 pack take a toml profile that decides which files are packed and which stay loose: the pack tab s custom rules fold, or cli --pack-profile . the file can be on this device, a paired device or a saved nas. see docs packing.md",
+          "smarter built-in packing. protected and video folders match in any case, insomniac s sound and movie containers stay loose, and the job log says why each group of files stays loose",
+          "much faster with many small files: inspecting gran turismo 7 95,382 files on windows went from 185-430 s to 4-5 s, and folder outputs write small files on 4 threads",
+          "a folder output writes sce sys and eboot.bin last, so shadowmount never finds a half-written game",
+          "a packed game whose packs also hold a file that is on disk lz4 or zstd is no longer refused: an identical copy keeps the plain file, otherwise the packed copy is used"
+        ],
+        "digest": "2f349141c51f5c0de87af284273ec5f033d12a1e00c3c50e0dedfa5a606f467f",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 123,
+        "notified": false
+      }
     }
   },
   "repositories": {
@@ -262,7 +281,8 @@
       "418406972",
       "416564215",
       "428204826",
-      "430413222"
+      "430413222",
+      "432776365"
     ]
   },
   "ru_translation_enabled_notice": true,
