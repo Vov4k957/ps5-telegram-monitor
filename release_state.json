@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-04T03:57:19.928387+00:00",
+  "last_heartbeat": "2026-11-04T15:07:09.444511+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-11-04T03:57:19.928387+00:00",
+    "completed_at": "2026-11-04T15:07:09.444511+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "41770215308",
-    "started_at": "2026-11-04T03:57:16.514387+00:00",
+    "notifications_sent": 1,
+    "run_id": "41854346016",
+    "started_at": "2026-11-04T15:06:56.537162+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -79,6 +79,45 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 124,
+        "notified": false
+      },
+      "434078723": {
+        "body": "ps5 mihawkos-v8.1.0-alpha-8 mihawkos is a passion project, not a piracy project it exists so you can play the games you own on the console you own piracy is not condoned no games, saves, keys, firmware or exploits are included, and they never will be use only games and programs you have the right to run : your own copies, bought or installed by you requests for, or links to, games, keys, firmware or exploits are not welcome in this project s issues or discussions steam s browser inside mihawkos. your game gets the whole console. cloud saves finish before steam closes a point release of alpha 8, all about steam. it is still experimental. mihawkos offers this update by itself from 7.1 and alpha 8 what s new: steam s browser runs inside mihawkos : big picture s pages use far less of the console what s new: your game comes first : steam steps aside when you press play, and comes back when you quit what s new: cloud saves you can trust : steam finishes its steam cloud upload before it closes what s new: new handover screens : getting your game ready and welcome back , on the game s own artwork steam s browser runs inside mihawkos big picture s store, library and sign-in pages are drawn by steam s built-in browser. in alpha 8 it ran as a separate program beside mihawkos; now it runs inside it far lighter on the console: about 710 of the console s page tables in ten minutes of browsing, against about 1,870 before base ps5, firmware 13.60 pages scroll at about 120 fps your game comes first when you press play on a game in big picture, steam now steps aside so the game gets all the room on the console 1. mihawkos shows getting ready and asks steam to close. steam saves its session and closes by itself 2. the game starts with steam running quietly behind it, and nothing else 3. when you quit the game, mihawkos shows welcome back , steam saves to steam cloud and closes, and big picture opens again where you left it measured on a base ps5 with the resident evil 3: raccoon city demo: about 6,200 page tables free during play, against about 5,300 in alpha 8, at 110 to 120 fps this handover is for 64-bit games . a 32-bit game started from big picture runs as it did in alpha 8: beside steam with no handover screens, and steam syncs its cloud saves as usual when it ends. 32-bit games join the handover in a later update the failed to start process for this game: general failure 0x1f pop-up that could flash when you pressed play is gone. if steam ever stops responding during a handover, mihawkos asks whether to keep waiting or close steam cloud saves you can trust when a game ends, mihawkos now waits until steam has seen it end. steam does its steam cloud upload first, and only then is it asked to close. on the console, steam s own log shows the upload completing two seconds before steam closed new handover screens getting ready and welcome back , each with a short checklist that ticks off what has really happened steam saving its session, room being made for the game, the game starting, the cloud save, big picture reopening drawn in frosted glass over the game s own steam artwork , read from steam s library on the console. games without artwork get the aero sky in all 10 languages the screen stays up until the game s first frames take over, in one step, without flicker also fixed settings shows release names. the update check reads alpha 8.1 and alpha 8 instead of a raw number such as 01.003.000 , which could appear cut off as 1 every windows setup gets the new built-in files when mihawkos updates. until now, a setup made by an older release could keep a few of its old windows modules after an update; it now refreshes all of them known issues a brief black frame when mihawkos switches between big picture and the game. it is next on the list big picture can still hitch now and then while pages load. smoothing it out comes after 8.1 not fixed yet on the controller: camera drift, the create button, the touchpad as a mouse, the steam input cursor and input lag. some games, such as the binding of isaac, can map the controller oddly; this is being looked at restart the ps5 now and then. pipe memory runs out after very many program starts; mihawkos says restart the ps5 when that happens the per-boot setup is yours: your payloads after every cold boot. never use rest mode with payloads loaded not supported: drm such as denuvo, and anti-cheat such as easy anti-cheat or battleye everything else from alpha 8 still applies installing or updating ps5 mihawkos-v8.1.0-alpha-8.zip size: 555.1 mb; what it is: the mihawkos title: the ppsa99170 folder, windows runtime included ps5 mihawkos-v8.1.0-alpha-8.zip.sha256 size: 1 kb; what it is: the sha-256 of the zip ps5 mihawkos-v8.1.0-alpha-8-readme.txt size: 1 kb; what it is: the install steps in short ps5 mihawkos-v8.1.0-alpha-8-sha256sums size: 42 kb; what it is: the sha-256 of every file in the folder: sha256sum -c checks a copy mihawkos-update.txt size: 1 kb; what it is: the signed description mihawkos s update check reads from alpha 8 or 7.1: open mihawkos from the home screen. it finds 8.1, downloads it, checks its signature and installs it when you restart it from alpha 7: replace the ppsa99170 folder in data homebrew with the new one and open mihawkos: it installs the new runtime by itself new install, or from alpha 6: follow alpha 7 s steps with this release s zip. back up your saves first when updating your setup, your games in c: games , steam and your settings are kept no games, saves, keys or firmware are supplied. use only games and programs you have the right to run source, licences and credits changes since v8.0.0-alpha-8 . release source: the complete corresponding source is the repository at that tag. mihawkos is free software under the gnu general public license v3.0 or later ; each component keeps its own licence, listed with its pin in notice.md thanks to the wine , proton , dxvk , vkd3d-proton and mesa developers, and to skeuoss for bubble city mihawkos is an independent hobby project, not affiliated with, sponsored by or endorsed by sony interactive entertainment, microsoft, valve, amd, capcom or any game publisher. playstation, ps5 and dualsense are trademarks of sony interactive entertainment inc.; windows and xbox are trademarks of microsoft corporation; steam, big picture and proton are trademarks of valve corporation; radeon is a trademark of advanced micro devices, inc.; resident evil is a trademark of capcom co., ltd. you are responsible for having the right to the programs you run, and for whether modifying your console is lawful where you live legal.md ready to get started? available releases installation guide source and credits",
+        "body_length": 6697,
+        "bullets": [
+          "no games, saves, keys, firmware or exploits are included, and they never will be",
+          "use only games and programs you have the right to run : your own copies, bought or installed by you",
+          "requests for, or links to, games, keys, firmware or exploits are not welcome in this project s issues or discussions",
+          "what s new: steam s browser runs inside mihawkos : big picture s pages use far less of the console",
+          "what s new: your game comes first : steam steps aside when you press play, and comes back when you quit",
+          "what s new: cloud saves you can trust : steam finishes its steam cloud upload before it closes",
+          "what s new: new handover screens : getting your game ready and welcome back , on the game s own artwork",
+          "far lighter on the console: about 710 of the console s page tables in ten minutes of browsing, against about 1,870",
+          "pages scroll at about 120 fps",
+          "1. mihawkos shows getting ready and asks steam to close. steam saves its session and closes by itself",
+          "2. the game starts with steam running quietly behind it, and nothing else",
+          "3. when you quit the game, mihawkos shows welcome back , steam saves to steam cloud and closes, and big picture opens",
+          "getting ready and welcome back , each with a short checklist that ticks off what has really happened",
+          "drawn in frosted glass over the game s own steam artwork , read from steam s library on the console. games without",
+          "the screen stays up until the game s first frames take over, in one step, without flicker",
+          "settings shows release names. the update check reads alpha 8.1 and alpha 8 instead of a raw number",
+          "every windows setup gets the new built-in files when mihawkos updates. until now, a setup made by an older",
+          "a brief black frame when mihawkos switches between big picture and the game. it is next on the list",
+          "big picture can still hitch now and then while pages load. smoothing it out comes after 8.1",
+          "not fixed yet on the controller: camera drift, the create button, the touchpad as a mouse, the steam input cursor",
+          "restart the ps5 now and then. pipe memory runs out after very many program starts; mihawkos says restart the",
+          "the per-boot setup is yours: your payloads after every cold boot. never use rest mode with payloads loaded",
+          "not supported: drm such as denuvo, and anti-cheat such as easy anti-cheat or battleye",
+          "ps5 mihawkos-v8.1.0-alpha-8.zip size: 555.1 mb; what it is: the mihawkos title: the ppsa99170 folder, windows runtime included",
+          "ps5 mihawkos-v8.1.0-alpha-8.zip.sha256 size: 1 kb; what it is: the sha-256 of the zip",
+          "ps5 mihawkos-v8.1.0-alpha-8-readme.txt size: 1 kb; what it is: the install steps in short",
+          "ps5 mihawkos-v8.1.0-alpha-8-sha256sums size: 42 kb; what it is: the sha-256 of every file in the folder: sha256sum -c checks a copy",
+          "mihawkos-update.txt size: 1 kb; what it is: the signed description mihawkos s update check reads"
+        ],
+        "digest": "c8f32229ec3c925052c858bb2cdd950d11cdc2d5a64916293df4d23819ea275b",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 129,
         "notified": false
       }
     },
@@ -212,7 +251,8 @@
       "429374136",
       "430714030",
       "431055676",
-      "432827456"
+      "432827456",
+      "434078723"
     ],
     "owendswang/ps5-aria2": [
       "403774307",
