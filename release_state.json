@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-05T09:04:36.782174+00:00",
+  "last_heartbeat": "2026-11-05T14:09:19.792534+00:00",
   "last_run": {
     "checked_repositories": 8,
-    "completed_at": "2026-11-05T09:04:36.782174+00:00",
+    "completed_at": "2026-11-05T14:09:19.792534+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "41999343599",
-    "started_at": "2026-11-05T09:04:21.744831+00:00",
+    "run_id": "42042221499",
+    "started_at": "2026-11-05T14:09:15.618474+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -122,24 +122,6 @@
       }
     },
     "quer3q/ps5-dump-forge": {
-      "432776365": {
-        "body": "new ampr-emu-ng v0.2.0. the bundled ampr-emu-ng is now its v0.2.0 release. games carrying v0.1.0 are still recognized. the ampr tile shows the runtime and its version custom packing rules. zstd and lz4 pack take a toml profile that decides which files are packed and which stay loose: the pack tab s custom rules fold, or cli --pack-profile . the file can be on this device, a paired device or a saved nas. see docs packing.md smarter built-in packing. protected and video folders match in any case, insomniac s sound and movie containers stay loose, and the job log says why each group of files stays loose fixes much faster with many small files: inspecting gran turismo 7 95,382 files on windows went from 185-430 s to 4-5 s, and folder outputs write small files on 4 threads a folder output writes sce sys and eboot.bin last, so shadowmount never finds a half-written game a packed game whose packs also hold a file that is on disk lz4 or zstd is no longer refused: an identical copy keeps the plain file, otherwise the packed copy is used thanks luanquanzteixeira made their first contribution in 17: scanned files are opened for their attributes only on windows, behind the much faster inspection above",
-        "body_length": 1208,
-        "bullets": [
-          "ampr-emu-ng v0.2.0. the bundled ampr-emu-ng is now its v0.2.0 release. games carrying v0.1.0 are still recognized. the ampr tile shows the runtime and its version",
-          "custom packing rules. zstd and lz4 pack take a toml profile that decides which files are packed and which stay loose: the pack tab s custom rules fold, or cli --pack-profile . the file can be on this device, a paired device or a saved nas. see docs packing.md",
-          "smarter built-in packing. protected and video folders match in any case, insomniac s sound and movie containers stay loose, and the job log says why each group of files stays loose",
-          "much faster with many small files: inspecting gran turismo 7 95,382 files on windows went from 185-430 s to 4-5 s, and folder outputs write small files on 4 threads",
-          "a folder output writes sce sys and eboot.bin last, so shadowmount never finds a half-written game",
-          "a packed game whose packs also hold a file that is on disk lz4 or zstd is no longer refused: an identical copy keeps the plain file, otherwise the packed copy is used",
-          "luanquanzteixeira made their first contribution in 17: scanned files are opened for their attributes only on windows, behind the much faster inspection above"
-        ],
-        "digest": "049a63334d36ad786dc5b424f3033196ef8cce1995580b0fc64057c27e43b8ab",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 123,
-        "notified": false
-      },
       "434932786": {
         "body": "new ampr-emu-ng v0.3.0. the bundled runtime is the v0.3.0 release, which serves fully packed zstd and lz4 games pack any game. pack now works on games whose eboot.bin doesn t import libsceampr . it installs ampr-emu-ng at fakelib libsceampr.sprx , which shadowmount loads pack everything. zstd pack, and lz4 pack with ampr-emu-ng, now pack everything except system files eboot.bin , executables and modules, sce sys , sce module , fakelib , the runtime s own files , so audio, video and configs get packed too picker shortcuts. add shortcut pins the folder shown, on any device, up to 9 in all. every picker lists them as chips above the files; click one to open that folder fixes zstd pack reads and compresses each file once. the rule that stored a whole file uncompressed when it saved under 1 is gone; only the chunks zstd can t shrink are stored raw, so large, barely compressible files no longer cost a second read archives and fpkg files on another device used to be missing from the picker. they are now listed greyed out, with a note that they open from this device only thanks libraaaaa2792 reported 18, which brought the picker shortcuts dexil123 reported 20, which made archives on another device show in the picker caimiao reported 15, which helped to push forward packing strategy and testing zstd format",
         "body_length": 1318,
