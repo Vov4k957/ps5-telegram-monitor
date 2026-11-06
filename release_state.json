@@ -1,35 +1,19 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-06T15:06:23.925532+00:00",
+  "last_heartbeat": "2026-11-06T17:18:20.887382+00:00",
   "last_run": {
     "checked_repositories": 9,
-    "completed_at": "2026-11-06T15:06:23.925532+00:00",
+    "completed_at": "2026-11-06T17:18:20.887382+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "42239890895",
-    "started_at": "2026-11-06T15:06:19.080039+00:00",
+    "run_id": "42260374841",
+    "started_at": "2026-11-06T17:18:16.625782+00:00",
     "updates_processed": 0
   },
   "release_watch": {
     "quer3q/ampr-emu-ng": {
-      "434215489": {
-        "body": "fully packed games this version runs games packed with every file in zstd or lz4 packs, no more need to select which files to pack or not except for crucial ones - like eboot.bin that saves more space and removes the need for custom toml configs new virtual-fd reads run on runtime threads with their own stacks, so a game thread with a small stack no longer crashes on a packed read pool 88 - 128 mib, decoded cache on by default 16 mib . more speed for games and better stability stability fixes for shutdown, mmap of packed files, page cache errors and pack fd accounting debug build black box trace in data ampr emu trace.txt : loaded modules with segment addresses and every failed file event, written as the game runs for crashes that happen before :9090 answers fsfail also logs packed files that reach an api the runtime does not serve thanks to everyone who tested, packed and played games with zstd packs so far - your feedback made this release better how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
-        "body_length": 1142,
-        "bullets": [
-          "virtual-fd reads run on runtime threads with their own stacks, so a game",
-          "pool 88 - 128 mib, decoded cache on by default 16 mib . more speed for games and better stability",
-          "stability fixes for shutdown, mmap of packed files, page cache errors and pack fd accounting",
-          "black box trace in data ampr emu trace.txt : loaded modules with",
-          "fsfail also logs packed files that reach an api the runtime does not"
-        ],
-        "digest": "135804e95c59875ea2558915d15d78715c83cca24ae69a4a50f738ab9c6c3bb5",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      },
       "435597949": {
         "body": "fixed days gone remastered 9 hung on the loading screen and sonic x shadow generations 8 crashed at launch. in both, the ps5 would not report whether a memory address was writable, and the runtime then refused the game s write to it. that write now goes through reporting a game issues now have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
         "body_length": 574,
