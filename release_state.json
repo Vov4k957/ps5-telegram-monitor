@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-05T14:48:23.572502+00:00",
+  "last_heartbeat": "2026-11-06T09:54:23.088807+00:00",
   "last_run": {
-    "checked_repositories": 8,
-    "completed_at": "2026-11-05T14:48:23.572502+00:00",
+    "checked_repositories": 9,
+    "completed_at": "2026-11-06T09:54:23.088807+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "42048535315",
-    "started_at": "2026-11-05T14:48:19.087668+00:00",
+    "run_id": "42198520319",
+    "started_at": "2026-11-06T09:54:18.508742+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -51,6 +51,51 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 129,
+        "notified": false
+      }
+    },
+    "quer3q/ampr-emu-ng": {
+      "434215489": {
+        "body": "fully packed games this version runs games packed with every file in zstd or lz4 packs, no more need to select which files to pack or not except for crucial ones - like eboot.bin that saves more space and removes the need for custom toml configs new virtual-fd reads run on runtime threads with their own stacks, so a game thread with a small stack no longer crashes on a packed read pool 88 - 128 mib, decoded cache on by default 16 mib . more speed for games and better stability stability fixes for shutdown, mmap of packed files, page cache errors and pack fd accounting debug build black box trace in data ampr emu trace.txt : loaded modules with segment addresses and every failed file event, written as the game runs for crashes that happen before :9090 answers fsfail also logs packed files that reach an api the runtime does not serve thanks to everyone who tested, packed and played games with zstd packs so far - your feedback made this release better how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
+        "body_length": 1142,
+        "bullets": [
+          "virtual-fd reads run on runtime threads with their own stacks, so a game",
+          "pool 88 - 128 mib, decoded cache on by default 16 mib . more speed for games and better stability",
+          "stability fixes for shutdown, mmap of packed files, page cache errors and pack fd accounting",
+          "black box trace in data ampr emu trace.txt : loaded modules with",
+          "fsfail also logs packed files that reach an api the runtime does not"
+        ],
+        "digest": "135804e95c59875ea2558915d15d78715c83cca24ae69a4a50f738ab9c6c3bb5",
+        "eligible": false,
+        "fingerprint_version": 2,
+        "message_id": null,
+        "notified": false
+      },
+      "435597949": {
+        "body": "fixed days gone remastered 9 hung on the loading screen and sonic x shadow generations 8 crashed at launch. in both, the ps5 would not report whether a memory address was writable, and the runtime then refused the game s write to it. that write now goes through reporting a game issues now have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
+        "body_length": 574,
+        "bullets": [
+          "days gone remastered 9 hung on the loading screen and sonic x shadow"
+        ],
+        "digest": "d536744135809be918ecc7b48879e53df77fde078218f3e54e3d54ab4b0fd3ef",
+        "eligible": false,
+        "fingerprint_version": 2,
+        "message_id": null,
+        "notified": false
+      },
+      "436303212": {
+        "body": "fixed resonance: a plague tale legacy ppsa30601, 14 now plays as a fully packed install. it used to stay on a black screen because it opens one packed file over and over until the runtime ran out of slots for packed files. packed files now get ordinary low file numbers, like loose files open packed files no longer count against the runtime s own open-file limit, so many open packed files can t hold up pack reads thanks jamesst20 for their first contribution 16 , both plague tale fixes found and tested on their own console everyone who reported a game since v0.3.1: ozankabulut 12 luminusalk 13 , rgdevz 15 and akaguiri 17 reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
+        "body_length": 936,
+        "bullets": [
+          "resonance: a plague tale legacy ppsa30601, 14 now plays as a fully",
+          "open packed files no longer count against the runtime s own open-file",
+          "jamesst20 for their first contribution 16 , both plague tale fixes",
+          "everyone who reported a game since v0.3.1: ozankabulut 12"
+        ],
+        "digest": "d7384c156fa51af87fb21a7f47c7a4d3d1ee40a3c593d286030a084a2328e1de",
+        "eligible": false,
+        "fingerprint_version": 2,
+        "message_id": null,
         "notified": false
       }
     },
@@ -194,6 +239,11 @@
       "402632325",
       "402015363",
       "395974568"
+    ],
+    "quer3q/ampr-emu-ng": [
+      "436303212",
+      "435597949",
+      "434215489"
     ],
     "quer3q/ps5-dump-forge": [
       "425438524",
