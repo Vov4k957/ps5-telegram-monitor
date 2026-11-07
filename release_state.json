@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-07T18:57:17.763799+00:00",
+  "last_heartbeat": "2026-11-07T22:56:29.389056+00:00",
   "last_run": {
     "checked_repositories": 9,
-    "completed_at": "2026-11-07T18:57:17.763799+00:00",
+    "completed_at": "2026-11-07T22:56:29.389056+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "42403804979",
-    "started_at": "2026-11-07T18:57:14.770983+00:00",
+    "notifications_sent": 1,
+    "run_id": "42422905484",
+    "started_at": "2026-11-07T22:56:17.240639+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -27,6 +27,27 @@
         "eligible": false,
         "fingerprint_version": 2,
         "message_id": null,
+        "notified": false
+      },
+      "437885147": {
+        "body": "fixed fully installed games no longer ask you to continue the download or to clear space on your storage marvel s wolverine 29 boots again fewer hangs and black screens in games that open many packed files at once ghost of yotei 22 and other games that read files in the background through the system can now read packed files hollow knight silksong 15 no longer stops at launch on a folder install on the internal ssd debug build the black box data ampr emu trace.txt now also lists each file api a game used on packed files, once, even when the call succeeded 18 , so a game that dies before :9090 answers still leaves that list behind fixed a race when several threads logged a file event at the same time thanks a huge thank you to jamesst20, who did most of this release: the wolverine fix 20 , the packed read and packed-file number fixes 23 and the debug log race 24 , each found and tested on their own console they also tracked the spider-man 2 text problem down to the console language 31 welcome to everyone who reported a game for the first time anas-naam-allah 18 , soulseeker1996 21 , kptnfrakass 22 shahbbbj 25 , betelopson 26, 27, 28, 33 majimagorosandesu 29 , bikram1996 30 and vov4k957 31 thanks again to rgdevz 19 and ozankabulut 32 , and to auros222 and iammrman for testing builds in the comments reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
+        "body_length": 1626,
+        "bullets": [
+          "fully installed games no longer ask you to continue the download or to",
+          "marvel s wolverine 29 boots again",
+          "fewer hangs and black screens in games that open many packed files at",
+          "ghost of yotei 22 and other games that read files in the background",
+          "hollow knight silksong 15 no longer stops at launch on a folder",
+          "the black box data ampr emu trace.txt now also lists each file api a",
+          "fixed a race when several threads logged a file event at the same time",
+          "a huge thank you to jamesst20, who did most of this release: the",
+          "welcome to everyone who reported a game for the first time",
+          "thanks again to rgdevz 19 and ozankabulut 32 , and to auros222"
+        ],
+        "digest": "3c070a958a5cc8c4cd067b022d83fa72a25bb3b3dd36883c7f57ee4d08673b22",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 142,
         "notified": false
       }
     },
@@ -170,7 +191,8 @@
     "quer3q/ampr-emu-ng": [
       "436303212",
       "435597949",
-      "434215489"
+      "434215489",
+      "437885147"
     ],
     "quer3q/ps5-dump-forge": [
       "425438524",
