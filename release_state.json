@@ -1,31 +1,19 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-07T08:40:33.579986+00:00",
+  "last_heartbeat": "2026-11-07T18:57:17.763799+00:00",
   "last_run": {
     "checked_repositories": 9,
-    "completed_at": "2026-11-07T08:40:33.579986+00:00",
+    "completed_at": "2026-11-07T18:57:17.763799+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "42356469316",
-    "started_at": "2026-11-07T08:40:30.369450+00:00",
+    "run_id": "42403804979",
+    "started_at": "2026-11-07T18:57:14.770983+00:00",
     "updates_processed": 0
   },
   "release_watch": {
     "quer3q/ampr-emu-ng": {
-      "435597949": {
-        "body": "fixed days gone remastered 9 hung on the loading screen and sonic x shadow generations 8 crashed at launch. in both, the ps5 would not report whether a memory address was writable, and the runtime then refused the game s write to it. that write now goes through reporting a game issues now have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
-        "body_length": 574,
-        "bullets": [
-          "days gone remastered 9 hung on the loading screen and sonic x shadow"
-        ],
-        "digest": "d536744135809be918ecc7b48879e53df77fde078218f3e54e3d54ab4b0fd3ef",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      },
       "436303212": {
         "body": "fixed resonance: a plague tale legacy ppsa30601, 14 now plays as a fully packed install. it used to stay on a black screen because it opens one packed file over and over until the runtime ran out of slots for packed files. packed files now get ordinary low file numbers, like loose files open packed files no longer count against the runtime s own open-file limit, so many open packed files can t hold up pack reads thanks jamesst20 for their first contribution 16 , both plague tale fixes found and tested on their own console everyone who reported a game since v0.3.1: ozankabulut 12 luminusalk 13 , rgdevz 15 and akaguiri 17 reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
         "body_length": 936,
