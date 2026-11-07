@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-06T17:18:20.887382+00:00",
+  "last_heartbeat": "2026-11-07T08:40:33.579986+00:00",
   "last_run": {
     "checked_repositories": 9,
-    "completed_at": "2026-11-06T17:18:20.887382+00:00",
+    "completed_at": "2026-11-07T08:40:33.579986+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "42260374841",
-    "started_at": "2026-11-06T17:18:16.625782+00:00",
+    "run_id": "42356469316",
+    "started_at": "2026-11-07T08:40:30.369450+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -43,26 +43,6 @@
       }
     },
     "quer3q/ps5-dump-forge": {
-      "434932786": {
-        "body": "new ampr-emu-ng v0.3.0. the bundled runtime is the v0.3.0 release, which serves fully packed zstd and lz4 games pack any game. pack now works on games whose eboot.bin doesn t import libsceampr . it installs ampr-emu-ng at fakelib libsceampr.sprx , which shadowmount loads pack everything. zstd pack, and lz4 pack with ampr-emu-ng, now pack everything except system files eboot.bin , executables and modules, sce sys , sce module , fakelib , the runtime s own files , so audio, video and configs get packed too picker shortcuts. add shortcut pins the folder shown, on any device, up to 9 in all. every picker lists them as chips above the files; click one to open that folder fixes zstd pack reads and compresses each file once. the rule that stored a whole file uncompressed when it saved under 1 is gone; only the chunks zstd can t shrink are stored raw, so large, barely compressible files no longer cost a second read archives and fpkg files on another device used to be missing from the picker. they are now listed greyed out, with a note that they open from this device only thanks libraaaaa2792 reported 18, which brought the picker shortcuts dexil123 reported 20, which made archives on another device show in the picker caimiao reported 15, which helped to push forward packing strategy and testing zstd format",
-        "body_length": 1318,
-        "bullets": [
-          "ampr-emu-ng v0.3.0. the bundled runtime is the v0.3.0 release, which serves fully packed zstd and lz4 games",
-          "pack any game. pack now works on games whose eboot.bin doesn t import libsceampr . it installs ampr-emu-ng at fakelib libsceampr.sprx , which shadowmount loads",
-          "pack everything. zstd pack, and lz4 pack with ampr-emu-ng, now pack everything except system files eboot.bin , executables and modules, sce sys , sce module , fakelib , the runtime s own files , so audio, video and configs get packed too",
-          "picker shortcuts. add shortcut pins the folder shown, on any device, up to 9 in all. every picker lists them as chips above the files; click one to open that folder",
-          "zstd pack reads and compresses each file once. the rule that stored a whole file uncompressed when it saved under 1 is gone; only the chunks zstd can t shrink are stored raw, so large, barely compressible files no longer cost a second read",
-          "archives and fpkg files on another device used to be missing from the picker. they are now listed greyed out, with a note that they open from this device only",
-          "libraaaaa2792 reported 18, which brought the picker shortcuts",
-          "dexil123 reported 20, which made archives on another device show in the picker",
-          "caimiao reported 15, which helped to push forward packing strategy and testing zstd format"
-        ],
-        "digest": "7d8ac500feb3aaeec5215e0ad5950be5009ee07ab52a8377467aacbd875701ab",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 130,
-        "notified": false
-      },
       "436476860": {
         "body": "new unsigned executables are fake-signed. a game whose executables are plain elf files never starts, because the ps5 loader refuses them. every conversion and pack job now writes them as fake-signed selfs. the source card warns when a game has unsigned executables, and the cli s inspect lists them include from and exclude from in pack rules. custom toml rules now read the pattern files a rule names, as upstream ampr pack.py does. the files sit in the profile s folder, on whatever device the profile is on, with one pattern per line. long path lists stay fast ampr-emu-ng v0.3.2. the bundled runtime is the v0.3.2 release. upstream fixes since v0.3.0: days gone remastered no longer hangs on the loading screen, sonic x shadow generations no longer crashes at launch, resonance: a plague tale legacy no longer stays on a black screen when fully packed, and open packed files no longer count against the runtime s open-file limit fixes a solid .7z or .rar was decoded about four times when picked. it is now decoded once: inspecting reads the password check and the files it needs in one pass, and naming and the job s start reuse what it found. a 1.6 gb solid 7z now opens in 34 s instead of 68 s the windows picker now lists drives a: and b:. an empty floppy, card reader or optical drive no longer asks for a disk; it is skipped",
         "body_length": 1334,
