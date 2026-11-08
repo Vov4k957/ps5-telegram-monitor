@@ -1,34 +1,19 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-07T22:56:29.389056+00:00",
+  "last_heartbeat": "2026-11-08T09:20:31.594706+00:00",
   "last_run": {
     "checked_repositories": 9,
-    "completed_at": "2026-11-07T22:56:29.389056+00:00",
+    "completed_at": "2026-11-08T09:20:31.594706+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 1,
-    "run_id": "42422905484",
-    "started_at": "2026-11-07T22:56:17.240639+00:00",
+    "notifications_sent": 0,
+    "run_id": "42466759414",
+    "started_at": "2026-11-08T09:20:28.857454+00:00",
     "updates_processed": 0
   },
   "release_watch": {
     "quer3q/ampr-emu-ng": {
-      "436303212": {
-        "body": "fixed resonance: a plague tale legacy ppsa30601, 14 now plays as a fully packed install. it used to stay on a black screen because it opens one packed file over and over until the runtime ran out of slots for packed files. packed files now get ordinary low file numbers, like loose files open packed files no longer count against the runtime s own open-file limit, so many open packed files can t hold up pack reads thanks jamesst20 for their first contribution 16 , both plague tale fixes found and tested on their own console everyone who reported a game since v0.3.1: ozankabulut 12 luminusalk 13 , rgdevz 15 and akaguiri 17 reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
-        "body_length": 936,
-        "bullets": [
-          "resonance: a plague tale legacy ppsa30601, 14 now plays as a fully",
-          "open packed files no longer count against the runtime s own open-file",
-          "jamesst20 for their first contribution 16 , both plague tale fixes",
-          "everyone who reported a game since v0.3.1: ozankabulut 12"
-        ],
-        "digest": "d7384c156fa51af87fb21a7f47c7a4d3d1ee40a3c593d286030a084a2328e1de",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      },
       "437885147": {
         "body": "fixed fully installed games no longer ask you to continue the download or to clear space on your storage marvel s wolverine 29 boots again fewer hangs and black screens in games that open many packed files at once ghost of yotei 22 and other games that read files in the background through the system can now read packed files hollow knight silksong 15 no longer stops at launch on a folder install on the internal ssd debug build the black box data ampr emu trace.txt now also lists each file api a game used on packed files, once, even when the call succeeded 18 , so a game that dies before :9090 answers still leaves that list behind fixed a race when several threads logged a file event at the same time thanks a huge thank you to jamesst20, who did most of this release: the wolverine fix 20 , the packed read and packed-file number fixes 23 and the debug log race 24 , each found and tested on their own console they also tracked the spider-man 2 text problem down to the console language 31 welcome to everyone who reported a game for the first time anas-naam-allah 18 , soulseeker1996 21 , kptnfrakass 22 shahbbbj 25 , betelopson 26, 27, 28, 33 majimagorosandesu 29 , bikram1996 30 and vov4k957 31 thanks again to rgdevz 19 and ozankabulut 32 , and to auros222 and iammrman for testing builds in the comments reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
         "body_length": 1626,
