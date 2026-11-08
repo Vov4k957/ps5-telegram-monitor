@@ -1,18 +1,36 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-08T13:12:30.569638+00:00",
+  "last_heartbeat": "2026-11-08T20:02:24.480379+00:00",
   "last_run": {
     "checked_repositories": 9,
-    "completed_at": "2026-11-08T13:12:30.569638+00:00",
+    "completed_at": "2026-11-08T20:02:24.480379+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 1,
-    "run_id": "42483822082",
-    "started_at": "2026-11-08T13:12:20.089877+00:00",
+    "run_id": "42518016112",
+    "started_at": "2026-11-08T20:02:17.942277+00:00",
     "updates_processed": 0
   },
   "release_watch": {
+    "drakmor/ShadowMountPlus": {
+      "438487450": {
+        "body": "introduced configuration format v2, with separate config.ini and profiles.ini, automatic migration, and runtime reloads improved mount and launch recovery, including safer cleanup of sandbox layers and handling for m.2 storage made library scans more resilient to inaccessible folders and source changes improved metadata and filename handling for ps4 trophies, sce sys files, and dynamic libraries added browser back navigation, an option to disable startup library notifications, and better support for long image mount paths",
+        "body_length": 527,
+        "bullets": [
+          "introduced configuration format v2, with separate config.ini and profiles.ini, automatic migration, and runtime reloads",
+          "improved mount and launch recovery, including safer cleanup of sandbox layers and handling for m.2 storage",
+          "made library scans more resilient to inaccessible folders and source changes",
+          "improved metadata and filename handling for ps4 trophies, sce sys files, and dynamic libraries",
+          "added browser back navigation, an option to disable startup library notifications, and better support for long image mount paths"
+        ],
+        "digest": "c7f0c9ea44787c46af7e782235b881c10b23842766650e4ab37046c076645d0f",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 144,
+        "notified": false
+      }
+    },
     "mihawk-99/PS5_MihawkOS": {
       "438255534": {
         "body": "ps5 mihawkos-v8.2.0-alpha-8 mihawkos is a passion project, not a piracy project it exists so you can play the games you own on the console you own piracy is not condoned no games, saves, keys, firmware or exploits are included, and they never will be use only games and programs you have the right to run : your own copies, bought or installed by you requests for, or links to, games, keys, firmware or exploits are not welcome in this project s issues or discussions a new look for the desktop: settings, dialogs and text as they were designed, and every shortcut with its own icon a point release of alpha 8, all about the mihawkos desktop. it is still experimental. mihawkos offers this update by itself from alpha 8.1, alpha 8 and 7.1 what s new: a new settings : home, personalization and display as designed, with a wallpaper picker what s new: smoother text : softer, cleaner letters everywhere on the desktop what s new: the right icon on every shortcut : no more wine icons on your desktop what s new: dialogs, colours and windows : light dialogs, your theme s accent colour, calmer inactive windows what s new: create shortcut works : from file explorer and the desktop, plus pin to start what s new: steam sign-in fixed : a new steam install no longer stays on steam is updating itself a new settings home, personalization and system display are redrawn as the design draws them pick your wallpaper in personalization: bubble city by skeuoss, mihawkos s own bubble earth, glass city and aqua world, and the theme wallpapers. the desktop changes as soon as you pick one quick settings is drawn as designed too smoother text letters are now drawn with 256 shades of grey instead of 17, with light hinting, so their edges are smooth on a tv no colour fringes the right icon on every shortcut every desktop shortcut now shows its own icon: the one the shortcut names, or else its program s own, found inside your mihawkos setup. store shortcuts and launchers that used to show wine s icon now show theirs. on the test console, 31 of 31 shortcuts show the right icon, for 64-bit and 32-bit programs alike dialogs, colours and windows message boxes and task dialogs stay light in the dark theme, as designed, and use the desktop s own font. programs that asked for the segoe ui font used to get a serif one your theme s accent colour is used in settings, start, the calendar, file explorer and the taskbar inactive windows get a calm, solid title bar, as in the design mihawkos, not windows: the desktop s prompts and messages say mihawkos create shortcut works create shortcut and pin to start work from file explorer and from the desktop s menu. the old create link item that did nothing is gone a new shortcut appears on the desktop within about a tenth of a second, and a deleted one is gone within half a second a start pin no longer shows up as a phantom icon on the desktop steam sign-in fixed in 8.1, a new steam install could stay on steam is updating itself for ten minutes and then ask to try again, every time issue 62 . steam had finished; mihawkos just never noticed that steam s browser had started, because since 8.1 that browser runs inside mihawkos. it now notices: on the test console the phone and qr screen came up about 4½ minutes after steam s install, with steam s browser still inside mihawkos. thanks to portablelle for finding the cause and proposing the fix if you used the steam-browser-optout workaround from the issue, you can delete that folder known issues small leftovers in the new look: a faint grey no can show inside a message box s cancel button after it moves quick settings on tiles keep the default blue, and the task dialog s layout is still the old one a brief black frame when mihawkos switches between big picture and the game big picture can still hitch now and then while pages load not fixed yet on the controller: camera drift, the create button, the touchpad as a mouse, the steam input cursor and input lag. some games, such as the binding of isaac, can map the controller oddly restart the ps5 now and then. pipe memory runs out after very many program starts; mihawkos says restart the ps5 when that happens the per-boot setup is yours: your payloads after every cold boot. never use rest mode with payloads loaded not supported: drm such as denuvo, and anti-cheat such as easy anti-cheat or battleye everything else from alpha 8.1 and alpha 8 still applies installing or updating ps5 mihawkos-v8.2.0-alpha-8.zip size: 565.0 mb; what it is: the mihawkos title: the ppsa99170 folder, windows runtime included ps5 mihawkos-v8.2.0-alpha-8.zip.sha256 size: 1 kb; what it is: the sha-256 of the zip ps5 mihawkos-v8.2.0-alpha-8-readme.txt size: 1 kb; what it is: the install steps in short ps5 mihawkos-v8.2.0-alpha-8-sha256sums size: 43 kb; what it is: the sha-256 of every file in the folder: sha256sum -c checks a copy mihawkos-update.txt size: 1 kb; what it is: the signed description mihawkos s update check reads from alpha 8.1, alpha 8 or 7.1: open mihawkos from the home screen. it finds 8.2, downloads it, checks its signature and installs it when you restart it from alpha 7: replace the ppsa99170 folder in data homebrew with the new one and open mihawkos: it installs the new runtime by itself new install, or from alpha 6: follow alpha 7 s steps with this release s zip. back up your saves first when updating your setup, your games in c: games , steam and your settings are kept no games, saves, keys or firmware are supplied. use only games and programs you have the right to run source, licences and credits changes since v8.1.0-alpha-8 . release source: the complete corresponding source is the repository at that tag. mihawkos is free software under the gnu general public license v3.0 or later ; each component keeps its own licence, listed with its pin in notice.md thanks to the wine , proton , dxvk , vkd3d-proton and mesa developers, and to skeuoss for bubble city mihawkos is an independent hobby project, not affiliated with, sponsored by or endorsed by sony interactive entertainment, microsoft, valve, amd, capcom or any game publisher. playstation, ps5 and dualsense are trademarks of sony interactive entertainment inc.; windows and xbox are trademarks of microsoft corporation; steam, big picture and proton are trademarks of valve corporation; radeon is a trademark of advanced micro devices, inc.; resident evil is a trademark of capcom co., ltd. you are responsible for having the right to the programs you run, and for whether modifying your console is lawful where you live legal.md ready to get started? available releases installation guide source and credits",
@@ -131,7 +149,8 @@
       "335594088",
       "332951681",
       "427230821",
-      "428410044"
+      "428410044",
+      "438487450"
     ],
     "itsPLK/ps5-payload-manager": [
       "417340345",
