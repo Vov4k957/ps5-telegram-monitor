@@ -1,36 +1,18 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-10T13:12:22.527467+00:00",
+  "last_heartbeat": "2026-11-10T20:02:22.179054+00:00",
   "last_run": {
     "checked_repositories": 9,
-    "completed_at": "2026-11-10T13:12:22.527467+00:00",
+    "completed_at": "2026-11-10T20:02:22.179054+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "42822358261",
-    "started_at": "2026-11-10T13:12:17.506213+00:00",
+    "run_id": "42891231053",
+    "started_at": "2026-11-10T20:02:17.619558+00:00",
     "updates_processed": 0
   },
   "release_watch": {
-    "drakmor/ShadowMountPlus": {
-      "438487450": {
-        "body": "introduced configuration format v2, with separate config.ini and profiles.ini, automatic migration, and runtime reloads improved mount and launch recovery, including safer cleanup of sandbox layers and handling for m.2 storage made library scans more resilient to inaccessible folders and source changes improved metadata and filename handling for ps4 trophies, sce sys files, and dynamic libraries added browser back navigation, an option to disable startup library notifications, and better support for long image mount paths",
-        "body_length": 527,
-        "bullets": [
-          "introduced configuration format v2, with separate config.ini and profiles.ini, automatic migration, and runtime reloads",
-          "improved mount and launch recovery, including safer cleanup of sandbox layers and handling for m.2 storage",
-          "made library scans more resilient to inaccessible folders and source changes",
-          "improved metadata and filename handling for ps4 trophies, sce sys files, and dynamic libraries",
-          "added browser back navigation, an option to disable startup library notifications, and better support for long image mount paths"
-        ],
-        "digest": "c7f0c9ea44787c46af7e782235b881c10b23842766650e4ab37046c076645d0f",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 144,
-        "notified": false
-      }
-    },
     "quer3q/ampr-emu-ng": {
       "439528891": {
         "body": "new smart runtime. the runtime now adapts to the game. it starts small grows while the game reads, and gives its threads back at once when the game needs them. this works in every game, packed or not faster open-world games. the pack caches are twice as large, so games that stream a big world keep more of it in memory fix launch and in-game freezes. a game no longer goes black at launch or freezes when it cannot start a thread of its own because the runtime s threads took the room. crimson desert 13 hit this at launch and at the main menu save fixes. crimson desert 13, 30 no longer hangs when loading a save. saves load, new saves work and videos play, from a plain folder and from a zstd pack debug build new get queues page: event queue waits, pending events and ampr targets metrics adds apr wait and submit gauges, error events, signal type and aio id counters, and the thread budget zstd frames are checked against their checksum the release build skips this thanks a big thank you to everyone who stayed with 13 to the end: luminusalk who opened it and tested build after build, jamesst20, whose tables of working and failing settings found the thread problem, and eduardoalvarez7, addictiontoplay and sharppg45-oss for their runs and reports thanks again to jamesst20 for helping other reporters in 35, 36 and 37 welcome to everyone who reported a game for the first time tnnuy23-dot 34, 40 , kinggslayerr 35, 37 , dlangamer 38 ramorym-bit 39 and mrfireos 41 , and welcome back majimagorosandesu 36 reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
