@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-11T19:15:35.929450+00:00",
+  "last_heartbeat": "2026-11-11T20:54:09.855161+00:00",
   "last_run": {
     "checked_repositories": 9,
-    "completed_at": "2026-11-11T19:15:35.929450+00:00",
+    "completed_at": "2026-11-11T20:54:09.855161+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "43085487778",
-    "started_at": "2026-11-11T19:15:32.615066+00:00",
+    "run_id": "43098374622",
+    "started_at": "2026-11-11T20:54:05.759717+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -25,29 +25,6 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 149,
-        "notified": false
-      }
-    },
-    "quer3q/ps5-dump-forge": {
-      "439593709": {
-        "body": "new custom output names. the about tab has a new output names card for how generated names look. type any text and insert the parts you want: title, title id, version, pack kind, region and firmware, each at most once english titles in names. generated names use the game s english title when it has one, so a game whose default language is japanese is named astro bot - ppsa01234 instead of アストロボット - ppsa01234 . a game whose default language is english keeps its own title ampr-emu-ng v0.3.4. the bundled runtime is the v0.3.4 release. upstream fixes since v0.3.2: the runtime sizes its threads to the game, so a game no longer goes black at launch or freezes when it can t start a thread of its own fixes ini files are never packed, in zstd and lz4 packs and under custom toml rules alike, so dlc emu.ini and other settings stay editable after packing verifying a pack written from a mac or pc to the ps5 read far more than it needed: every packed file over 2 mib pulled a 64 mib window, and one 20 gb pack took about 90 minutes to verify. reads now start small and grow while they stay sequential delete the source failed on a windows exfat or fat drive with the volume reports no file ids . the drive s root folder has no file id on those file systems, and it is now accepted for the root only a name worked out after another job started could take that job s name, and the next job then failed on it. names now count every job started since thanks lucaszhongsj made their first contribution in 39, which brought english titles to generated names and stopped hidden tabs from renaming their output on every template change jamesst20 asked for the version and pack kind in names in 33, which became the output names card nisec-eric reported the slow verify in 36, and linkultima the failing delete on windows in 34",
-        "body_length": 1818,
-        "bullets": [
-          "custom output names. the about tab has a new output names card for how generated names look. type any text and insert the parts you want: title, title id, version, pack kind, region and firmware, each at most once",
-          "english titles in names. generated names use the game s english title when it has one, so a game whose default language is japanese is named astro bot - ppsa01234 instead of アストロボット - ppsa01234 . a game whose default language is english keeps its own title",
-          "ampr-emu-ng v0.3.4. the bundled runtime is the v0.3.4 release. upstream fixes since v0.3.2: the runtime sizes its threads to the game, so a game no longer goes black at launch or freezes when it can t start a thread of its own",
-          "ini files are never packed, in zstd and lz4 packs and under custom toml rules alike, so dlc emu.ini and other settings stay editable after packing",
-          "verifying a pack written from a mac or pc to the ps5 read far more than it needed: every packed file over 2 mib pulled a 64 mib window, and one 20 gb pack took about 90 minutes to verify. reads now start small and grow while they stay sequential",
-          "delete the source failed on a windows exfat or fat drive with the volume reports no file ids . the drive s root folder has no file id on those file systems, and it is now accepted for the root only",
-          "a name worked out after another job started could take that job s name, and the next job then failed on it. names now count every job started since",
-          "lucaszhongsj made their first contribution in 39, which brought english titles to generated names and stopped hidden tabs from renaming their output on every template change",
-          "jamesst20 asked for the version and pack kind in names in 33, which became the output names card",
-          "nisec-eric reported the slow verify in 36, and linkultima the failing delete on windows in 34"
-        ],
-        "digest": "16d8366f7fc7b8612c5c23560d69853d0d751cfd1cb0094b2d4cfcbf7f5c4382",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 146,
         "notified": false
       }
     }
