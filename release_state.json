@@ -1,40 +1,19 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-11T09:35:30.806787+00:00",
+  "last_heartbeat": "2026-11-11T19:15:35.929450+00:00",
   "last_run": {
     "checked_repositories": 9,
-    "completed_at": "2026-11-11T09:35:30.806787+00:00",
+    "completed_at": "2026-11-11T19:15:35.929450+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 1,
-    "run_id": "42996432996",
-    "started_at": "2026-11-11T09:35:22.779636+00:00",
+    "notifications_sent": 0,
+    "run_id": "43085487778",
+    "started_at": "2026-11-11T19:15:32.615066+00:00",
     "updates_processed": 0
   },
   "release_watch": {
     "quer3q/ampr-emu-ng": {
-      "439528891": {
-        "body": "new smart runtime. the runtime now adapts to the game. it starts small grows while the game reads, and gives its threads back at once when the game needs them. this works in every game, packed or not faster open-world games. the pack caches are twice as large, so games that stream a big world keep more of it in memory fix launch and in-game freezes. a game no longer goes black at launch or freezes when it cannot start a thread of its own because the runtime s threads took the room. crimson desert 13 hit this at launch and at the main menu save fixes. crimson desert 13, 30 no longer hangs when loading a save. saves load, new saves work and videos play, from a plain folder and from a zstd pack debug build new get queues page: event queue waits, pending events and ampr targets metrics adds apr wait and submit gauges, error events, signal type and aio id counters, and the thread budget zstd frames are checked against their checksum the release build skips this thanks a big thank you to everyone who stayed with 13 to the end: luminusalk who opened it and tested build after build, jamesst20, whose tables of working and failing settings found the thread problem, and eduardoalvarez7, addictiontoplay and sharppg45-oss for their runs and reports thanks again to jamesst20 for helping other reporters in 35, 36 and 37 welcome to everyone who reported a game for the first time tnnuy23-dot 34, 40 , kinggslayerr 35, 37 , dlangamer 38 ramorym-bit 39 and mrfireos 41 , and welcome back majimagorosandesu 36 reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in settings zstd and lz4 packs can be made by ps5-dump-forge",
-        "body_length": 1821,
-        "bullets": [
-          "smart runtime. the runtime now adapts to the game. it starts small",
-          "faster open-world games. the pack caches are twice as large, so games",
-          "launch and in-game freezes. a game no longer goes black at launch or",
-          "save fixes. crimson desert 13, 30 no longer hangs when loading a",
-          "new get queues page: event queue waits, pending events and ampr",
-          "metrics adds apr wait and submit gauges, error events, signal type",
-          "zstd frames are checked against their checksum the release build skips",
-          "a big thank you to everyone who stayed with 13 to the end: luminusalk",
-          "thanks again to jamesst20 for helping other reporters in 35, 36 and",
-          "welcome to everyone who reported a game for the first time"
-        ],
-        "digest": "0eb6785c4956ab45b2763eaaca1aee143d2c58edf77eba65ddffe71039aa2b85",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 145,
-        "notified": false
-      },
       "441465055": {
         "body": "fixes saves: starting a new game over an existing save no longer hangs on the loading screen. your saves are not destroyed - thay was just not able to load lean runtime: games are run smoother than before thanks a big thank you to jamesst20, who wrote the save fixes and the pread idle fix in this release 46 , tracked the new-game hang and the packed save icon down in 13, and left a working build there for everyone waiting thanks to marczito, rahulsinghal97s, redcowboy85 and lautaronf, who hit the same save problem in 13, tested the builds and confirmed the fix, and to eduardoalvarez7 and sharppg45-oss for staying with it welcome to everyone who reported a game for the first time robertocarlos3162005-creator 43 , shree1521 44 , fecent 45 and dvnipena 47 , and welcome back betelopson 42 reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in its settings zstd and lz4 packs can be made with ps5-dump-forge",
         "body_length": 1110,
