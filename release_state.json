@@ -1,22 +1,22 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-13T11:53:21.890444+00:00",
+  "last_heartbeat": "2026-11-13T11:57:22.859950+00:00",
   "last_run": {
     "checked_repositories": 10,
-    "completed_at": "2026-11-13T11:53:21.890444+00:00",
+    "completed_at": "2026-11-13T11:57:22.859950+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "43420599669",
-    "started_at": "2026-11-13T11:53:15.798140+00:00",
+    "run_id": "43421124049",
+    "started_at": "2026-11-13T11:57:15.243845+00:00",
     "updates_processed": 0
   },
   "release_watch": {
     "quer3q/ampr-emu-ng": {
       "444085058": {
-        "body": "the big one - fpkg pkg games support ampr-emu-ng now runs games installed as debug fpkg .pkg files. the runtime reads the game s data straight from the .pkg , so you don t have to unpack it or keep a second copy on the drive. zstd packs, lz4 packs and plain folders work as before fpkg support is experimental, and a pkg game can run worse than the same game in zstd packs. if a game stutters as a pkg, try it in zstd packs and tell us in an issue what s new fpkg pkg games, see above faster pack reads: every chunk is read with one disk read of its exact size, and the decoded cache is 64 mib. on two zstd titles the game waited 11 and 14 less per read than with v0.3.5 lz4 packs split a large read into parallel jobs, as zstd packs already did a pack index too big for memory is now read on demand. v0.3.5 refused it, switched the packs off, and the game quit 53 the zstd decoders no longer take memory from the game s heap a game installed on a writable app0 can create files next to its packed files. packed files stay read-only fixes freeze while loading with zstd packs 37 : the runtime s read threads ran at a lower priority than the game s threads. they now run at the same priority as the pack workers endless loading screen on the internal ssd and extended m.2 45 : a folder listing that failed on these drives went to the game, and the game asked again and again. the runtime now lists the folder from the pack index instead thanks a huge thank you to our two strongest contributors strongt1me found and fixed the loading freeze 51, for 37 and the internal ssd hang 57, for 45 , and read the logs of nearly every new report 48, 49, 50, 52, 53, 54, 55, 56 , often with a test build the same day jamesst20 made the core dump and the inline-read test that showed what froze 37, tried to reproduce 48 on their own console, tested 54 and 35, and opened the design discussion on virtual fd numbers 58 thanks to everyone who tested builds and sent logs franchesco98 for the detailed 37 captures, and kinggslayerr for reporting it fecent for testing every 45 build within hours, and for the large-index data in 53 olizo53 for a whole night of 48 runs that found the workers 1 workaround ex-communicad0 for the save data workaround in 54 theone5000 49 , privatepasta 52 and shahbbbj 25 for their logs and retests welcome to everyone who reported a game for the first time olizo53 48 , theone5000 49 , danielh646 50 , privatepasta 52 zhangsaiyi123-png 53 , majddark 54 , ya0ha 55 and aruto16 56 reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work, and name the format: pkg, zstd, lz4 or folder launch fpkg pkg game fpkg games are launched with kraken-mount 1. make a plaintext debug fpkg .pkg with any pkg tool you like 2. mount your games with kraken-mount instead of shadowmountplus 3. when the game starts, the notice reads ampr-emu-ng: v0.4.0 pkg running how to use fpkg games: see launch fpkg pkg game zstd, lz4 and folder games: copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in its settings , or with kraken-mount zstd and lz4 packs can be made with ps5-dump-forge",
-        "body_length": 3210,
+        "body": "the big one - fpkg pkg games support ampr-emu-ng now runs games packed as debug fpkg .pkg files. the runtime reads the game s data straight from the .pkg , so you don t have to unpack it or install on the internal drive zstd packs, lz4 packs and plain folders work as before fpkg support is experimental , and a pkg game can run worse than the same game in zstd packs. if a game stutters as a pkg, try it in zstd packs and tell us in an issue what s new fpkg pkg games, see above faster pack reads: every chunk is read with one disk read of its exact size, and the decoded cache is 64 mib. on two zstd titles the game waited 11 and 14 less per read than with v0.3.5 lz4 packs split a large read into parallel jobs, as zstd packs already did a pack index too big for memory is now read on demand. v0.3.5 refused it, switched the packs off, and the game quit 53 the zstd decoders no longer take memory from the game s heap a game installed on a writable app0 can create files next to its packed files. packed files stay read-only fixes freeze while loading with zstd packs 37 : the runtime s read threads ran at a lower priority than the game s threads. they now run at the same priority as the pack workers endless loading screen on the internal ssd and extended m.2 45 : a folder listing that failed on these drives went to the game, and the game asked again and again. the runtime now lists the folder from the pack index instead thanks a huge thank you to our two strongest contributors strongt1me found and fixed the loading freeze 51, for 37 and the internal ssd hang 57, for 45 , and read the logs of nearly every new report 48, 49, 50, 52, 53, 54, 55, 56 , often with a test build the same day jamesst20 made the core dump and the inline-read test that showed what froze 37, tried to reproduce 48 on their own console, tested 54 and 35, and opened the design discussion on virtual fd numbers 58 thanks to everyone who tested builds and sent logs franchesco98 for the detailed 37 captures, and kinggslayerr for reporting it fecent for testing every 45 build within hours, and for the large-index data in 53 olizo53 for a whole night of 48 runs that found the workers 1 workaround ex-communicad0 for the save data workaround in 54 theone5000 49 , privatepasta 52 and shahbbbj 25 for their logs and retests welcome to everyone who reported a game for the first time olizo53 48 , theone5000 49 , danielh646 50 , privatepasta 52 zhangsaiyi123-png 53 , majddark 54 , ya0ha 55 and aruto16 56 reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work, and name the format: pkg, zstd, lz4 or folder launch fpkg pkg game fpkg games are launched with kraken-mount 1. make a plaintext debug fpkg .pkg with any pkg tool you like 2. mount your games with kraken-mount instead of shadowmountplus 3. when the game starts, the notice reads ampr-emu-ng: v0.4.0 pkg running how to use fpkg games: see launch fpkg pkg game zstd, lz4 and folder games: copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in its settings , or with kraken-mount zstd and lz4 packs can be made with ps5-dump-forge",
+        "body_length": 3205,
         "bullets": [
           "fpkg pkg games, see above",
           "faster pack reads: every chunk is read with one disk read of its exact",
@@ -37,15 +37,11 @@
           "2. mount your games with kraken-mount instead of shadowmountplus",
           "3. when the game starts, the notice reads"
         ],
-        "digest": "2d657625892cee87f614c0f862202878f313d00fa675928e99a288e14235cbcf",
+        "digest": "83f6539ba49be099b0af61284fb21fd6e4dfad408760b36da1047a8be6790225",
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 152,
-        "notified": false,
-        "pending": {
-          "digest": "83f6539ba49be099b0af61284fb21fd6e4dfad408760b36da1047a8be6790225",
-          "first_seen": 1794570800.8722854
-        }
+        "notified": false
       }
     }
   },
