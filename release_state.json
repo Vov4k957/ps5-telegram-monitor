@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-13T11:57:22.859950+00:00",
+  "last_heartbeat": "2026-11-13T13:39:21.588146+00:00",
   "last_run": {
-    "checked_repositories": 10,
-    "completed_at": "2026-11-13T11:57:22.859950+00:00",
+    "checked_repositories": 11,
+    "completed_at": "2026-11-13T13:39:21.588146+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "43421124049",
-    "started_at": "2026-11-13T11:57:15.243845+00:00",
+    "run_id": "43435509125",
+    "started_at": "2026-11-13T13:39:15.839248+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -41,6 +41,23 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 152,
+        "notified": false
+      }
+    },
+    "quer3q/kraken-mount": {
+      "444099863": {
+        "body": "kraken mount v0.0.1-beta first public build. kraken mount is experimental: expect rough edges, and keep a copy of any game you can t easily get back it registers games from debug fpkg .pkg files and game folders plain, zstd or lz4 packs without installing them, and runs them through ampr-emu-ng ampr-emu-ng v0.4.0 is bundled and installed into data krakenmount ampr on first start fpkg .pkg games are the newest and least tested part. a game can run worse as a .pkg than the same game in zstd packs; if one stutters or fails, try it as a zstd folder only a small number of games have been tried so far. settings, cache layout and paths may still change between releases, which can mean a cache rebuild if a game fails to show up, register or launch, open an issue with the game, its source type pkg or folder and the lines from data krakenmount kraken.log",
+        "body_length": 856,
+        "bullets": [
+          "it registers games from debug fpkg .pkg files and game folders plain, zstd or lz4 packs",
+          "ampr-emu-ng v0.4.0 is bundled and installed into data krakenmount ampr on first start",
+          "fpkg .pkg games are the newest and least tested part. a game can run worse as a .pkg than",
+          "only a small number of games have been tried so far. settings, cache layout and paths may still"
+        ],
+        "digest": "938b776ea0efda90e17a06e82fb5dfbc8c43382f62a72092d9c40b4eb7ef548c",
+        "eligible": false,
+        "fingerprint_version": 2,
+        "message_id": null,
         "notified": false
       }
     }
@@ -199,6 +216,9 @@
       "439528891",
       "441465055",
       "444085058"
+    ],
+    "quer3q/kraken-mount": [
+      "444099863"
     ],
     "quer3q/ps5-dump-forge": [
       "425438524",
