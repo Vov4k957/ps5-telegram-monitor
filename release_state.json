@@ -1,34 +1,18 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-13T02:34:24.132666+00:00",
+  "last_heartbeat": "2026-11-13T09:35:26.755314+00:00",
   "last_run": {
     "checked_repositories": 10,
-    "completed_at": "2026-11-13T02:34:24.132666+00:00",
+    "completed_at": "2026-11-13T09:35:26.755314+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "43353082384",
-    "started_at": "2026-11-13T02:34:18.007650+00:00",
+    "run_id": "43402564243",
+    "started_at": "2026-11-13T09:35:22.950591+00:00",
     "updates_processed": 0
   },
-  "release_watch": {
-    "quer3q/ampr-emu-ng": {
-      "441465055": {
-        "body": "fixes saves: starting a new game over an existing save no longer hangs on the loading screen. your saves are not destroyed - thay was just not able to load lean runtime: games are run smoother than before thanks a big thank you to jamesst20, who wrote the save fixes and the pread idle fix in this release 46 , tracked the new-game hang and the packed save icon down in 13, and left a working build there for everyone waiting thanks to marczito, rahulsinghal97s, redcowboy85 and lautaronf, who hit the same save problem in 13, tested the builds and confirmed the fix, and to eduardoalvarez7 and sharppg45-oss for staying with it welcome to everyone who reported a game for the first time robertocarlos3162005-creator 43 , shree1521 44 , fecent 45 and dvnipena 47 , and welcome back betelopson 42 reporting a game issues have a game report form. please share how your games run, both the ones that fail and the ones that work how to use copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in its settings zstd and lz4 packs can be made with ps5-dump-forge",
-        "body_length": 1110,
-        "bullets": [
-          "saves: starting a new game over an existing save no longer hangs on the",
-          "lean runtime: games are run smoother than before"
-        ],
-        "digest": "163e064988d930cbb27dbbe6799ba007b067531f9531c3f7794466b605e78d72",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 149,
-        "notified": false
-      }
-    }
-  },
+  "release_watch": {},
   "repositories": {
     "EchoStretch/kstuff-lite": [
       "392541028",
