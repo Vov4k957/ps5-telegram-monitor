@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-13T10:26:24.942092+00:00",
+  "last_heartbeat": "2026-11-13T11:53:21.890444+00:00",
   "last_run": {
     "checked_repositories": 10,
-    "completed_at": "2026-11-13T10:26:24.942092+00:00",
+    "completed_at": "2026-11-13T11:53:21.890444+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 1,
-    "run_id": "43409038350",
-    "started_at": "2026-11-13T10:26:17.106197+00:00",
+    "notifications_sent": 0,
+    "run_id": "43420599669",
+    "started_at": "2026-11-13T11:53:15.798140+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -41,7 +41,11 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 152,
-        "notified": false
+        "notified": false,
+        "pending": {
+          "digest": "83f6539ba49be099b0af61284fb21fd6e4dfad408760b36da1047a8be6790225",
+          "first_seen": 1794570800.8722854
+        }
       }
     }
   },
