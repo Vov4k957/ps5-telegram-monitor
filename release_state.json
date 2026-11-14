@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-14T15:47:20.588811+00:00",
+  "last_heartbeat": "2026-11-14T15:50:38.085261+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-14T15:47:20.588811+00:00",
+    "completed_at": "2026-11-14T15:50:38.085261+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "43612033051",
-    "started_at": "2026-11-14T15:47:16.803162+00:00",
+    "run_id": "43612320867",
+    "started_at": "2026-11-14T15:50:31.079498+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -44,18 +44,14 @@
         "notified": false
       },
       "445097490": {
-        "body": "beta build of main at 340b6c5d4cf670ece3ec3aae5417c17a4fa82f35, rebuilt on every push. not a release it may be untested on a console. the launch notice reads v-beta.340b6c5 ; put that in a game report changes since v0.4.0",
-        "body_length": 221,
+        "body": "that s an automatic beta version intended for testing purposes built automatically on each push to main branch it may be untested on a console, can break games and not intended to be used as a general way - just testing changes since v0.4.0",
+        "body_length": 240,
         "bullets": [],
-        "digest": "63304a3ac0a01bd2fb304b28822f22263ecaeebc5728c4c94d85ae49f3f0c039",
+        "digest": "5b1e4f624498b67ff4f330947e52dc5b992a47a85d7aa320b4775600709eebd2",
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 155,
-        "notified": false,
-        "pending": {
-          "digest": "5b1e4f624498b67ff4f330947e52dc5b992a47a85d7aa320b4775600709eebd2",
-          "first_seen": 1794671239.6472664
-        }
+        "notified": false
       }
     },
     "quer3q/kraken-mount": {
