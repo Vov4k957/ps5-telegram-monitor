@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-14T08:58:22.477953+00:00",
+  "last_heartbeat": "2026-11-14T09:02:27.316501+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-14T08:58:22.477953+00:00",
+    "completed_at": "2026-11-14T09:02:27.316501+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "43578278218",
-    "started_at": "2026-11-14T08:58:18.151852+00:00",
+    "run_id": "43578601314",
+    "started_at": "2026-11-14T09:02:19.249864+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -44,18 +44,14 @@
         "notified": false
       },
       "445097490": {
-        "body": "beta build of main at 152274fba34636d688aff0c2887196c1c66c300e, rebuilt on every push. not a release it may be untested on a console. the launch notice reads v-beta.152274f ; put that in a game report changes since v0.4.0",
+        "body": "beta build of main at 340b6c5d4cf670ece3ec3aae5417c17a4fa82f35, rebuilt on every push. not a release it may be untested on a console. the launch notice reads v-beta.340b6c5 ; put that in a game report changes since v0.4.0",
         "body_length": 221,
         "bullets": [],
-        "digest": "61e62acb31b1144eed93f1e4a73ea5ff80a4152de38aa01974fb317812118ffd",
+        "digest": "63304a3ac0a01bd2fb304b28822f22263ecaeebc5728c4c94d85ae49f3f0c039",
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 155,
-        "notified": false,
-        "pending": {
-          "digest": "63304a3ac0a01bd2fb304b28822f22263ecaeebc5728c4c94d85ae49f3f0c039",
-          "first_seen": 1794646701.520077
-        }
+        "notified": false
       }
     },
     "quer3q/kraken-mount": {
