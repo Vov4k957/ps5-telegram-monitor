@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-14T09:02:27.316501+00:00",
+  "last_heartbeat": "2026-11-14T15:47:20.588811+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-14T09:02:27.316501+00:00",
+    "completed_at": "2026-11-14T15:47:20.588811+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "43578601314",
-    "started_at": "2026-11-14T09:02:19.249864+00:00",
+    "run_id": "43612033051",
+    "started_at": "2026-11-14T15:47:16.803162+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -51,7 +51,11 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 155,
-        "notified": false
+        "notified": false,
+        "pending": {
+          "digest": "5b1e4f624498b67ff4f330947e52dc5b992a47a85d7aa320b4775600709eebd2",
+          "first_seen": 1794671239.6472664
+        }
       }
     },
     "quer3q/kraken-mount": {
