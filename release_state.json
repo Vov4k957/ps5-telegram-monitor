@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-15T18:33:18.530734+00:00",
+  "last_heartbeat": "2026-11-15T18:36:25.160223+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-15T18:33:18.530734+00:00",
+    "completed_at": "2026-11-15T18:36:25.160223+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "43747395591",
-    "started_at": "2026-11-15T18:33:14.555956+00:00",
+    "run_id": "43747683333",
+    "started_at": "2026-11-15T18:36:17.177596+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -50,8 +50,8 @@
     },
     "quer3q/kraken-mount": {
       "446208902": {
-        "body": "now that s a real release version all fpkg files are now supported, even sparse ones the web ui and the notifications are in 11 languages ampr-emu-ng v0.4.1 is bundled. app can now check for ampr-emu-ng updates by itself a game moved to another drive or folder is relinked without a rebuild kraken mount waits for kstuff to launch, and for shadowmount to stop, before it mounts anything new games now register on setups where only elfldr runs system ex was read-only there thanks strongt1me 22 the web ui is lighter: covers load the 512x512 icon first, and the background photo is gone to update, send kraken-mount.elf once to elfldr port 9021 . existing caches are kept; the first start after the update only refreshes each game s fakelib thanks to everyone who tested fpkg games and sent feedback on this new way of launching them without installing",
-        "body_length": 851,
+        "body": "now that s a proper release version all fpkg files are now supported, even sparse ones the web ui and the notifications are in 11 languages ampr-emu-ng v0.4.1 is bundled. app can now check for ampr-emu-ng updates by itself a game moved to another drive or folder is relinked without a rebuild kraken mount waits for kstuff to launch, and for shadowmount to stop, before it mounts anything new games now register on setups where only elfldr runs system ex was read-only there thanks strongt1me 22 the web ui is lighter: covers load the 512x512 icon first, and the background photo is gone to update, send kraken-mount.elf once to elfldr port 9021 . existing caches are kept; the first start after the update only refreshes each game s fakelib thanks to everyone who tested fpkg games and sent feedback on this new way of launching them without installing",
+        "body_length": 853,
         "bullets": [
           "all fpkg files are now supported, even sparse ones",
           "the web ui and the notifications are in 11 languages",
@@ -61,15 +61,11 @@
           "new games now register on setups where only elfldr runs system ex was read-only there",
           "the web ui is lighter: covers load the 512x512 icon first, and the background photo is gone"
         ],
-        "digest": "26017e82b82ee5927c7f55759e51be85ddd9aa77af9c0884e675a19252a8a366",
+        "digest": "4ca7a8947051876d22c86854dc22c0ae5856e9379b6a399ef545d5966ff22a2a",
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 159,
-        "notified": false,
-        "pending": {
-          "digest": "4ca7a8947051876d22c86854dc22c0ae5856e9379b6a399ef545d5966ff22a2a",
-          "first_seen": 1794767597.9573958
-        }
+        "notified": false
       }
     }
   },
