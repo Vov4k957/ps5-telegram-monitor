@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-15T16:04:35.677860+00:00",
+  "last_heartbeat": "2026-11-15T16:54:24.892002+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-15T16:04:35.677860+00:00",
+    "completed_at": "2026-11-15T16:54:24.892002+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 1,
-    "run_id": "43733365734",
-    "started_at": "2026-11-15T16:04:17.734582+00:00",
+    "run_id": "43738060383",
+    "started_at": "2026-11-15T16:54:16.744160+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -45,6 +45,26 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 158,
+        "notified": false
+      }
+    },
+    "quer3q/kraken-mount": {
+      "446208902": {
+        "body": "now that s a real release version all fpkg files are now supported, even sparse ones the web ui and the notifications are in 11 languages ampr-emu-ng v0.4.1 is bundled. app can now check for ampr-emu-ng updates by itself a game moved to another drive or folder is relinked without a rebuild kraken mount waits for kstuff to launch, and for shadowmount to stop, before it mounts anything new games now register on setups where only elfldr runs system ex was read-only there thanks strongt1me 22 the web ui is lighter: covers load the 512x512 icon first, and the background photo is gone to update, send kraken-mount.elf once to elfldr port 9021 . existing caches are kept; the first start after the update only refreshes each game s fakelib thanks to everyone who tested fpkg games and sent feedback on this new way of launching them without installing",
+        "body_length": 851,
+        "bullets": [
+          "all fpkg files are now supported, even sparse ones",
+          "the web ui and the notifications are in 11 languages",
+          "ampr-emu-ng v0.4.1 is bundled. app can now check for ampr-emu-ng updates by itself",
+          "a game moved to another drive or folder is relinked without a rebuild",
+          "kraken mount waits for kstuff to launch, and for shadowmount to stop, before it mounts anything",
+          "new games now register on setups where only elfldr runs system ex was read-only there",
+          "the web ui is lighter: covers load the 512x512 icon first, and the background photo is gone"
+        ],
+        "digest": "26017e82b82ee5927c7f55759e51be85ddd9aa77af9c0884e675a19252a8a366",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 159,
         "notified": false
       }
     }
@@ -207,7 +227,8 @@
       "446174623"
     ],
     "quer3q/kraken-mount": [
-      "444099863"
+      "444099863",
+      "446208902"
     ],
     "quer3q/ps5-dump-forge": [
       "425438524",
