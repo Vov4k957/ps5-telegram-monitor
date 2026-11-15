@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-15T10:37:20.464262+00:00",
+  "last_heartbeat": "2026-11-15T16:04:35.677860+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-15T10:37:20.464262+00:00",
+    "completed_at": "2026-11-15T16:04:35.677860+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "43704952968",
-    "started_at": "2026-11-15T10:37:15.827401+00:00",
+    "notifications_sent": 1,
+    "run_id": "43733365734",
+    "started_at": "2026-11-15T16:04:17.734582+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -22,6 +22,29 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 155,
+        "notified": false
+      },
+      "446174623": {
+        "body": "fpkg pkg support is experimental , and a pkg game can run worse than the same game in zstd packs. if a game stutters as a pkg, try it in zstd packs and tell us in an issue what s new a new file index: every game s index is kept in memory as one compact table, built once when the game starts. it needs less memory, has no fixed 48 mib cap, and opening a packed file no longer reads its path from disk data ampr cache no longer shows in a file explorer fixes large games that would not start with index tables need ... mib, over the 48 mib : final fantasy xvi 53, 67 , demon s souls 61 and returnal 72 new game crash in marvel s spider-man: miles morales 63 : the save icon path ran out of stack on the game s save thread stuck on closing... with ce-108255-1 in ai limit 60 , and saves that could not be created 64 : a busy save mount is now passed back to the game instead of being retried after unmounting its other saves 66 loading stuck at 20 or 60 after loading a save in horizon forbidden west 23, 68 folder handles of packed folders are now numbers below 1024, since some games reject larger ones 58, 70 a folder is no longer hidden by a file with the same name in another case thanks jamesst20 tracked down the spider-man crash from core dumps 71 moved folder handles below 1024 70 , wrote a core dump payload, and dug through three wolverine crash dumps 48 strongt1me fixed the save mount retry 66 , documented the ampr emu.index rules for packer authors 69 , and found from the logs why demon s souls and ff16 did not fit in memory 61, 67 bxymartin, in a first contribution, fixed the horizon forbidden west loading hang 68 dotpinheiro for the save mount investigation in 62 thanks to everyone who tested builds and sent logs: mrfireos 60 walkerallen96082 61 , zedan015 67 , fecent 72 , xavi871b 64 myselfayman2-sys and linchiech 63 , libraaaaa2792 65 olizo53 48 and privatepasta 52 how to use fpkg games: launch with kraken-mount zstd, lz4 and folder games: copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in its settings or kraken mount zstd and lz4 packs can be made with ps5-dump-forge please keep reporting how your games run with the game report form, and name the format: pkg, zstd, lz4 or folder",
+        "body_length": 2272,
+        "bullets": [
+          "a new file index: every game s index is kept in memory as one compact",
+          "data ampr cache no longer shows in a file explorer",
+          "large games that would not start with index tables need ... mib, over",
+          "new game crash in marvel s spider-man: miles morales 63 : the save",
+          "stuck on closing... with ce-108255-1 in ai limit 60 , and saves",
+          "loading stuck at 20 or 60 after loading a save in horizon forbidden",
+          "folder handles of packed folders are now numbers below 1024, since some",
+          "a folder is no longer hidden by a file with the same name in another",
+          "jamesst20 tracked down the spider-man crash from core dumps 71",
+          "strongt1me fixed the save mount retry 66 , documented the",
+          "bxymartin, in a first contribution, fixed the horizon forbidden west",
+          "dotpinheiro for the save mount investigation in 62"
+        ],
+        "digest": "de659352b880909a9d7ce96252e481af317f34a8c71882ee167c5f54460bf0af",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 158,
         "notified": false
       }
     }
@@ -180,7 +203,8 @@
       "439528891",
       "441465055",
       "444085058",
-      "445097490"
+      "445097490",
+      "446174623"
     ],
     "quer3q/kraken-mount": [
       "444099863"
