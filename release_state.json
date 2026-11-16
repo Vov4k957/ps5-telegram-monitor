@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-16T10:51:24.547102+00:00",
+  "last_heartbeat": "2026-11-16T15:48:07.387542+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-16T10:51:24.547102+00:00",
+    "completed_at": "2026-11-16T15:48:07.387542+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 1,
-    "run_id": "43852511468",
-    "started_at": "2026-11-16T10:51:15.358926+00:00",
+    "run_id": "43891025042",
+    "started_at": "2026-11-16T15:47:58.644416+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -68,6 +68,28 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 160,
+        "notified": false
+      }
+    },
+    "quer3q/ps5-dump-forge": {
+      "447217440": {
+        "body": "new ampr-emu-ng v0.4.1. the bundled runtime is the v0.4.1 release, in place of v0.3.4 payloads.json for ps5-payload-manager. each release now carries a payloads.json catalog. add as a custom repository in ps5-payload-manager, and it installs and updates the ps5 payload static linux cli. a new linux-x86-64-musl tarball carries a fully static ps5-dump-forge cli, with the web ui built in for serve . it runs on any x86-64 linux, with no system libraries needed fixes trophies after a .pkg conversion. a package that keeps sce sys nptitle.dat and its npbind.dat files only in its container, stored encrypted, lost them on conversion, so trophies didn t register. it was affecting a small amount of pkgs packs of more than 32 volumes onto a ps5. a zstd or lz4 pack written straight into a folder on a paired ps5 failed at ampr zstd-032.pak about 120 gib of packs with 32 files are being written already . each volume is now closed once written and reopened for its header. both devices need v0.5.6; with an older one on the other side, the old limit stays linux picker. every mounted disk is now a root ext4, btrfs, xfs, vfat, exfat, ntfs, ... , so a second internal disk at var mnt ... , srv or anywhere else shows on the first screen. each folder is listed once thanks strongt1me made their first contribution in 47, which brought the trophy files back 45 . they also sent 48 ci under rust 1.100 , 49 payloads.json , 54 packs of more than 32 volumes onto a ps5 and 61 the speed test s faster release , and helped triage many issues dev-beresnev-org made their first contribution in 57, which brought the static linux cli nowhere-hub reported 45, remolatron 40, ctrimborn-fr 42, leomars32012-cyber 51, hernanprograma 52 and no-orchid-9511 59",
+        "body_length": 1740,
+        "bullets": [
+          "ampr-emu-ng v0.4.1. the bundled runtime is the v0.4.1 release, in place of v0.3.4",
+          "payloads.json for ps5-payload-manager. each release now carries a payloads.json catalog. add as a custom repository in ps5-payload-manager, and it installs and updates the ps5 payload",
+          "static linux cli. a new linux-x86-64-musl tarball carries a fully static ps5-dump-forge cli, with the web ui built in for serve . it runs on any x86-64 linux, with no system libraries needed",
+          "trophies after a .pkg conversion. a package that keeps sce sys nptitle.dat and its npbind.dat files only in its container, stored encrypted, lost them on conversion, so trophies didn t register. it was affecting a small amount of pkgs",
+          "packs of more than 32 volumes onto a ps5. a zstd or lz4 pack written straight into a folder on a paired ps5 failed at ampr zstd-032.pak about 120 gib of packs with 32 files are being written already . each volume is now closed once written and reopened for its header. both devices need v0.5.6; with an older one on the other side, the old limit stays",
+          "linux picker. every mounted disk is now a root ext4, btrfs, xfs, vfat, exfat, ntfs, ... , so a second internal disk at var mnt ... , srv or anywhere else shows on the first screen. each folder is listed once",
+          "strongt1me made their first contribution in 47, which brought the trophy files back 45 . they also sent 48 ci under rust 1.100 , 49 payloads.json , 54 packs of more than 32 volumes onto a ps5 and 61 the speed test s faster release , and helped triage many issues",
+          "dev-beresnev-org made their first contribution in 57, which brought the static linux cli",
+          "nowhere-hub reported 45, remolatron 40, ctrimborn-fr 42, leomars32012-cyber 51, hernanprograma 52 and no-orchid-9511 59"
+        ],
+        "digest": "5a374b8716b8e6420632641e71a042746ae1a817d2634fd2239388073a9cc872",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 161,
         "notified": false
       }
     }
@@ -245,7 +267,8 @@
       "432776365",
       "434932786",
       "436476860",
-      "439593709"
+      "439593709",
+      "447217440"
     ]
   },
   "ru_translation_enabled_notice": true,
