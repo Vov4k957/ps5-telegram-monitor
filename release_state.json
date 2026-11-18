@@ -1,18 +1,39 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-18T15:48:24.076553+00:00",
+  "last_heartbeat": "2026-11-18T16:44:28.445306+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-18T15:48:24.076553+00:00",
+    "completed_at": "2026-11-18T16:44:28.445306+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "44339817961",
-    "started_at": "2026-11-18T15:48:18.663902+00:00",
+    "notifications_sent": 1,
+    "run_id": "44350654084",
+    "started_at": "2026-11-18T16:44:18.218568+00:00",
     "updates_processed": 0
   },
-  "release_watch": {},
+  "release_watch": {
+    "quer3q/kraken-mount": {
+      "450240005": {
+        "body": "saves, dlc and playgo emulators, usb unmount saves: a game s own libscesavedata.native.sprx from its fakelib is no longer used. it replaced the console s save module and made saves disappear or fail to load 68, 64 . thanks astroboot-dev for tracking it down 76 and strongt1me for the review pkg games always get ampr-emu-ng, even with inject ampr off: only ampr-emu-ng can read the game from the .pkg . the setting now covers folder games only 73 bundled dlc and playgo emulators: drakmor s dlc emu 0.3 and pgo stub 0.6. dlc emu is added when the game has a dlc emu.ini , pgo stub when the game uses playgo, and only when the game does not already ship a newer copy. setting add emulators on . see docs dlcemu.md and docs playgo.md 71 title sound: a game plays its title sound when selected on the home screen 57 usb drives: each usb drive gets an unmount button in the web ui, so it can be pulled safely game names follow the console language scan: a game still being copied is skipped until its files stop changing stability wait seconds , 10 . a title whose source stays gone for 5 minutes is removed from the home screen auto remove missing , on ; its cache stays and it comes back when the source does to update, send kraken-mount.elf once to elfldr port 9021 . the first start after the update recomposes every game s fakelib once",
+        "body_length": 1336,
+        "bullets": [
+          "saves: a game s own libscesavedata.native.sprx from its fakelib is no longer used. it",
+          "pkg games always get ampr-emu-ng, even with inject ampr off: only ampr-emu-ng can read the",
+          "bundled dlc and playgo emulators: drakmor s dlc emu 0.3 and pgo stub 0.6. dlc emu is added when",
+          "title sound: a game plays its title sound when selected on the home screen 57",
+          "usb drives: each usb drive gets an unmount button in the web ui, so it can be pulled safely",
+          "game names follow the console language",
+          "scan: a game still being copied is skipped until its files stop changing"
+        ],
+        "digest": "ed6c8f16db39b877031cfac369729b7d604b5f5052d0b08fbe12831c17083c54",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 162,
+        "notified": false
+      }
+    }
+  },
   "repositories": {
     "EchoStretch/kstuff-lite": [
       "392541028",
@@ -173,7 +194,8 @@
     "quer3q/kraken-mount": [
       "444099863",
       "446208902",
-      "446908947"
+      "446908947",
+      "450240005"
     ],
     "quer3q/ps5-dump-forge": [
       "425438524",
