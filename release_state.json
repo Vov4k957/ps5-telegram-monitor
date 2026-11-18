@@ -1,33 +1,18 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-17T16:54:23.623413+00:00",
+  "last_heartbeat": "2026-11-18T10:51:23.460622+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-17T16:54:23.623413+00:00",
+    "completed_at": "2026-11-18T10:51:23.460622+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "44131010395",
-    "started_at": "2026-11-17T16:54:17.079226+00:00",
+    "run_id": "44289259193",
+    "started_at": "2026-11-18T10:51:16.354289+00:00",
     "updates_processed": 0
   },
   "release_watch": {
-    "quer3q/kraken-mount": {
-      "446908947": {
-        "body": "trophies, saves and file access trophies, save icons and game backgrounds now come through for fpkg games. some files are kept only in the package s outer container, not in its game image: save data.png , pic0 pic1 snd0.at9 , the trophy files and the encrypted npbind.dat nptitle.dat . kraken mount now puts them into the game s cache too. this fixes the ce-107112-2 popup on games whose save actually worked 41, 48 , missing trophies and missing backgrounds 51 file access: games and the console s save and trophy services read a game s files under their own user. kraken mount now makes caches, .pkg files with their folders, and folder games readable for them. it only adds missing permissions and never removes any. before, a .pkg uploaded with restrictive permissions made ampr-emu-ng fall back to lz4 mode and the game failed to start 36, 56 to update, send kraken-mount.elf once to elfldr port 9021 . the first start after the update rebuilds every game s cache once, so it takes a while and needs some free space",
-        "body_length": 1020,
-        "bullets": [
-          "trophies, save icons and game backgrounds now come through for fpkg games. some files are kept",
-          "file access: games and the console s save and trophy services read a game s files under their own"
-        ],
-        "digest": "704e8cc703221d74c0ad1c85fa99bb26ebc6a56b723592adc78ffbb7a3771a70",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 160,
-        "notified": false
-      }
-    },
     "quer3q/ps5-dump-forge": {
       "447217440": {
         "body": "new ampr-emu-ng v0.4.1. the bundled runtime is the v0.4.1 release, in place of v0.3.4 payloads.json for ps5-payload-manager. each release now carries a payloads.json catalog. add as a custom repository in ps5-payload-manager, and it installs and updates the ps5 payload static linux cli. a new linux-x86-64-musl tarball carries a fully static ps5-dump-forge cli, with the web ui built in for serve . it runs on any x86-64 linux, with no system libraries needed fixes trophies after a .pkg conversion. a package that keeps sce sys nptitle.dat and its npbind.dat files only in its container, stored encrypted, lost them on conversion, so trophies didn t register. it was affecting a small amount of pkgs packs of more than 32 volumes onto a ps5. a zstd or lz4 pack written straight into a folder on a paired ps5 failed at ampr zstd-032.pak about 120 gib of packs with 32 files are being written already . each volume is now closed once written and reopened for its header. both devices need v0.5.6; with an older one on the other side, the old limit stays linux picker. every mounted disk is now a root ext4, btrfs, xfs, vfat, exfat, ntfs, ... , so a second internal disk at var mnt ... , srv or anywhere else shows on the first screen. each folder is listed once thanks strongt1me made their first contribution in 47, which brought the trophy files back 45 . they also sent 48 ci under rust 1.100 , 49 payloads.json , 54 packs of more than 32 volumes onto a ps5 and 61 the speed test s faster release , and helped triage many issues dev-beresnev-org made their first contribution in 57, which brought the static linux cli nowhere-hub reported 45, remolatron 40, ctrimborn-fr 42, leomars32012-cyber 51, hernanprograma 52 and no-orchid-9511 59",
