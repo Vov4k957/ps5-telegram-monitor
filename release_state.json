@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-20T12:10:46.159575+00:00",
+  "last_heartbeat": "2026-11-20T16:44:23.139953+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-20T12:10:46.159575+00:00",
+    "completed_at": "2026-11-20T16:44:23.139953+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 1,
-    "run_id": "44733567620",
-    "started_at": "2026-11-20T12:10:32.648013+00:00",
+    "notifications_sent": 0,
+    "run_id": "44776330949",
+    "started_at": "2026-11-20T16:44:18.070490+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -39,24 +39,6 @@
       }
     },
     "quer3q/kraken-mount": {
-      "450240005": {
-        "body": "saves, dlc and playgo emulators, usb unmount saves: a game s own libscesavedata.native.sprx from its fakelib is no longer used. it replaced the console s save module and made saves disappear or fail to load 68, 64 . thanks astroboot-dev for tracking it down 76 and strongt1me for the review pkg games always get ampr-emu-ng, even with inject ampr off: only ampr-emu-ng can read the game from the .pkg . the setting now covers folder games only 73 bundled dlc and playgo emulators: drakmor s dlc emu 0.3 and pgo stub 0.6. dlc emu is added when the game has a dlc emu.ini , pgo stub when the game uses playgo, and only when the game does not already ship a newer copy. setting add emulators on . see docs dlcemu.md and docs playgo.md 71 title sound: a game plays its title sound when selected on the home screen 57 usb drives: each usb drive gets an unmount button in the web ui, so it can be pulled safely game names follow the console language scan: a game still being copied is skipped until its files stop changing stability wait seconds , 10 . a title whose source stays gone for 5 minutes is removed from the home screen auto remove missing , on ; its cache stays and it comes back when the source does to update, send kraken-mount.elf once to elfldr port 9021 . the first start after the update recomposes every game s fakelib once",
-        "body_length": 1336,
-        "bullets": [
-          "saves: a game s own libscesavedata.native.sprx from its fakelib is no longer used. it",
-          "pkg games always get ampr-emu-ng, even with inject ampr off: only ampr-emu-ng can read the",
-          "bundled dlc and playgo emulators: drakmor s dlc emu 0.3 and pgo stub 0.6. dlc emu is added when",
-          "title sound: a game plays its title sound when selected on the home screen 57",
-          "usb drives: each usb drive gets an unmount button in the web ui, so it can be pulled safely",
-          "game names follow the console language",
-          "scan: a game still being copied is skipped until its files stop changing"
-        ],
-        "digest": "ed6c8f16db39b877031cfac369729b7d604b5f5052d0b08fbe12831c17083c54",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 162,
-        "notified": false
-      },
       "452647756": {
         "body": "what s new fw 12 : games register on the home screen again. where the per-title install call is missing each scan pass stages its titles and registers them with one install call at the end, with one toast for the batch 95 . thanks dang3rzone playgo stub: can be turned off per game in its details. resident evil village and some other games stay on a black screen with it 84, 85, 87 scan: games in a folder directly inside a scan root are found too 83 . a copy in a subfolder never takes over a game found directly in a root bundled ampr-emu-ng v0.5.0 faster registration: staged sce sys and appmeta files are copied 1 mib at a time, so registering a game takes about 21 s instead of 36-44 s 94 . thanks dang3rzone log: every kraken.log line starts with the time; cache builds, registrations and slow scan passes log how long they took 92 . thanks dang3rzone config: a wrong item in a config array is skipped; the other items stay to update, send kraken-mount.elf once to elfldr port 9021",
         "body_length": 988,
