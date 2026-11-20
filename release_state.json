@@ -1,18 +1,43 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-18T16:44:28.445306+00:00",
+  "last_heartbeat": "2026-11-20T09:59:22.959383+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-18T16:44:28.445306+00:00",
+    "completed_at": "2026-11-20T09:59:22.959383+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 1,
-    "run_id": "44350654084",
-    "started_at": "2026-11-18T16:44:18.218568+00:00",
+    "run_id": "44715304723",
+    "started_at": "2026-11-20T09:59:15.402215+00:00",
     "updates_processed": 0
   },
   "release_watch": {
+    "quer3q/ampr-emu-ng": {
+      "452514440": {
+        "body": "up to 20 better speed and multiple game fixes fpkg pkg support is experimental , and a pkg game can run worse than the same game in zstd packs. if a game stutters as a pkg, try it in zstd packs and tell us in an issue what s new faster reads: games wait up to 20 less for their files. threads pick up a read sooner, the read path has fewer steps, and the cache keeps the most used data when a game scans through many files less memory: the module takes 150.89 mib instead of 184.44 mib. the cache starts at 32 mib and grows into the memory the file index leaves free once the game has started about 100 mib on our test games games start faster: the file index loads 30-40 quicker fixes final fantasy xvi 84 : a crash during play, a freeze at the dalimil story point, and a crash at start for a dump without ampr emu.index marvel s avengers crashed at boot 103 : a game that reads a folder in one go now sees its packed files demon slayer -kimetsu no yaiba- the hinokami chronicles would not start 105 : a file listed in the index but missing from the dump is now reported as missing grand theft auto v would not start 88 : packed files now show in a folder that also exists on disk games backported to firmware 4.xx that never saved, such as blasphemous 2 92 and castlevania: belmont s curse a game that writes a save is no longer handed a read-only save mount it already holds thanks jamesst20 fixed final fantasy xvi 98, 102 , marvel s avengers 108 , demon slayer 109 and grand theft auto v 89 , all traced from core dumps, added a build check for the stack size of the game s threads 73 , and added a crash page to the debug build for core dumps of frozen games 90 strongt1me found the cause of the final fantasy xvi startup crash 84 , pointed to the index problem behind 100, and read the dumps and logs in many reports 48, 82, 83, 86, 87, 88, 94, 95 dang3rzone, in a first contribution, fixed saving in backported games 106 and confirmed it with blasphemous 2 thanks to everyone who tested builds and sent logs: psksuffsmp 84 103 , fecent 105, 88 and rodolphomaia 92 how to use fpkg games: launch with kraken-mount zstd, lz4 and folder games: copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in its settings or kraken mount zstd and lz4 packs can be made with ps5-dump-forge",
+        "body_length": 2338,
+        "bullets": [
+          "faster reads: games wait up to 20 less for their files. threads pick",
+          "less memory: the module takes 150.89 mib instead of 184.44 mib. the",
+          "games start faster: the file index loads 30-40 quicker",
+          "final fantasy xvi 84 : a crash during play, a freeze at the dalimil",
+          "marvel s avengers crashed at boot 103 : a game that reads a folder in",
+          "demon slayer -kimetsu no yaiba- the hinokami chronicles would not start",
+          "grand theft auto v would not start 88 : packed files now show in a",
+          "games backported to firmware 4.xx that never saved, such as blasphemous 2",
+          "a game that writes a save is no longer handed a read-only save mount it",
+          "jamesst20 fixed final fantasy xvi 98, 102 , marvel s avengers",
+          "strongt1me found the cause of the final fantasy xvi startup crash",
+          "dang3rzone, in a first contribution, fixed saving in backported games"
+        ],
+        "digest": "8f2e62e09743199a880d30496b510f3957bb48be32c01243e6cfcaef1817f89c",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 163,
+        "notified": false
+      }
+    },
     "quer3q/kraken-mount": {
       "450240005": {
         "body": "saves, dlc and playgo emulators, usb unmount saves: a game s own libscesavedata.native.sprx from its fakelib is no longer used. it replaced the console s save module and made saves disappear or fail to load 68, 64 . thanks astroboot-dev for tracking it down 76 and strongt1me for the review pkg games always get ampr-emu-ng, even with inject ampr off: only ampr-emu-ng can read the game from the .pkg . the setting now covers folder games only 73 bundled dlc and playgo emulators: drakmor s dlc emu 0.3 and pgo stub 0.6. dlc emu is added when the game has a dlc emu.ini , pgo stub when the game uses playgo, and only when the game does not already ship a newer copy. setting add emulators on . see docs dlcemu.md and docs playgo.md 71 title sound: a game plays its title sound when selected on the home screen 57 usb drives: each usb drive gets an unmount button in the web ui, so it can be pulled safely game names follow the console language scan: a game still being copied is skipped until its files stop changing stability wait seconds , 10 . a title whose source stays gone for 5 minutes is removed from the home screen auto remove missing , on ; its cache stays and it comes back when the source does to update, send kraken-mount.elf once to elfldr port 9021 . the first start after the update recomposes every game s fakelib once",
@@ -189,7 +214,8 @@
       "441465055",
       "444085058",
       "445097490",
-      "446174623"
+      "446174623",
+      "452514440"
     ],
     "quer3q/kraken-mount": [
       "444099863",
