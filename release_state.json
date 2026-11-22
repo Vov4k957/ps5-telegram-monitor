@@ -1,18 +1,39 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-22T12:09:22.728197+00:00",
+  "last_heartbeat": "2026-11-22T17:12:28.222862+00:00",
   "last_run": {
     "checked_repositories": 11,
-    "completed_at": "2026-11-22T12:09:22.728197+00:00",
+    "completed_at": "2026-11-22T17:12:28.222862+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "45020798291",
-    "started_at": "2026-11-22T12:09:19.400923+00:00",
+    "notifications_sent": 1,
+    "run_id": "45048106154",
+    "started_at": "2026-11-22T17:12:17.801534+00:00",
     "updates_processed": 0
   },
-  "release_watch": {},
+  "release_watch": {
+    "quer3q/ps5-dump-forge": {
+      "454608043": {
+        "body": "new edit in the cli. ps5-dump-forge edit changes a game s files without mounting it, for scripts: --add : , --delete , --rename : and --mkdir , applied in the order given, in place or with --rebuild . it runs the same job as the edit tab static linux cli for arm64. a new linux-arm64-musl tarball carries the fully static ps5-dump-forge cli for arm64 nases and boards, beside the x86-64 one fixes ffpfsc unsupported pfs pointer layout . an image whose file ends at its last data byte, instead of at the end of its last 64 kib block, was refused. it now reads; one cut into its data is still refused ampr index read as damaged. an ampr emu.index whose slot table starts at a multiple of 8 bytes a package s own index, crisis core was called damaged and written afresh on conversion. it now reads, and is kept when it lists exactly the output s files. when an index really is damaged, the job log now says why thanks jamesst20 made their first contribution in 69, which brought the cli s edit command strongt1me sent 68 .ffpfsc images with a short last block , 67 the arm64 static cli , 64 8-byte aligned ampr index and 62 why an index is damaged , and keeps helping triage issues tomeq82 reported 65 with the byte dumps that settled it, n3uma-lovable 66 and cherritm the crisis core index quer3q ampr-emu-ng 86",
+        "body_length": 1309,
+        "bullets": [
+          "edit in the cli. ps5-dump-forge edit changes a game s files without mounting it, for scripts: --add : , --delete , --rename : and --mkdir , applied in the order given, in place or with --rebuild . it runs the same job as the edit tab",
+          "static linux cli for arm64. a new linux-arm64-musl tarball carries the fully static ps5-dump-forge cli for arm64 nases and boards, beside the x86-64 one",
+          "ffpfsc unsupported pfs pointer layout . an image whose file ends at its last data byte, instead of at the end of its last 64 kib block, was refused. it now reads; one cut into its data is still refused",
+          "ampr index read as damaged. an ampr emu.index whose slot table starts at a multiple of 8 bytes a package s own index, crisis core was called damaged and written afresh on conversion. it now reads, and is kept when it lists exactly the output s files. when an index really is damaged, the job log now says why",
+          "jamesst20 made their first contribution in 69, which brought the cli s edit command",
+          "strongt1me sent 68 .ffpfsc images with a short last block , 67 the arm64 static cli , 64 8-byte aligned ampr index and 62 why an index is damaged , and keeps helping triage issues",
+          "tomeq82 reported 65 with the byte dumps that settled it, n3uma-lovable 66 and cherritm the crisis core index quer3q ampr-emu-ng 86"
+        ],
+        "digest": "7aca5be637fb29ca59cd7011266f0eb4ff9f9d56c1ce9795f764e22d18ab1775",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 165,
+        "notified": false
+      }
+    }
+  },
   "repositories": {
     "EchoStretch/kstuff-lite": [
       "392541028",
@@ -190,7 +211,8 @@
       "434932786",
       "436476860",
       "439593709",
-      "447217440"
+      "447217440",
+      "454608043"
     ]
   },
   "ru_translation_enabled_notice": true,
