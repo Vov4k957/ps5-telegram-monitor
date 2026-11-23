@@ -1,46 +1,19 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-23T21:17:25.324011+00:00",
+  "last_heartbeat": "2026-11-23T23:35:34.080916+00:00",
   "last_run": {
     "checked_repositories": 13,
-    "completed_at": "2026-11-23T21:17:25.324011+00:00",
+    "completed_at": "2026-11-23T23:35:34.080916+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "45268094193",
-    "started_at": "2026-11-23T21:17:17.226448+00:00",
+    "run_id": "45290111624",
+    "started_at": "2026-11-23T23:35:25.895783+00:00",
     "updates_processed": 0
   },
   "release_watch": {
     "Darkatek7/PS5SD": {
-      "454060970": {
-        "body": "moss-image in the catalog 19 , a civitai search and each lora s info and trigger words 24 , and fan modes you can see moss-image moss-image 4-step q4 0 : 1024x1024 in about 35 s. featured in models get more moss-image sft q4 k : the model as openmoss made it, cfg 3 with a negative prompt, about 4 min 35 s at 20 steps both use qwen3.5 9b and its tokenizer and the flux.2 vae 9.4 gb each, 6 gb shared . both write printed text into a picture moss-image models and loras are told by their tensors civitai and hugging face get more has four tabs: catalog, civitai, hugging face, upload the civitai tab searches by name, type, base model the loaded model s is picked first and order, shows the pictures and trigger words, and downloads into the loras or models folder. mature results are off by default; a picture rated r or higher stays blurred until clicked tokens for civitai and hugging face are saved from the web ui. civitai.red links work like civitai.com ones lora info each lora keeps its trigger words, preferred strength, notes, description and pictures in a1111 s sidecar file name.json , name.preview.jpeg , so a1111 reads it too look up online finds a lora on civitai by the file s sha-256, so a renamed file is found too; a lora from hugging face is asked there. look up all does every lora without info, and a lora downloaded in the web ui is looked up by itself. a 650 mb lora took about 10 s, mostly the hash add trigger words puts a lora s words into the prompt with one button; its preferred strength is used when it is added add a lora on the create tab becomes a search field once there are more than 8 loras deleting a lora deletes its info and preview too new routes: get post loras info , post loras lookup , get loras preview , get post tokens api.md the fan each mode says the highest temperature it holds the chip at: quiet 91 c the console s own , balanced 88, cool 85, manual 70 to 91 a chart shows the mode the fan flat at its minimum, then up at that temperature , the console s own, the chip s last 2 minutes and now, and how the mode did on the console. with flux.2 klein 9b making one image after another, the fan went up to 30 in quiet the chip 84.5 c on average , 33 in balanced 83 c and 35 in cool 81.5 c another payload can leave the console s own target at 50 c, and the fan then runs loud. ps5sd now takes a target under 70 c as 91 c: manual, balanced and cool work from there, and quiet puts 91 c back measured on the console: console.md install from the homebrew store, or unpack ppsa99576.zip into data homebrew and let shadowmountplus scan. an update keeps models, presets, gallery and settings next roadmap.md at the tag",
-        "body_length": 2663,
-        "bullets": [
-          "moss-image 4-step q4 0 : 1024x1024 in about 35 s. featured in models get more",
-          "moss-image sft q4 k : the model as openmoss made it, cfg 3 with a negative prompt, about 4 min 35 s at 20 steps",
-          "both use qwen3.5 9b and its tokenizer and the flux.2 vae 9.4 gb each, 6 gb shared . both write printed text into a picture",
-          "moss-image models and loras are told by their tensors",
-          "get more has four tabs: catalog, civitai, hugging face, upload",
-          "the civitai tab searches by name, type, base model the loaded model s is picked first and order, shows the pictures and trigger words, and downloads into the loras or models folder. mature results are off by default; a picture rated r or higher stays blurred until clicked",
-          "tokens for civitai and hugging face are saved from the web ui. civitai.red links work like civitai.com ones",
-          "each lora keeps its trigger words, preferred strength, notes, description and pictures in a1111 s sidecar file name.json , name.preview.jpeg , so a1111 reads it too",
-          "look up online finds a lora on civitai by the file s sha-256, so a renamed file is found too; a lora from hugging face is asked there. look up all does every lora without info, and a lora downloaded in the web ui is looked up by itself. a 650 mb lora took about 10 s, mostly the hash",
-          "add trigger words puts a lora s words into the prompt with one button; its preferred strength is used when it is added",
-          "add a lora on the create tab becomes a search field once there are more than 8 loras",
-          "deleting a lora deletes its info and preview too",
-          "new routes: get post loras info , post loras lookup , get loras preview , get post tokens api.md",
-          "each mode says the highest temperature it holds the chip at: quiet 91 c the console s own , balanced 88, cool 85, manual 70 to 91",
-          "a chart shows the mode the fan flat at its minimum, then up at that temperature , the console s own, the chip s last 2 minutes and now, and how the mode did on the console. with flux.2 klein 9b making one image after another, the fan went up to 30 in quiet the chip 84.5 c on average , 33 in balanced 83 c and 35 in cool 81.5 c",
-          "another payload can leave the console s own target at 50 c, and the fan then runs loud. ps5sd now takes a target under 70 c as 91 c: manual, balanced and cool work from there, and quiet puts 91 c back"
-        ],
-        "digest": "954b10f7ff7ff7160fe0025f4cb176fe847586438a7d2482119246a98a4bec8b",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      },
       "454095636": {
         "body": "prompt collections on the console, name and lora in a prompt, and all of it through the api collections a collection is a named list of prompts or words, kept on the console for every model and every browser save prompt under the prompt puts the prompt and its negative prompt into a collection saved , or a new one the collections tab next to history lists them: use an entry, random prompt , insert name , rename, delete import .txt and export .txt use the files of a1111 s dynamic prompts: one entry per line placeholders name in a prompt is a random entry of that collection, picked anew for each image, like a b c . a prompt of only portraits with a count of 10 makes 10 different prompts. entries may hold a b and other names a prompt that is only name also takes the entry s negative prompt, before the one you typed lora is the trigger words of the picked loras at that place. add trigger words now puts them at the cursor the hint under the prompt says what each image picks from, and names a name that matches nothing the prompt as typed in the image each image keeps the prompt as you typed it, as template: in its parameters as dynamic prompts writes it , so use all gives people back, not the one prompt that came of it api get , post and delete ps5sd v1 app promptbooks and its entries: make, rename, fill and delete collections post ps5sd v1 app prompts expand : the same rules as the page, with the loras stored trigger words from lora , or the prompt s tags , a count up to 100 and a seed that repeats the picks. about 10 ms on the console img gen and vid gen take template and negative template api.md has the routes and an example. measured on the console: console.md install from the homebrew store, or unpack ppsa99576.zip into data homebrew and let shadowmountplus scan. an update keeps models, presets, gallery and settings next roadmap.md at the tag",
         "body_length": 1873,
