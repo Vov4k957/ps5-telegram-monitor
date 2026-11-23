@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-23T14:15:41.720812+00:00",
+  "last_heartbeat": "2026-11-23T19:37:34.226530+00:00",
   "last_run": {
     "checked_repositories": 12,
-    "completed_at": "2026-11-23T14:15:41.720812+00:00",
+    "completed_at": "2026-11-23T19:37:34.226530+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "45192236368",
-    "started_at": "2026-11-23T14:15:34.570276+00:00",
+    "notifications_sent": 1,
+    "run_id": "45250814832",
+    "started_at": "2026-11-23T19:37:15.935302+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -28,6 +28,28 @@
         "eligible": false,
         "fingerprint_version": 2,
         "message_id": null,
+        "notified": false
+      }
+    },
+    "quer3q/ampr-emu-ng": {
+      "455896610": {
+        "body": "save fixes in pkg mode and faster read batches fpkg pkg support is experimental , and a pkg game can run worse than the same game in zstd packs. if a game stutters as a pkg, try it in zstd packs and tell us in an issue what s new faster read batches: a game s next batch of reads now starts while the previous one is still finishing. on our test games a batch completes about 10 sooner in pkg mode, and a zstd game that queued its reads badly went from 98 ms to 5 ms a batch. the disk read pool grows from 6 to 8 threads to keep up fixes games that failed every save in pkg mode, such as marvel s wolverine 116 : the save service cannot open the game s save icon in pkg mode so the runtime now reads the icon and hands it over itself, also when the game is installed on an m.2 drive. not yet confirmed by the reporter hades hung when closed and showed 0xa0024301 in pkg mode 114 . shared save mounts are removed: a save mount the game already holds is passed back as busy, as on a retail console dirt 5 crashed about 15 s after launch, then hung on a black screen, in pkg mode 117 : folders listed with a small buffer now show their files on disk as well as the packed ones marvel cosmic invasion aborted at launch 111 , and scott pilgrim ex is fixed by the same change: a folder that exists only in the packs no longer reports a stale not found error at the end of its listing thanks jamesst20 fixed marvel cosmic invasion and scott pilgrim ex 113 and dirt 5 118 , traced from core dumps, and found the save bug behind the hades hang 115 pristmc-code sent detailed reports with core dumps and traces for marvel cosmic invasion 111 , hades 114 and dirt 5 117 , and tested every fix build on a console fever86 sent the logs for marvel s wolverine 116 and found that the save failure happened only on m.2 strongt1me helped triage 111 how to use fpkg games: launch with kraken-mount zstd, lz4 and folder games: copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in its settings or kraken mount zstd and lz4 packs can be made with ps5-dump-forge",
+        "body_length": 2098,
+        "bullets": [
+          "faster read batches: a game s next batch of reads now starts while the",
+          "games that failed every save in pkg mode, such as marvel s wolverine",
+          "hades hung when closed and showed 0xa0024301 in pkg mode 114 . shared",
+          "dirt 5 crashed about 15 s after launch, then hung on a black screen, in",
+          "marvel cosmic invasion aborted at launch 111 , and scott pilgrim ex is",
+          "jamesst20 fixed marvel cosmic invasion and scott pilgrim ex 113 and",
+          "pristmc-code sent detailed reports with core dumps and traces for",
+          "fever86 sent the logs for marvel s wolverine 116 and found that the",
+          "strongt1me helped triage 111"
+        ],
+        "digest": "8fe58351065ae1831d216baec01317f7bb1e5eaa9e7d10cd006865e275abab6b",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 174,
         "notified": false
       }
     },
@@ -220,7 +242,8 @@
       "444085058",
       "445097490",
       "446174623",
-      "452514440"
+      "452514440",
+      "455896610"
     ],
     "quer3q/kraken-mount": [
       "444099863",
