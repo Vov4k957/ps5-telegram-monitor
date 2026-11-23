@@ -1,18 +1,36 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-23T12:28:24.406535+00:00",
+  "last_heartbeat": "2026-11-23T12:29:21.511153+00:00",
   "last_run": {
-    "checked_repositories": 10,
-    "completed_at": "2026-11-23T12:28:24.406535+00:00",
+    "checked_repositories": 11,
+    "completed_at": "2026-11-23T12:29:21.511153+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "45174593874",
-    "started_at": "2026-11-23T12:28:19.375560+00:00",
+    "run_id": "45174743847",
+    "started_at": "2026-11-23T12:29:16.295949+00:00",
     "updates_processed": 0
   },
   "release_watch": {
+    "itsPLK/ps5-webkit-autoloader": {
+      "454874663": {
+        "body": "dependencies updated wobkot to 452046e added relapse support for fw 3.00, 3.10, 3.20, 4.00, 4.02, 4.03, 4.50, and 4.51 this expands supported firmware to 3.00 13.60 downloads ps5 installer payload file: webkit-autoloader-installer v0.8.4.elf linux macos wsl installer-host file: webkit-autoloader-host v0.8.4.py windows installer-host file: webkit-autoloader-host v0.8.4.exe",
+        "body_length": 374,
+        "bullets": [
+          "updated wobkot to 452046e",
+          "added relapse support for fw 3.00, 3.10, 3.20, 4.00, 4.02, 4.03, 4.50, and 4.51",
+          "ps5 installer payload file: webkit-autoloader-installer v0.8.4.elf",
+          "linux macos wsl installer-host file: webkit-autoloader-host v0.8.4.py",
+          "windows installer-host file: webkit-autoloader-host v0.8.4.exe"
+        ],
+        "digest": "01d423b770e3351ac1d99b9e2159b1620d41c0076cfbafe4fb8c09749c591081",
+        "eligible": false,
+        "fingerprint_version": 2,
+        "message_id": null,
+        "notified": false
+      }
+    },
     "quer3q/ps5-dump-forge": {
       "454608043": {
         "body": "new edit in the cli. ps5-dump-forge edit changes a game s files without mounting it, for scripts: --add : , --delete , --rename : and --mkdir , applied in the order given, in place or with --rebuild . it runs the same job as the edit tab static linux cli for arm64. a new linux-arm64-musl tarball carries the fully static ps5-dump-forge cli for arm64 nases and boards, beside the x86-64 one fixes ffpfsc unsupported pfs pointer layout . an image whose file ends at its last data byte, instead of at the end of its last 64 kib block, was refused. it now reads; one cut into its data is still refused ampr index read as damaged. an ampr emu.index whose slot table starts at a multiple of 8 bytes a package s own index, crisis core was called damaged and written afresh on conversion. it now reads, and is kept when it lists exactly the output s files. when an index really is damaged, the job log now says why thanks jamesst20 made their first contribution in 69, which brought the cli s edit command strongt1me sent 68 .ffpfsc images with a short last block , 67 the arm64 static cli , 64 8-byte aligned ampr index and 62 why an index is damaged , and keeps helping triage issues tomeq82 reported 65 with the byte dumps that settled it, n3uma-lovable 66 and cherritm the crisis core index quer3q ampr-emu-ng 86",
@@ -130,6 +148,38 @@
       "332813968",
       "316691806",
       "316164583"
+    ],
+    "itsPLK/ps5-webkit-autoloader": [
+      "454874663",
+      "453602885",
+      "452587459",
+      "452385561",
+      "452109069",
+      "448683950",
+      "447199678",
+      "437947468",
+      "437110644",
+      "430105086",
+      "426123319",
+      "407023978",
+      "406581215",
+      "405901042",
+      "400316008",
+      "399628262",
+      "399236785",
+      "375377132",
+      "373318236",
+      "371382467",
+      "370523287",
+      "370294248",
+      "370219124",
+      "370106701",
+      "369110952",
+      "368646762",
+      "368588230",
+      "368528977",
+      "368280485",
+      "366798722"
     ],
     "mihawk-99/PS5_MihawkOS": [
       "426049299",
