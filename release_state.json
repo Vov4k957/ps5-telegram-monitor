@@ -1,15 +1,15 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-24T09:11:24.683651+00:00",
+  "last_heartbeat": "2026-11-24T09:31:36.267928+00:00",
   "last_run": {
     "checked_repositories": 13,
-    "completed_at": "2026-11-24T09:11:24.683651+00:00",
+    "completed_at": "2026-11-24T09:31:36.267928+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 0,
-    "run_id": "45362771361",
-    "started_at": "2026-11-24T09:11:16.193174+00:00",
+    "notifications_sent": 1,
+    "run_id": "45365955267",
+    "started_at": "2026-11-24T09:31:19.895119+00:00",
     "updates_processed": 0
   },
   "release_watch": {
@@ -91,6 +91,30 @@
         "eligible": true,
         "fingerprint_version": 2,
         "message_id": 174,
+        "notified": false
+      }
+    },
+    "quer3q/kraken-mount": {
+      "456541337": {
+        "body": "what s new updates from the ui: at start kraken mount checks github for a newer release and the web ui offers update, which downloads kraken-mount.elf and starts it through elfldr not while a game runs 117 ps5-payload-manager: each release has a payloads.json . add as a custom repository to install and update kraken mount there playden support 105 : folders can be excluded from the scan, a title can be removed from the home screen while its folder stays, api state shows whether each title is registered, mounted and present, and a per-game kraken mount libraries switch turns the overlay off for a folder game. the calls follow shadowmount s api v1 api on port 8097. thanks felipecrs library: search by name or title id, a play button in the game sheet, and compact drive chips that filter the grid by drive 116 . thanks dang3rzone crash report: a game s crash is logged and kept with its time and process; the game sheet shows the last one and report gives the text for an issue 100 . thanks dang3rzone apps that start a second elf on exit exit spawn work from a pkg, and closing a game no longer hangs or powers the console off 109 . thanks xtrackkkz. pkg caches rebuild once system fonts: homebrew apps see the console s fonts in preinst common font , as with shadowmount 119 . thanks zhuwenxue2002 fw 12 : the kraken mount tile registers again, also after it was removed from the home screen 120 web ui is reachable again after rest mode 110 rebuild stays disabled until the rebuild is done 115 . thanks dang3rzone bundled ampr-emu-ng v0.5.1 to update, send kraken-mount.elf once to elfldr port 9021 . from this version on, the web ui offers newer releases itself",
+        "body_length": 1672,
+        "bullets": [
+          "updates from the ui: at start kraken mount checks github for a newer release and the web ui",
+          "ps5-payload-manager: each release has a payloads.json . add",
+          "playden support 105 : folders can be excluded from the scan, a title can be removed from the",
+          "library: search by name or title id, a play button in the game sheet, and compact drive chips",
+          "crash report: a game s crash is logged and kept with its time and process; the game sheet shows",
+          "apps that start a second elf on exit exit spawn work from a pkg, and closing a game no longer",
+          "system fonts: homebrew apps see the console s fonts in preinst common font , as with",
+          "fw 12 : the kraken mount tile registers again, also after it was removed from the home screen",
+          "web ui is reachable again after rest mode 110",
+          "rebuild stays disabled until the rebuild is done 115 . thanks dang3rzone",
+          "bundled ampr-emu-ng v0.5.1"
+        ],
+        "digest": "670afafc3d649288e2e4b99f3ad1762a0669bbfbb0f4783a5556dd17792b5b2e",
+        "eligible": true,
+        "fingerprint_version": 2,
+        "message_id": 177,
         "notified": false
       }
     },
@@ -323,7 +347,8 @@
       "446208902",
       "446908947",
       "450240005",
-      "452647756"
+      "452647756",
+      "456541337"
     ],
     "quer3q/ps5-dump-forge": [
       "425438524",
