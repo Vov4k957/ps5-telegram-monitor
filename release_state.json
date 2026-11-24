@@ -1,38 +1,19 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-24T00:51:21.259093+00:00",
+  "last_heartbeat": "2026-11-24T09:11:24.683651+00:00",
   "last_run": {
     "checked_repositories": 13,
-    "completed_at": "2026-11-24T00:51:21.259093+00:00",
+    "completed_at": "2026-11-24T09:11:24.683651+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "45300491509",
-    "started_at": "2026-11-24T00:51:14.944087+00:00",
+    "run_id": "45362771361",
+    "started_at": "2026-11-24T09:11:16.193174+00:00",
     "updates_processed": 0
   },
   "release_watch": {
     "Darkatek7/PS5SD": {
-      "454325556": {
-        "body": "a random prompt for each image from the collections you tick, and a fan chart that matches the console s readings random prompt for each image at the top of the collections tab, switch on random prompt for each image and tick one or more collections. each image then takes a random entry of the ticked collections instead of the prompt box. every entry is as likely as any other the entry s a b , names and lora are expanded as usual. its negative prompt comes first, then the one you typed each image keeps the entry it took, so use all gives it back and turns the switch off, as use does the switch and the ticks are kept in your browser. the note under the prompt says how many entries each image picks from, with turn off next to it the link that puts one random entry into the prompt now is called use a random entry api post ps5sd v1 app prompts expand takes books a list of collection names instead of prompt . each item has its own template and negative template , to send to img gen api.md the fan chart the chart drew each fan mode as a fan line: 23 up to the highest temperature, then straight up. the console s readings did not follow it. the fan stays near 30 while the chip s reading swings by 10 c and more from one second to the next it now shows the chip and the fan over the last 2 minutes, with the mode s highest temperature as a line. point at it to read one second. measured on the console: console.md install from the homebrew store, or unpack ppsa99576.zip into data homebrew and let shadowmountplus scan. an update keeps models, presets, gallery and settings next roadmap.md at the tag",
-        "body_length": 1610,
-        "bullets": [
-          "at the top of the collections tab, switch on random prompt for each image and tick one or more collections. each image then takes a random entry of the ticked collections instead of the prompt box. every entry is as likely as any other",
-          "the entry s a b , names and lora are expanded as usual. its negative prompt comes first, then the one you typed",
-          "each image keeps the entry it took, so use all gives it back and turns the switch off, as use does",
-          "the switch and the ticks are kept in your browser. the note under the prompt says how many entries each image picks from, with turn off next to it",
-          "the link that puts one random entry into the prompt now is called use a random entry",
-          "post ps5sd v1 app prompts expand takes books a list of collection names instead of prompt . each item has its own template and negative template , to send to img gen",
-          "the chart drew each fan mode as a fan line: 23 up to the highest temperature, then straight up. the console s readings did not follow it. the fan stays near 30 while the chip s reading swings by 10 c and more from one second to the next",
-          "it now shows the chip and the fan over the last 2 minutes, with the mode s highest temperature as a line. point at it to read one second. measured on the console: console.md"
-        ],
-        "digest": "4a60ba578b37e40c227db24ac18763f5f9caadc6612e18d151a608b9983fd1f2",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      },
       "454374615": {
         "body": "ps5sd 1.8.4 says why a model cannot run, and helps with the ones that can 25 files made for comfyui the models tab names a file s weight format when it is one made for comfyui. those that cannot run on the ps5 are marked red, use is off, and the api refuses a switch to them with 422 and the code model format nvfp4 made for nvidia s newest gpus : stable-diffusion.cpp does not read it comfyui int8, w4a4, w4a8 : stable-diffusion.cpp reads them, but the ps5 s gpu has no int8 dot product, and the cpu fallback ended ps5sd on the console. int8 files that keep their format only in quantization metadata cannot be read at all torchao unsloth s fp8 and int8 files : stable-diffusion.cpp does not read it fp8 runs: flux.2 klein 4b took 37 s an image instead of 22 s with the q8 0 gguf a gguf of the same model is the better choice on the ps5 krea 2 krea 2 is told from its tensors. its files show as a diffusion model, and its presets are no longer listed as video models it uses wan s vae why a load failed the reason stays on the model s row in the models tab until another model loads. sd.cpp s get sd version from file failed now says that it does not know the file s layout make a preset a diffusion model that came alone flux, z-image, moss-image, krea 2, wan has make a preset . it takes the text encoder, vae and settings of an installed preset of the same family, or the catalog s, and says which file is missing and what brings it. check the lines, save, and use loads it. get ps5sd v1 app models files lists the files on the console, and post ps5sd v1 app presets takes name , text export a preset export .txt in a preset s menu saves its file, to share it. upload it as preset .txt on another console install from the homebrew store, or unpack ppsa99576.zip into data homebrew and let shadowmountplus scan next roadmap.md at this tag",
         "body_length": 1841,
