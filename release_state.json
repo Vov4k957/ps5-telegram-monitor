@@ -1,44 +1,18 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-24T10:45:38.978588+00:00",
+  "last_heartbeat": "2026-11-24T12:23:22.763216+00:00",
   "last_run": {
     "checked_repositories": 13,
-    "completed_at": "2026-11-24T10:45:38.978588+00:00",
+    "completed_at": "2026-11-24T12:23:22.763216+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "45377782531",
-    "started_at": "2026-11-24T10:45:31.973723+00:00",
+    "run_id": "45392984872",
+    "started_at": "2026-11-24T12:23:15.570918+00:00",
     "updates_processed": 0
   },
   "release_watch": {
-    "Darkatek7/PS5SD": {
-      "454428848": {
-        "body": "ps5sd 1.8.5 waits when civitai limits downloads, fixes the memory hint after a model switch, adds a search to the prompt collections, and keeps showing the steps of a run after its tab was in the background downloads that the server limits http 429 civitai stopped a lora at 855 mb with too many requests . 1.8.4 tried again every few seconds on 16 connections and gave up after about a minute, and the row only showed the bytes all connections of a download now pause together: 30, 60, then 120 s, or as long as the server s retry-after says at most 300 s . after seven pauses in a row without progress the download fails a 429 on the first request is asked again three times the row says why it waits: civitai limits downloads for now http 429 ; trying again in 60 s a failed download says what happened and that retry keeps what came in on the console, the 580 mb lora that civitai limited paused 300 s twice and then finished on its own the memory hint under generate it said larger than every run since ps5sd started when it meant since the model loaded . it now says what it checks it warned at flux.3 klein s own 1024x1024 after a switch from another model. q6 k at 1024x1024 after q4 k, the run that failed in 0.7, now runs, so 1024x1024 counts as safe for the family the hint is checked again after each image of a queue, not only when the queue ends search in the prompt collections a box above the collections finds them by name and by their entries. all the words you type must match, in any order, each at the start of a word: red finds red and reddish, not colored a collection whose name does not match lists only the entries that do, and its chip shows cosplay 3 of 60 tick all and tick none act on the shown collections while you search the steps after a tab in the background the page asked for its job one look at a time. a look that never came back, such as a request the browser held while the tab was in the background, left the page on queued for good a look now has a time limit, and one that hangs for 15 s is replaced the page looks at once when its tab is shown again while your image waits behind another one, the page shows the one that runs: its step queued running now: step 14 of 20 , the bar and its live preview. this happens with random prompt, where each image is sent when the one before is done: images you add to the queue meanwhile line up before the run s next one install update from the homebrew store, or unpack ppsa99576.zip into data homebrew and let shadowmountplus scan next roadmap.md",
-        "body_length": 2533,
-        "bullets": [
-          "all connections of a download now pause together: 30, 60, then 120 s, or as long as the server s retry-after says at most 300 s . after seven pauses in a row without progress the download fails",
-          "a 429 on the first request is asked again three times",
-          "the row says why it waits: civitai limits downloads for now http 429 ; trying again in 60 s",
-          "a failed download says what happened and that retry keeps what came in",
-          "it said larger than every run since ps5sd started when it meant since the model loaded . it now says what it checks",
-          "it warned at flux.3 klein s own 1024x1024 after a switch from another model. q6 k at 1024x1024 after q4 k, the run that failed in 0.7, now runs, so 1024x1024 counts as safe for the family",
-          "the hint is checked again after each image of a queue, not only when the queue ends",
-          "a box above the collections finds them by name and by their entries. all the words you type must match, in any order, each at the start of a word: red finds red and reddish, not colored",
-          "a collection whose name does not match lists only the entries that do, and its chip shows cosplay 3 of 60",
-          "tick all and tick none act on the shown collections while you search",
-          "a look now has a time limit, and one that hangs for 15 s is replaced",
-          "the page looks at once when its tab is shown again",
-          "while your image waits behind another one, the page shows the one that runs: its step queued running now: step 14 of 20 , the bar and its live preview. this happens with random prompt, where each image is sent when the one before is done: images you add to the queue meanwhile line up before the run s next one"
-        ],
-        "digest": "43c3d6cea8cfc985f9522b9196b4e9ce682ab6d5a00107865b477ec2e3e0b008",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      }
-    },
     "itsPLK/ps5-webkit-autoloader": {
       "454874663": {
         "body": "dependencies updated wobkot to 452046e added relapse support for fw 3.00, 3.10, 3.20, 4.00, 4.02, 4.03, 4.50, and 4.51 this expands supported firmware to 3.00 13.60 downloads ps5 installer payload file: webkit-autoloader-installer v0.8.4.elf linux macos wsl installer-host file: webkit-autoloader-host v0.8.4.py windows installer-host file: webkit-autoloader-host v0.8.4.exe",
