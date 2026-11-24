@@ -1,64 +1,19 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-23T23:35:34.080916+00:00",
+  "last_heartbeat": "2026-11-24T00:51:21.259093+00:00",
   "last_run": {
     "checked_repositories": 13,
-    "completed_at": "2026-11-23T23:35:34.080916+00:00",
+    "completed_at": "2026-11-24T00:51:21.259093+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "45290111624",
-    "started_at": "2026-11-23T23:35:25.895783+00:00",
+    "run_id": "45300491509",
+    "started_at": "2026-11-24T00:51:14.944087+00:00",
     "updates_processed": 0
   },
   "release_watch": {
     "Darkatek7/PS5SD": {
-      "454095636": {
-        "body": "prompt collections on the console, name and lora in a prompt, and all of it through the api collections a collection is a named list of prompts or words, kept on the console for every model and every browser save prompt under the prompt puts the prompt and its negative prompt into a collection saved , or a new one the collections tab next to history lists them: use an entry, random prompt , insert name , rename, delete import .txt and export .txt use the files of a1111 s dynamic prompts: one entry per line placeholders name in a prompt is a random entry of that collection, picked anew for each image, like a b c . a prompt of only portraits with a count of 10 makes 10 different prompts. entries may hold a b and other names a prompt that is only name also takes the entry s negative prompt, before the one you typed lora is the trigger words of the picked loras at that place. add trigger words now puts them at the cursor the hint under the prompt says what each image picks from, and names a name that matches nothing the prompt as typed in the image each image keeps the prompt as you typed it, as template: in its parameters as dynamic prompts writes it , so use all gives people back, not the one prompt that came of it api get , post and delete ps5sd v1 app promptbooks and its entries: make, rename, fill and delete collections post ps5sd v1 app prompts expand : the same rules as the page, with the loras stored trigger words from lora , or the prompt s tags , a count up to 100 and a seed that repeats the picks. about 10 ms on the console img gen and vid gen take template and negative template api.md has the routes and an example. measured on the console: console.md install from the homebrew store, or unpack ppsa99576.zip into data homebrew and let shadowmountplus scan. an update keeps models, presets, gallery and settings next roadmap.md at the tag",
-        "body_length": 1873,
-        "bullets": [
-          "a collection is a named list of prompts or words, kept on the console for every model and every browser",
-          "save prompt under the prompt puts the prompt and its negative prompt into a collection saved , or a new one",
-          "the collections tab next to history lists them: use an entry, random prompt , insert name , rename, delete",
-          "import .txt and export .txt use the files of a1111 s dynamic prompts: one entry per line",
-          "name in a prompt is a random entry of that collection, picked anew for each image, like a b c . a prompt of only portraits with a count of 10 makes 10 different prompts. entries may hold a b and other names",
-          "a prompt that is only name also takes the entry s negative prompt, before the one you typed",
-          "lora is the trigger words of the picked loras at that place. add trigger words now puts them at the cursor",
-          "the hint under the prompt says what each image picks from, and names a name that matches nothing",
-          "each image keeps the prompt as you typed it, as template: in its parameters as dynamic prompts writes it , so use all gives people back, not the one prompt that came of it",
-          "get , post and delete ps5sd v1 app promptbooks and its entries: make, rename, fill and delete collections",
-          "post ps5sd v1 app prompts expand : the same rules as the page, with the loras stored trigger words from lora , or the prompt s tags , a count up to 100 and a seed that repeats the picks. about 10 ms on the console",
-          "img gen and vid gen take template and negative template",
-          "api.md has the routes and an example. measured on the console: console.md"
-        ],
-        "digest": "c38a57c24b716cf2ea8409fb657d7ea0a2b234a8c64edbffaaa1794e4c6b3d09",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      },
-      "454095742": {
-        "body": "a lora s trigger words as a list: each on or off, all of them or some at random for each image, and through the api trigger words as chips a lora s trigger words are a list of chips, kept on the console. under info you add your own enter or a comma , remove ones with , and turn them on and off under a lora you picked on the create tab, its chips turn on and off with a click, saved to the console at once a lookup on civitai makes one chip of each trained word; a phrase with commas stays one chip activation text keeps all the words, so a1111 still sees them modes all of them : the words that are on. one at random or some at random a number : picked anew for each image in mode one or some, add lora:name puts a placeholder at the cursor, so each image picks its own words; in mode all, add trigger words puts the words themselves lora:name puts in one lora s words at that place its path or file name, any case , picked or not. lora leaves out the loras it names api get and post ps5sd v1 app loras info read and set triggers , trigger mode and trigger count ; the old trigger still works. get loras lists them post ps5sd v1 app prompts expand uses each lora s list and mode, and takes triggers , trigger mode and trigger count in a lora item for one call api.md. measured on the console: console.md install from the homebrew store, or unpack ppsa99576.zip into data homebrew and let shadowmountplus scan. an update keeps models, presets, gallery and settings next roadmap.md at the tag",
-        "body_length": 1492,
-        "bullets": [
-          "a lora s trigger words are a list of chips, kept on the console. under info you add your own enter or a comma , remove ones with , and turn them on and off",
-          "under a lora you picked on the create tab, its chips turn on and off with a click, saved to the console at once",
-          "a lookup on civitai makes one chip of each trained word; a phrase with commas stays one chip",
-          "activation text keeps all the words, so a1111 still sees them",
-          "all of them : the words that are on. one at random or some at random a number : picked anew for each image",
-          "in mode one or some, add lora:name puts a placeholder at the cursor, so each image picks its own words; in mode all, add trigger words puts the words themselves",
-          "lora:name puts in one lora s words at that place its path or file name, any case , picked or not. lora leaves out the loras it names",
-          "get and post ps5sd v1 app loras info read and set triggers , trigger mode and trigger count ; the old trigger still works. get loras lists them",
-          "post ps5sd v1 app prompts expand uses each lora s list and mode, and takes triggers , trigger mode and trigger count in a lora item for one call",
-          "api.md. measured on the console: console.md"
-        ],
-        "digest": "03d585d3ffd3b9da11dcda73d0dba8101c2bd567204191baa0d2e68f7740cc5f",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      },
       "454325556": {
         "body": "a random prompt for each image from the collections you tick, and a fan chart that matches the console s readings random prompt for each image at the top of the collections tab, switch on random prompt for each image and tick one or more collections. each image then takes a random entry of the ticked collections instead of the prompt box. every entry is as likely as any other the entry s a b , names and lora are expanded as usual. its negative prompt comes first, then the one you typed each image keeps the entry it took, so use all gives it back and turns the switch off, as use does the switch and the ticks are kept in your browser. the note under the prompt says how many entries each image picks from, with turn off next to it the link that puts one random entry into the prompt now is called use a random entry api post ps5sd v1 app prompts expand takes books a list of collection names instead of prompt . each item has its own template and negative template , to send to img gen api.md the fan chart the chart drew each fan mode as a fan line: 23 up to the highest temperature, then straight up. the console s readings did not follow it. the fan stays near 30 while the chip s reading swings by 10 c and more from one second to the next it now shows the chip and the fan over the last 2 minutes, with the mode s highest temperature as a line. point at it to read one second. measured on the console: console.md install from the homebrew store, or unpack ppsa99576.zip into data homebrew and let shadowmountplus scan. an update keeps models, presets, gallery and settings next roadmap.md at the tag",
         "body_length": 1610,
