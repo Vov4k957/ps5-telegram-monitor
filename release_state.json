@@ -1,34 +1,19 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-24T09:31:36.267928+00:00",
+  "last_heartbeat": "2026-11-24T10:45:38.978588+00:00",
   "last_run": {
     "checked_repositories": 13,
-    "completed_at": "2026-11-24T09:31:36.267928+00:00",
+    "completed_at": "2026-11-24T10:45:38.978588+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 1,
-    "run_id": "45365955267",
-    "started_at": "2026-11-24T09:31:19.895119+00:00",
+    "notifications_sent": 0,
+    "run_id": "45377782531",
+    "started_at": "2026-11-24T10:45:31.973723+00:00",
     "updates_processed": 0
   },
   "release_watch": {
     "Darkatek7/PS5SD": {
-      "454374615": {
-        "body": "ps5sd 1.8.4 says why a model cannot run, and helps with the ones that can 25 files made for comfyui the models tab names a file s weight format when it is one made for comfyui. those that cannot run on the ps5 are marked red, use is off, and the api refuses a switch to them with 422 and the code model format nvfp4 made for nvidia s newest gpus : stable-diffusion.cpp does not read it comfyui int8, w4a4, w4a8 : stable-diffusion.cpp reads them, but the ps5 s gpu has no int8 dot product, and the cpu fallback ended ps5sd on the console. int8 files that keep their format only in quantization metadata cannot be read at all torchao unsloth s fp8 and int8 files : stable-diffusion.cpp does not read it fp8 runs: flux.2 klein 4b took 37 s an image instead of 22 s with the q8 0 gguf a gguf of the same model is the better choice on the ps5 krea 2 krea 2 is told from its tensors. its files show as a diffusion model, and its presets are no longer listed as video models it uses wan s vae why a load failed the reason stays on the model s row in the models tab until another model loads. sd.cpp s get sd version from file failed now says that it does not know the file s layout make a preset a diffusion model that came alone flux, z-image, moss-image, krea 2, wan has make a preset . it takes the text encoder, vae and settings of an installed preset of the same family, or the catalog s, and says which file is missing and what brings it. check the lines, save, and use loads it. get ps5sd v1 app models files lists the files on the console, and post ps5sd v1 app presets takes name , text export a preset export .txt in a preset s menu saves its file, to share it. upload it as preset .txt on another console install from the homebrew store, or unpack ppsa99576.zip into data homebrew and let shadowmountplus scan next roadmap.md at this tag",
-        "body_length": 1841,
-        "bullets": [
-          "nvfp4 made for nvidia s newest gpus : stable-diffusion.cpp does not read it",
-          "comfyui int8, w4a4, w4a8 : stable-diffusion.cpp reads them, but the ps5 s gpu has no int8 dot product, and the cpu fallback ended ps5sd on the console. int8 files that keep their format only in quantization metadata cannot be read at all",
-          "torchao unsloth s fp8 and int8 files : stable-diffusion.cpp does not read it",
-          "fp8 runs: flux.2 klein 4b took 37 s an image instead of 22 s with the q8 0 gguf"
-        ],
-        "digest": "21f24abb9f0aeede2e891a00568d7a3f6ffb40f42da65015c1999616fec9dd86",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      },
       "454428848": {
         "body": "ps5sd 1.8.5 waits when civitai limits downloads, fixes the memory hint after a model switch, adds a search to the prompt collections, and keeps showing the steps of a run after its tab was in the background downloads that the server limits http 429 civitai stopped a lora at 855 mb with too many requests . 1.8.4 tried again every few seconds on 16 connections and gave up after about a minute, and the row only showed the bytes all connections of a download now pause together: 30, 60, then 120 s, or as long as the server s retry-after says at most 300 s . after seven pauses in a row without progress the download fails a 429 on the first request is asked again three times the row says why it waits: civitai limits downloads for now http 429 ; trying again in 60 s a failed download says what happened and that retry keeps what came in on the console, the 580 mb lora that civitai limited paused 300 s twice and then finished on its own the memory hint under generate it said larger than every run since ps5sd started when it meant since the model loaded . it now says what it checks it warned at flux.3 klein s own 1024x1024 after a switch from another model. q6 k at 1024x1024 after q4 k, the run that failed in 0.7, now runs, so 1024x1024 counts as safe for the family the hint is checked again after each image of a queue, not only when the queue ends search in the prompt collections a box above the collections finds them by name and by their entries. all the words you type must match, in any order, each at the start of a word: red finds red and reddish, not colored a collection whose name does not match lists only the entries that do, and its chip shows cosplay 3 of 60 tick all and tick none act on the shown collections while you search the steps after a tab in the background the page asked for its job one look at a time. a look that never came back, such as a request the browser held while the tab was in the background, left the page on queued for good a look now has a time limit, and one that hangs for 15 s is replaced the page looks at once when its tab is shown again while your image waits behind another one, the page shows the one that runs: its step queued running now: step 14 of 20 , the bar and its live preview. this happens with random prompt, where each image is sent when the one before is done: images you add to the queue meanwhile line up before the run s next one install update from the homebrew store, or unpack ppsa99576.zip into data homebrew and let shadowmountplus scan next roadmap.md",
         "body_length": 2533,
