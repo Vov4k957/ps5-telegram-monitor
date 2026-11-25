@@ -1,36 +1,18 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-24T17:12:24.212971+00:00",
+  "last_heartbeat": "2026-11-25T01:00:55.820936+00:00",
   "last_run": {
     "checked_repositories": 13,
-    "completed_at": "2026-11-24T17:12:24.212971+00:00",
+    "completed_at": "2026-11-25T01:00:55.820936+00:00",
     "errors": [],
     "event": "workflow_dispatch",
     "notifications_sent": 0,
-    "run_id": "45445903556",
-    "started_at": "2026-11-24T17:12:17.490615+00:00",
+    "run_id": "45522497178",
+    "started_at": "2026-11-25T01:00:51.223952+00:00",
     "updates_processed": 0
   },
   "release_watch": {
-    "itsPLK/ps5-webkit-autoloader": {
-      "454874663": {
-        "body": "dependencies updated wobkot to 452046e added relapse support for fw 3.00, 3.10, 3.20, 4.00, 4.02, 4.03, 4.50, and 4.51 this expands supported firmware to 3.00 13.60 downloads ps5 installer payload file: webkit-autoloader-installer v0.8.4.elf linux macos wsl installer-host file: webkit-autoloader-host v0.8.4.py windows installer-host file: webkit-autoloader-host v0.8.4.exe",
-        "body_length": 374,
-        "bullets": [
-          "updated wobkot to 452046e",
-          "added relapse support for fw 3.00, 3.10, 3.20, 4.00, 4.02, 4.03, 4.50, and 4.51",
-          "ps5 installer payload file: webkit-autoloader-installer v0.8.4.elf",
-          "linux macos wsl installer-host file: webkit-autoloader-host v0.8.4.py",
-          "windows installer-host file: webkit-autoloader-host v0.8.4.exe"
-        ],
-        "digest": "01d423b770e3351ac1d99b9e2159b1620d41c0076cfbafe4fb8c09749c591081",
-        "eligible": false,
-        "fingerprint_version": 2,
-        "message_id": null,
-        "notified": false
-      }
-    },
     "quer3q/ampr-emu-ng": {
       "455896610": {
         "body": "save fixes in pkg mode and faster read batches fpkg pkg support is experimental , and a pkg game can run worse than the same game in zstd packs. if a game stutters as a pkg, try it in zstd packs and tell us in an issue what s new faster read batches: a game s next batch of reads now starts while the previous one is still finishing. on our test games a batch completes about 10 sooner in pkg mode, and a zstd game that queued its reads badly went from 98 ms to 5 ms a batch. the disk read pool grows from 6 to 8 threads to keep up fixes games that failed every save in pkg mode, such as marvel s wolverine 116 : the save service cannot open the game s save icon in pkg mode so the runtime now reads the icon and hands it over itself, also when the game is installed on an m.2 drive. not yet confirmed by the reporter hades hung when closed and showed 0xa0024301 in pkg mode 114 . shared save mounts are removed: a save mount the game already holds is passed back as busy, as on a retail console dirt 5 crashed about 15 s after launch, then hung on a black screen, in pkg mode 117 : folders listed with a small buffer now show their files on disk as well as the packed ones marvel cosmic invasion aborted at launch 111 , and scott pilgrim ex is fixed by the same change: a folder that exists only in the packs no longer reports a stale not found error at the end of its listing thanks jamesst20 fixed marvel cosmic invasion and scott pilgrim ex 113 and dirt 5 118 , traced from core dumps, and found the save bug behind the hades hang 115 pristmc-code sent detailed reports with core dumps and traces for marvel cosmic invasion 111 , hades 114 and dirt 5 117 , and tested every fix build on a console fever86 sent the logs for marvel s wolverine 116 and found that the save failure happened only on m.2 strongt1me helped triage 111 how to use fpkg games: launch with kraken-mount zstd, lz4 and folder games: copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in its settings or kraken mount zstd and lz4 packs can be made with ps5-dump-forge",
