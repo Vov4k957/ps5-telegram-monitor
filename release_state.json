@@ -1,83 +1,18 @@
 {
   "commands_menu_configured": true,
   "commands_menu_scope_cleared": true,
-  "last_heartbeat": "2026-11-25T10:22:41.644317+00:00",
+  "last_heartbeat": "2026-11-25T10:37:20.830246+00:00",
   "last_run": {
-    "checked_repositories": 13,
-    "completed_at": "2026-11-25T10:22:41.644317+00:00",
+    "checked_repositories": 10,
+    "completed_at": "2026-11-25T10:37:20.830246+00:00",
     "errors": [],
     "event": "workflow_dispatch",
-    "notifications_sent": 1,
-    "run_id": "45594319356",
-    "started_at": "2026-11-25T10:22:20.089060+00:00",
+    "notifications_sent": 0,
+    "run_id": "45596706954",
+    "started_at": "2026-11-25T10:37:15.230157+00:00",
     "updates_processed": 0
   },
-  "release_watch": {
-    "quer3q/ampr-emu-ng": {
-      "455896610": {
-        "body": "save fixes in pkg mode and faster read batches fpkg pkg support is experimental , and a pkg game can run worse than the same game in zstd packs. if a game stutters as a pkg, try it in zstd packs and tell us in an issue what s new faster read batches: a game s next batch of reads now starts while the previous one is still finishing. on our test games a batch completes about 10 sooner in pkg mode, and a zstd game that queued its reads badly went from 98 ms to 5 ms a batch. the disk read pool grows from 6 to 8 threads to keep up fixes games that failed every save in pkg mode, such as marvel s wolverine 116 : the save service cannot open the game s save icon in pkg mode so the runtime now reads the icon and hands it over itself, also when the game is installed on an m.2 drive. not yet confirmed by the reporter hades hung when closed and showed 0xa0024301 in pkg mode 114 . shared save mounts are removed: a save mount the game already holds is passed back as busy, as on a retail console dirt 5 crashed about 15 s after launch, then hung on a black screen, in pkg mode 117 : folders listed with a small buffer now show their files on disk as well as the packed ones marvel cosmic invasion aborted at launch 111 , and scott pilgrim ex is fixed by the same change: a folder that exists only in the packs no longer reports a stale not found error at the end of its listing thanks jamesst20 fixed marvel cosmic invasion and scott pilgrim ex 113 and dirt 5 118 , traced from core dumps, and found the save bug behind the hades hang 115 pristmc-code sent detailed reports with core dumps and traces for marvel cosmic invasion 111 , hades 114 and dirt 5 117 , and tested every fix build on a console fever86 sent the logs for marvel s wolverine 116 and found that the save failure happened only on m.2 strongt1me helped triage 111 how to use fpkg games: launch with kraken-mount zstd, lz4 and folder games: copy libsceampr.sprx into the game s fakelib and mount the game with shadowmountplus disable fakelib update in its settings or kraken mount zstd and lz4 packs can be made with ps5-dump-forge",
-        "body_length": 2098,
-        "bullets": [
-          "faster read batches: a game s next batch of reads now starts while the",
-          "games that failed every save in pkg mode, such as marvel s wolverine",
-          "hades hung when closed and showed 0xa0024301 in pkg mode 114 . shared",
-          "dirt 5 crashed about 15 s after launch, then hung on a black screen, in",
-          "marvel cosmic invasion aborted at launch 111 , and scott pilgrim ex is",
-          "jamesst20 fixed marvel cosmic invasion and scott pilgrim ex 113 and",
-          "pristmc-code sent detailed reports with core dumps and traces for",
-          "fever86 sent the logs for marvel s wolverine 116 and found that the",
-          "strongt1me helped triage 111"
-        ],
-        "digest": "8fe58351065ae1831d216baec01317f7bb1e5eaa9e7d10cd006865e275abab6b",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 174,
-        "notified": false
-      }
-    },
-    "quer3q/kraken-mount": {
-      "456541337": {
-        "body": "what s new updates from the ui: at start kraken mount checks github for a newer release and the web ui offers update, which downloads kraken-mount.elf and starts it through elfldr not while a game runs 117 ps5-payload-manager: each release has a payloads.json . add as a custom repository to install and update kraken mount there playden support 105 : folders can be excluded from the scan, a title can be removed from the home screen while its folder stays, api state shows whether each title is registered, mounted and present, and a per-game kraken mount libraries switch turns the overlay off for a folder game. the calls follow shadowmount s api v1 api on port 8097. thanks felipecrs library: search by name or title id, a play button in the game sheet, and compact drive chips that filter the grid by drive 116 . thanks dang3rzone crash report: a game s crash is logged and kept with its time and process; the game sheet shows the last one and report gives the text for an issue 100 . thanks dang3rzone apps that start a second elf on exit exit spawn work from a pkg, and closing a game no longer hangs or powers the console off 109 . thanks xtrackkkz. pkg caches rebuild once system fonts: homebrew apps see the console s fonts in preinst common font , as with shadowmount 119 . thanks zhuwenxue2002 fw 12 : the kraken mount tile registers again, also after it was removed from the home screen 120 web ui is reachable again after rest mode 110 rebuild stays disabled until the rebuild is done 115 . thanks dang3rzone bundled ampr-emu-ng v0.5.1 to update, send kraken-mount.elf once to elfldr port 9021 . from this version on, the web ui offers newer releases itself",
-        "body_length": 1672,
-        "bullets": [
-          "updates from the ui: at start kraken mount checks github for a newer release and the web ui",
-          "ps5-payload-manager: each release has a payloads.json . add",
-          "playden support 105 : folders can be excluded from the scan, a title can be removed from the",
-          "library: search by name or title id, a play button in the game sheet, and compact drive chips",
-          "crash report: a game s crash is logged and kept with its time and process; the game sheet shows",
-          "apps that start a second elf on exit exit spawn work from a pkg, and closing a game no longer",
-          "system fonts: homebrew apps see the console s fonts in preinst common font , as with",
-          "fw 12 : the kraken mount tile registers again, also after it was removed from the home screen",
-          "web ui is reachable again after rest mode 110",
-          "rebuild stays disabled until the rebuild is done 115 . thanks dang3rzone",
-          "bundled ampr-emu-ng v0.5.1"
-        ],
-        "digest": "670afafc3d649288e2e4b99f3ad1762a0669bbfbb0f4783a5556dd17792b5b2e",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 177,
-        "notified": false
-      },
-      "457943030": {
-        "body": "the big one - redesign and installed games support install to the console: an fpkg game installs from its game sheet in the library install . the new install tab lists the patch and dlc .pkg files in the scan roots, with the queue and the results installed games: games installed on the console user app and extended storage show in the library too. kraken mount never mounts, hides or deletes them. an installed copy wins over the same title s fpkg or folder, so a natively installed game no longer gets the pkg s ampr-emu-ng 121 with ampr installed off the default , an installed game runs the system s libsceampr.sprx backports for installed games: a backport in backports now applies to an installed game too. its libraries go into the fakelib, and at each launch its other files are redirected into the game s app0 ; the install itself stays unchanged. the new backports screen lists the backport folders, and hidden lists the hidden games with unhide redesigned web ui with a sidebar you can collapse to icons, dark and light themes, three color schemes abyss, ember, moss and a language choice in settings title sound: home-screen tiles keep their background music after you leave a game, and kraken mount restores a sound the system drops later 124, 125 thanks atenb for tracking down why the title sound dropped out, and for the fix and its console tests 124, 125 norbi7454 for reporting a natively installed game that failed next to its fpkg 121 to update, use update in the web ui, or send kraken-mount.elf to elfldr port 9021",
-        "body_length": 1537,
-        "bullets": [
-          "install to the console: an fpkg game installs from its game sheet in the library install . the",
-          "installed games: games installed on the console user app and extended storage show in the",
-          "backports for installed games: a backport in backports now applies to an installed game",
-          "redesigned web ui with a sidebar you can collapse to icons, dark and light themes, three color",
-          "title sound: home-screen tiles keep their background music after you leave a game, and kraken mount",
-          "atenb for tracking down why the title sound dropped out, and for the fix and its console tests",
-          "norbi7454 for reporting a natively installed game that failed next to its fpkg 121"
-        ],
-        "digest": "cd11e3098cfab385131eae3a02ce65e13136e7db2f40c1f8ec7a0e124febac16",
-        "eligible": true,
-        "fingerprint_version": 2,
-        "message_id": 182,
-        "notified": false
-      }
-    }
-  },
+  "release_watch": {},
   "repositories": {
     "Darkatek7/PS5SD": [
       "454428848",
@@ -248,47 +183,11 @@
       "368280485",
       "366798722"
     ],
-    "mihawk-99/PS5_MihawkOS": [
-      "426049299",
-      "418829460",
-      "418479107",
-      "417877460",
-      "428264216",
-      "428361297",
-      "429374136",
-      "430714030",
-      "431055676",
-      "432827456",
-      "434078723",
-      "438255534"
-    ],
     "owendswang/ps5-aria2": [
       "403774307",
       "402632325",
       "402015363",
       "395974568"
-    ],
-    "quer3q/ampr-emu-ng": [
-      "436303212",
-      "435597949",
-      "434215489",
-      "437885147",
-      "439528891",
-      "441465055",
-      "444085058",
-      "445097490",
-      "446174623",
-      "452514440",
-      "455896610"
-    ],
-    "quer3q/kraken-mount": [
-      "444099863",
-      "446208902",
-      "446908947",
-      "450240005",
-      "452647756",
-      "456541337",
-      "457943030"
     ],
     "quer3q/ps5-dump-forge": [
       "425438524",
